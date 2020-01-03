@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on Shawngu的网络日志</title>
+    <link>https://shawngu.com/categories/python/</link>
+    <description>Recent content in python on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 31 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://shawngu.com/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python网络编程</title>
+      <link>https://shawngu.com/2018/03/python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Sat, 31 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</guid>
+      <description>Python是一个很强大的网络编程语言，对网络协议的各个层次进行了封装。这样我们不必再去关系网络实现的细节，可以集中精力处理程序逻辑部分。
+Socket Socket（套接字）可以看成是两个端点程序之间的信息通道。程序分布在不同的计算机或者网络上，通过套接字相互发送信息。在Python中，通过Socket模块来创建这样的连接。
+套接字包括两个：服务器套接字和客户端套接字。在创建一个服务器套接字后，让它等待连接，这样它就会在某个网络地址处（IP地址和端口的组合）监听，直到有客户端的套接字连接，连接成功后，就可以进行交互了。
+在Python的Socket模块中，一个套接字就是socket类的一个实例。实例化需要给定3个参数：第一个参数是地址族（默认是socket.AF_INET）;第2个参数是流（默认是socket.SOCK_STREAM）或数据报（socket.SOCK_DGRAM）,第3个参数是使用的协议（默认是0，一般使用默认值即可）。
+服务器套接字使用bind方法后，再调用listen方法去监听某个特定的地址。
+客户端套接字使用connect方法连接到服务器，在connect方法中使用的地址与服务器在bind方法中的地址相同。
+服务器套接字开始监听后，它就可以接受客户端的连接。通过accetp来完成。这个方法会阻塞（等待）直到客户端连接，然后返回一个格式为(client, address)的元组，client是一个客户端套接字。服务器处理完与该客户端的连接后，再次调用accept方法开始等待下一个连接。
+套接字有两个方法send（发送）和recv（接收），来传输数据。
+TCP编程 TCP是面向于有连接的协议，建立可靠的协议，双方通信确认以后可传输数据。具体看代码：
+服务器 import socket # 创建socket对象 s = socket.socket() host = &#39;127.0.0.1&#39; port = 8888 # 监听地址和端口 s.bind((host, port)) # 指定等待连接的最大数量 s.listen(5) # 无限循环接口客户端的连接 while True: sock, addr = s.accept() print(&#39;connected from %s:%s :&#39; % addr) sock.send(b&#39;thank you for connecting&#39;) sock.close()  上面的程序是一个小型服务器，连接客户端的连接，连接成功后会给客户端发送一句话“thank you for connecting”
+客户端 创建一个客户端来连接服务器
+import socket # 创建socket对象 s = socket.socket() host = &#39;127.0.0.1&#39; port = 8888 # 连接服务器 s.</description>
+    </item>
+    
+    <item>
+      <title>Python访问数据库</title>
+      <link>https://shawngu.com/2018/03/python%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Thu, 29 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>使用文件等相关方式存储数据总归是很有限的，当我们需要存储大量数据的时候，数据库这个时候就相当有用了。
+SQLite SQLite是一种嵌入式数据库，体积很小，常常被嵌入到应用中。而Python就内置了SQLite，可以直接导入使用。
+import sqlite3 # 创建连接，如果不存在该库就在当前目录下创建 conn = sqlite3.connect(&#39;test.db&#39;) # 创建游标 curs = conn.cursor() # 建表 query = &#39;create table user (id int primary key, name varchar(15))&#39; curs.execute(query) # &amp;lt;sqlite3.Cursor object at 0x108fe9c70&amp;gt; # 插入数据 query = &#39;insert into user values (1, &amp;quot;shawngu&amp;quot;), (2, &amp;quot;jack&amp;quot;), (3, &amp;quot;rose&amp;quot;)&#39; curs.execute(query) # 提交事务 conn.commit() cursor.close() # 查询 curs = conn.cursor() query = &#39;select * from user&#39; curs.execute(query) # &amp;lt;sqlite3.Cursor object at 0x108fe9c70&amp;gt; # 获取查询结果集 rows = curs.</description>
+    </item>
+    
+    <item>
+      <title>Python图形界面库</title>
+      <link>https://shawngu.com/2018/03/python%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%BA%93/</link>
+      <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%BA%93/</guid>
+      <description>Python支持多种第三方的图形界面库。常见有：
+ Pyqt：anaconda中自带
+ wxPython
+  推荐使用anaconda集成包作为Python环境，在anaconda中安装wxpython很简单：
+conda install -c melund wxpython   Tkinter：这个包Python中自带  使用哪个库导入即可
+# 使用pyqt import pyqt # 使用tkinter import tkinter # from tkinter # 使用wxpython import wx # wxpython  </description>
+    </item>
+    
+    <item>
+      <title>Python文件和流相关操作</title>
+      <link>https://shawngu.com/2018/03/python%E6%96%87%E4%BB%B6%E5%92%8C%E6%B5%81%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Tue, 27 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E6%96%87%E4%BB%B6%E5%92%8C%E6%B5%81%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/</guid>
+      <description>文件的操作是典型的I/O操作，而文件操作中读和写又是最常用的。
+读文件 open函数用来打开一个文件，并返回一个文件对象。模式打开模式即为读。
+格式：open(name, [mode, [buffering&amp;hellip;]])
+其中：name为文件名，强制参数，其他为可选参数。
+# 等价于 open(&#39;/Users/shawn/Desktop/f.txt&#39;, &#39;r&#39;) f = open(&#39;/Users/shawn/Desktop/f.txt&#39;) print(f) # _io.TextIOWrapper name=&#39;/Users/shawn/Desktop/f.txt&#39; mode=&#39;r&#39; encoding=&#39;UTF-8&#39;&amp;gt;  如果文件不存在，就会报错
+f = open(&#39;/Users/shawn/Desktop/ff.txt&#39;) &#39;&#39;&#39; Traceback (most recent call last): File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt; FileNotFoundError: [Errno 2] No such file or directory: &#39;/Users/shawn/Desktop/ff.txt&#39; &#39;&#39;&#39;  文件打开后，可以使用read函数一次性读取全部内容，也可以指定读取的字符数。
+# 读取全部 f.read() # 返回 &#39;Hello, World!!!&#39; # 读取指定字符数 f.read(5) # 返回 &#39;Hello&#39; # 在此调用读写，就是读取剩下的内容了 f.read() # 返回 &#39;, World!!!&#39;  也可以使用readline和readlines来读取行。</description>
+    </item>
+    
+    <item>
+      <title>Python模块</title>
+      <link>https://shawngu.com/2018/03/python%E6%A8%A1%E5%9D%97/</link>
+      <pubDate>Sun, 25 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E6%A8%A1%E5%9D%97/</guid>
+      <description>自定义模块 一般的，当我们想让代码重用的时候，就可以将代码放到一个模块中，这样一来，就可以再多个程序中使用这些代码了。其中一个xxx.py文件就是一个模块
+例如，我们编写一个简单的模块保存到hello.py文件中：
+def hello(): print(&#39;hello world&#39;) if __name__ == &#39;__main__&#39;: hello()  这样，当我们在命令行通过python hello.py时，就会输出&amp;rsquo;hello world&amp;rsquo;。
+解释：
+name变量用来“告知”模块本身是作为程序运行还是导入到其他程序。当我们在“主程序”（包括命令行）执行这个模块时，Python解释器就会将name的值设置为main，而在导入的模块中，这个值就被设定为模块的名字。所以，为了让模块更加好用，一般将其放置在if语句中。
+内置模块 Python自身内置了很多的模块，可以直接拿来用，要使用模块，通过import语句导入就可以使用了。如使用内置的sys和pprint模块：
+import sys import pprint # 打印系统模块列表 pprint.pprint(sys.path)  注：当要打印的数据结构过大，不能在一行打印完，就可以使用pprint模块中的pprint函数替代普通的print语句。pprint函数能够提供很假只能的打印输出。
+探究模块 想要合理有效的使用模块，就必须对模块有所熟悉，知道模块里到底有什么，以及一些其他的细节。所谓“知己知彼”，才能运用自如。
+想要知道模块细节，最直接的方式就是在Python解释器中研究它们。研究的第一步是知道模块的名字，然后导入它，如sys：
+import sys  使用dir 查看模块中包含的内容可以使用dir函数，它会将模块的的所有函数、类和变量等列出。
+dir(sys)  使用help获取帮助 help函数可以帮助我们模块的一些更加详细的说明，如：
+help(sys) # 展示信息 &#39;&#39;&#39; Help on built-in module sys: NAME sys MODULE REFERENCE https://docs.python.org/3.6/library/sys The following documentation is automatically generated from the Python source files. It may be incomplete, incorrect or include features that are considered implementation detail and may vary between Python Help on built-in module sys: 。。。。。。 &#39;&#39;&#39;  使用文档 当我们想要查看模块的一些描述时，可以使用doc查看，如：</description>
+    </item>
+    
+    <item>
+      <title>Python高级特性之列表生成式、生成器和迭代器</title>
+      <link>https://shawngu.com/2018/03/python%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B9%8B%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F%E7%94%9F%E6%88%90%E5%99%A8%E5%92%8C%E8%BF%AD%E4%BB%A3%E5%99%A8/</link>
+      <pubDate>Sat, 24 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B9%8B%E5%88%97%E8%A1%A8%E7%94%9F%E6%88%90%E5%BC%8F%E7%94%9F%E6%88%90%E5%99%A8%E5%92%8C%E8%BF%AD%E4%BB%A3%E5%99%A8/</guid>
+      <description>列表生成式 Python中提供了一种非常简洁的方式来生成列表list。
+例如：要生成[1x1, 2x2, 3x3, 4x4, 5x5, 6x6, 7x7, 8x8, 9x9]这样的一个列表。
+一种方式是使用循环，如：
+squares = [] for x in range(10): squares.append(x * x) print(squares) # 返回[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]  另一种方式是使用一个map和匿名函数lambda，如：
+squares = list(map(lambda x: x*x, range(10))) print(squares) # 返回[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]  而最简洁的方式则肯定是使用列表生成式了，看代码：
+squares = [x * x for x in range(10)]  说明：在一个列表中，使用for循环生成需要的值，for前面即是最终存放在列表中的具体值。在列表生成式中，甚至可以嵌套for循环，并且可以加判断，看代码：
+number_tuples = [(a, b) for a in [1, 2, 3, 4] for b in [&#39;a&#39;, &#39;b&#39;]] print(number_tuples) # 返回[(1, &#39;a&#39;), (1, &#39;b&#39;), (2, &#39;a&#39;), (2, &#39;b&#39;), (3, &#39;a&#39;), (3, &#39;b&#39;), (4, &#39;a&#39;), (4, &#39;b&#39;)] # 加判断 number_tuples = [(x, y) for x in [1,2,3] for y in [3,1,4] if x !</description>
+    </item>
+    
+    <item>
+      <title>Python异常处理</title>
+      <link>https://shawngu.com/2018/03/python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</guid>
+      <description>在编写程序的时候，难免会遇到程序可能出现异常的情况，这个时候如果我们不做捕获处理，异常就会一直往上抛，即回溯（traceback）终止程序往下执行，如：
+print(1/0) # 返回 Traceback (most recent call last): File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt; ZeroDivisionError: division by zero  处理异常 异常可能在某些东西出错时自动引发，当异常触发后我们应当针对于其作出处理方式。
+抛出异常 当我们指定某个程序可能出现的异常时，可以通过raise抛出指定的异常，如：
+def test(n): if n == 0: raise ValueError(&#39;invalid value: %s&#39; % n) else: return 1 / n # 调用 test(0) # 返回信息 Traceback (most recent call last): File &amp;quot;test.py&amp;quot;, line 8, in &amp;lt;module&amp;gt; test(0) File &amp;quot;test.py&amp;quot;, line 3, in test raise ValueError(&#39;invalid value: %s&#39; % n) ValueError: invalid value: 0  其中，ValueError是Python内建的异常类对象，是Exception异常类的子类，所有异常类都继承与Exception。更多内建异常类参考：https://docs.</description>
+    </item>
+    
+    <item>
+      <title>Python面向对象编程</title>
+      <link>https://shawngu.com/2018/03/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/</guid>
+      <description>Python本身是一种面向对象编程语言，面向对象编程（Object Oriented Programming），简称OOP，是一种编程思想，OOP将对象作为编程的基本单元，一个对象包含了数据以及对数据操作的函数。面向对象编程都有下面几个特点：
+ 封装 继承 多态  在说面向对象编程特点前，先说说类（class）和对象（object）的概念。
+类和对象 类（class）：一种抽象的模板，它定义了一组对象的共有特点。例如人类。
+对象（object）：是类的实例（instance）。例如男人、女人等。
+类的定义 类通过关键字class来定义，后面紧跟着类名，如：
+class Person: pass  如果需要继承某个类，需要在类名后加（class_name），如：
+class Person(object): # 表示Person类继承object类 pass  创建对象 类定义好后，便可以创建一个实例，也叫创建对象，创建对象很简单，如：
+man = Person() print(man) # 返回&amp;lt;__main__.Person object at 0x1083ed390&amp;gt;，0x1083ed390表示对象在内存中的地址  对象创建好后，可以动态的给对象绑定属性：
+man.name = &#39;shawn.gu&#39; print(man.name) # 返回 shawn.gu  另外我们可以在类定义的时候初始化一些属性，这样在创建对象后，这些属性就会自动绑定到对象上。
+# 通过__init__ （两边都是两个下划线）函数 class Person(object): def __init__(self, name, age): self.name = name self.age = age  这样在实例化时可以传入参数进行绑定具体值：
+man = Person(&#39;shawn.gu&#39;, 25) print(man.name) # 返回shawn.</description>
+    </item>
+    
+    <item>
+      <title>Python函数式编程</title>
+      <link>https://shawngu.com/2018/03/python%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Tue, 20 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/</guid>
+      <description>函数式编程又叫面向过程编程，Python对函数式编程提供部分支持，但是Python并不是一个完全的函数式编程。
+高阶函数 简单的说就是一个函数将另一个函数作为参数传入函数中，这样的函数就是高阶函数。如：
+def f(a): return a**2; def oper(x, f): # f函数作为参数传入 return f(x)  一些内建高阶函数：
+map map()函数接收两个参数，第一个参数是一个函数，第二个参数为可迭代的对象Iterable,例如序列。map将函数作用于可迭代的对象的每一个元素，并返回一个Iterator。看代码：
+def f(x): return x**2 numbers = [1, 2, 3, 4, 5] res = map(f, numbers) print(list(res)) # 返回[1, 4, 9, 16, 25]  reduce reduce是functools模块中的一个函数，它把一个函数作用在给定的序列上，而这个参数函数必须接收两个参数，每次执行都会把结果继续和序列的下一个元素做累积计算，直接看代码：
+from functools import reduce def fn(a, b): return a * 10 + b numbers = [1, 2, 3, 4, 5] res = reduce(fn, numbers) # 将给定的序列转成12345 print(res) # 返回12345  filter filter函数用来过滤一个序列，filter接收两个参数，第一个参数是一个函数，第二个参数是一个序列，它将函数作用于序列的每一个元素，然后根据结果为True还是False决定是否过滤舍弃掉这个元素。结果返回一个可迭代对象。看代码：</description>
+    </item>
+    
+    <item>
+      <title>Python递归函数</title>
+      <link>https://shawngu.com/2018/03/python%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Mon, 19 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</guid>
+      <description>递归函数说的简单一点就是在函数内部自己调用自己。那么这个函数就是递归函数。如：
+def recursion(): return recursion()  上面这个就是一个简单的递归函数。当然这样的函数什么事情也做不了，并且是个无穷递归，一旦执行就永不结束，很快程序就会崩溃。所以这样的递归函数时没有意义的。
+一个有用的递归应当包含几个部分：
+ 必须有结束条件，即一般说的有返回值 包含一个或多个问题较小部分的递归调用，简单的说就是每一次递归调用都更接近于最小可能性的解  下面两个经典递归应用
+阶乘 n的阶乘定义为 n x (n-1) x (n-2) x (n-3) x &amp;hellip; x 1。
+简单分析：
+ 1的阶乘为1 大于1的数的阶乘为n x (n-1) 的阶乘  代码实现：
+def factorial(n): if n == 1: return 1 else: return n * factorial(n-1)  二分法查找 即每次折半查找，如要查找一个数是否在序列内，以中间序列中中间数字为基准进行判断，如果比中间数字大，将序列折半，然后再取右侧折半后的序列的中间数再进行比较查找，依次这样下去，找到返回。如果数比原序列中间数小，则左边做同样的查找。
+代码实现：
+def binary_search(seq, target_number, lower=0, upper=None): if upper is None: upper = len(seq)-1 if lower == upper: assert target_number == seq[upper] return upper else: middle = (lower + upper) // 2 # 先除以2再向下取整 if target_number &amp;gt; seq[middle]: return binary_search(seq, target_number, middle+1, upper) else: return binary_search(seq, target_number, lower, middle)  总结 所有的递归一般都可以写成循环的形式，递归优点是逻辑要比循环清晰，但是递归存在栈溢出的问题。所有是否要使用递归，酌情选择。</description>
+    </item>
+    
+    <item>
+      <title>Python函数和参数</title>
+      <link>https://shawngu.com/2018/03/python%E5%87%BD%E6%95%B0%E5%92%8C%E5%8F%82%E6%95%B0/</link>
+      <pubDate>Sat, 17 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%87%BD%E6%95%B0%E5%92%8C%E5%8F%82%E6%95%B0/</guid>
+      <description>当我们在多个地方要使用同一个功能时，如果处都编写一次一样的代码，那么这样下来，整个程序会变得冗余不堪。为了解决这个问题，我们需要将一样功能的代码进行抽象封装，然后在需要的时间调用就行了，函数便是抽象的一个具体方式。
+函数分为内建函数和自定义函数，内建函数直接拿过来调用就好了，如：
+max(5, 15) # 求两数最大值  其他更多内建函数参考：https://docs.python.org/3/library/functions.html
+这里主要探讨自定义函数
+创建函数 在Python中，定义函数使用关键字def，紧接着是函数名、()和冒号:。函数体要缩进（四个空格）。看代码：
+# 无返回值 def my_func(): print(&#39;hello,world&#39;) # 有返回值 def my_func2(): a = 5 return a # 返回多个值 def my_func3(): a, b = 1, 2 return a, b # 空函数，pass表示什么也不做，占个位而已。 def my_func4(): pass  注：通过return也可以返回None，直接return None即可。另外当一个函数什么也不做时，要给一个pass，否则程序会报错
+函数调用 函数调用直接通过函数名加参数（有参数的话）即可，如：
+my_func() abs(-10)  函数的参数 Python中函数的参数分为多种：
+ 位置参数：对于一般的函数，比如abs(x)、max(a, b, c)等，括号里x、a、b、c都是位置参数，调用函数时，按照位置顺序赋给参数指定的值。  # 定义函数 def compare(x, y): if x &amp;gt; y: print(&#39;x大于y&#39;) else: print(&#39;x小于等于y&#39;) # 调用函数 a, b = 5, 20 compare(a, b) # 打印 x小于等于y   默认值参数：在定义参数的时候给定默认值，这样一来，在调用函数时，即使不再给定义的参数传值函数也能正确的调用。有了默认参数，函数的使用就更加方便了一些。  def student(name, age, sex=&#39;male&#39;): print(&#39;name=&#39;, &#39;,age=&#39;, age, &#39;,sex=&#39;, sex) # 调用函数，这里并没有传入第三个参数，但因为在定义时给了默认值，所以在函数内部可以正常使用，并且函数调用正常 student(&#39;tom&#39;, 25) # 打印 name= ,age= 25 ,sex= male  注：默认参数必须在位置参数（必选参数）后面。</description>
+    </item>
+    
+    <item>
+      <title>Python中的赋值魔法</title>
+      <link>https://shawngu.com/2018/03/python%E4%B8%AD%E7%9A%84%E8%B5%8B%E5%80%BC%E9%AD%94%E6%B3%95/</link>
+      <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E4%B8%AD%E7%9A%84%E8%B5%8B%E5%80%BC%E9%AD%94%E6%B3%95/</guid>
+      <description>在Python，用好一些赋值的小技巧可以让我们程序很简洁高效。
+序列解包 也叫递归解包，即将多个值的序列解开，然后放到变量的序列中。可以一次进行多个赋值操作。
+x, y, z = 1, 2, 3 print(x, y, z) # 返回1 2 3 x, y = y, x # 两个变量值互相交换，很有用哦 print(x, y, z) # 返回2 1 3 names = &#39;shawn&#39;, &#39;tom&#39;, &#39;jack&#39; print(names) # 返回(&#39;shawn&#39;, &#39;tom&#39;, &#39;jack&#39;) 元组 a, b, c = names print(a + &#39;,&#39; + b + &#39;,&#39; + c) # 返回 shawn,tom,jack student = {&#39;name&#39;: &#39;kate&#39;, &#39;age&#39;: 25} k, v = student.popitem() print(&#39;key=&#39;,k, &#39;value=&#39;, v) # 返回 key= age value= 25  小结：使用序列解包赋值的时候，变量的个数要和赋的值个数相同。</description>
+    </item>
+    
+    <item>
+      <title>Python中的一些迭代工具</title>
+      <link>https://shawngu.com/2018/03/python%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E8%BF%AD%E4%BB%A3%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Wed, 14 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E8%BF%AD%E4%BB%A3%E5%B7%A5%E5%85%B7/</guid>
+      <description>在Python中迭代序列或者其他可迭代对象时，有一些函数非常好用。
+并行迭代 即程序可以同时迭代两个序列，如：
+students = [&#39;jack&#39;, &#39;kate&#39;, &#39;tom&#39;, &#39;mate&#39;] ages = [21, 18, 23, 27] # 名字对应年龄 # range为列表生成式，在这里生成从0到len(students)的整数列表 for i in range(len(students)): print(students[i], &#39;=&#39;, ages[i]) # 打印 jack = 21 kate = 18 tom = 23 mate = 27  使用内建函数zip将两个序列压缩在一起，返回一个元组为成员的列表，然后进行并行迭代。
+students = [&#39;jack&#39;, &#39;kate&#39;, &#39;tom&#39;, &#39;mate&#39;] ages = [21, 18, 23, 27] # zip(students, ages) 在迭代时会返回[(&#39;jack&#39;, 21), (&#39;kate&#39;, 18), (&#39;tom&#39;, 23), (&#39;mate&#39;, 27)] for stu, age in zip(students, ages): print(&#39;stu=&#39;,stu, &#39;,age=&#39;, age) &#39;&#39;&#39;返回 stu= jack ,age= 21 stu= kate ,age= 18 stu= tom ,age= 23 stu= mate ,age= 27 &#39;&#39;&#39;  按索引迭代 有时候想要迭代当前序列中的对象，同时还要获取当前对象的索引，看下面代码：</description>
+    </item>
+    
+    <item>
+      <title>Python流程控制之条件判断、循环</title>
+      <link>https://shawngu.com/2018/03/python%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B9%8B%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E5%BE%AA%E7%8E%AF/</link>
+      <pubDate>Tue, 13 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B9%8B%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E5%BE%AA%E7%8E%AF/</guid>
+      <description>条件判断 计算机能执行一些复杂的、自动化的任务，关键在于自己能够根据条件作出判断。
+条件判断语句为：if&amp;hellip;elif&amp;hellip;else。
+完整形式为：
+if &amp;lt;condition1&amp;gt;: &amp;lt;operation1&amp;gt; elif &amp;lt;condition2&amp;gt;: &amp;lt;operation2&amp;gt; else: &amp;lt;operation3&amp;gt;  其中elif可有多个。当if后面的条件为真（True）时，就会执行if后的操作，而elif和else就会被忽略掉。如果if后面条件为假（False），就会向下去执行elif，如果所有elif的条件也都为假，最后会执行else的操作。
+看代码：
+# if...else name = &#39;jack&#39; if name == &#39;shawn&#39;: print(&#39;找到shawn了&#39;) else: print(&#39;不是shawn&#39;） # 执行该语句，返回&#39;不是shawn&#39; # if...elif...else age = 18 if age &amp;lt;= 13: print(&#39;少年你好&#39;) elif age &amp;lt;= 20: print(&#39;哟，青年才俊嘛&#39;) # 执行该语句 else: print(&#39;再过几年就是油腻的大叔啦&#39;)  一些常用的条件：
+   表达式 描述     x == y x 等于 y   x &amp;lt; y x 小于 y   x &amp;lt;= y x 小于等于 y   x &amp;gt; y x 大于 y   x &amp;gt;= y x 大于等于 y   x !</description>
+    </item>
+    
+    <item>
+      <title>Python高级类型之字典(dict)和集合(set)</title>
+      <link>https://shawngu.com/2018/03/python%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%AD%97%E5%85%B8dict%E5%92%8C%E9%9B%86%E5%90%88set/</link>
+      <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%AD%97%E5%85%B8dict%E5%92%8C%E9%9B%86%E5%90%88set/</guid>
+      <description>Dict 字典是Python中唯一内建的映射类型，在Python中用dict表示。字典中的项没有特定的顺序，使用键值对（k-v）来存储元素，其中键（k）唯一，但值（v）可以不唯一。
+创建和使用字典 字典的创建可以直接通过{}；也可以使用dict函数，给参数来创建，参数可以是其他字典或者(k, v)形式的元组。具体看代码：
+# 直接通过{}创建，键值间用冒号隔开，项间用逗号隔开 students = {&#39;jack&#39;: 20, &#39;tom&#39;: 23, &#39;shawn&#39;: 18} # 通过dict函数，加参数形式， items = [(&#39;name&#39;, &#39;shawn&#39;), (&#39;age&#39;, 18)] d = dict(items) # 返回{&#39;name&#39;: &#39;shawn&#39;, &#39;age&#39;: 18} animal = dict(name=&#39;dog&#39;, color=&#39;grey&#39;) # 返回{&#39;name&#39;: &#39;dog&#39;, &#39;color&#39;: &#39;grey&#39;}  字典是一种映射类型，但一些操作和通过序列很相似：
+ len()返回字典中项的数量  d = {&#39;name&#39;: &#39;shawn&#39;, &#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18} len(d) # 返回3   d[k] 返回键对应的值  d = {&#39;name&#39;: &#39;shawn&#39;, &#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18} d[&#39;name&#39;] # 返回&#39;shawn&#39;   d[k] = v 赋值  d = {&#39;name&#39;: &#39;shawn&#39;, &#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18} d[&#39;name&#39;] = &#39;jack&#39; print(d) # 返回{&#39;name&#39;: &#39;jack&#39;, &#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18}   del d[k]删除键为k的项  d = {&#39;name&#39;: &#39;shawn&#39;, &#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18} del d[&#39;name&#39;] print(d) # 返回{&#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18}   k in d 检查是否存在键为k的项  d = {&#39;name&#39;: &#39;shawn&#39;, &#39;sex&#39;: &#39;male&#39;, &#39;age&#39;: 18} &#39;name&#39; in d # 返回True  字典的格式化字符串 使用字典来格式化字符串有时非常便捷高效，直接看代码：</description>
+    </item>
+    
+    <item>
+      <title>Python序列类型之列表(list)和元组(tuple)</title>
+      <link>https://shawngu.com/2018/03/python%E5%BA%8F%E5%88%97%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%88%97%E8%A1%A8list%E5%92%8C%E5%85%83%E7%BB%84tuple/</link>
+      <pubDate>Sat, 10 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%BA%8F%E5%88%97%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%88%97%E8%A1%A8list%E5%92%8C%E5%85%83%E7%BB%84tuple/</guid>
+      <description>列表（List） 列表是一种可变序列类型，所以通用的序列操作，如索引、分片、连接、乘等都适用于列表。除此之外，还有其他的一些改变列表的方法，如列表元素赋值、元素删除等等，下面概述一些常用操作。
+字符串不能像列表一样被修改，有时候根据字符串创建列表会相当有用。如：
+list(&#39;hello&#39;) # 返回[&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;]  元素赋值 即可以通过索引来单个元素赋值，也可以通过分片来批量赋值。具体看代码：
+# 索引赋值修改元素 nums = [1, 2, 3] nums[1] = 5 print(nums) # 返回[1, 5, 3] names = [&#39;Tom&#39;, &#39;Lucy&#39;, &#39;Viky&#39;] names[0] = &#39;shawn&#39; print(names) # 返回[&#39;shawn&#39;, &#39;Lucy&#39;, &#39;Viky&#39;] # 分片赋值修改元素 strs = list(&#39;shawn.gu&#39;) # 返回[&#39;s&#39;, &#39;h&#39;, &#39;a&#39;, &#39;w&#39;, &#39;n&#39;, &#39;.&#39;, &#39;g&#39;, &#39;u&#39;] strs[-3:] = list(&#39;lalala&#39;) # strs返回[&#39;s&#39;, &#39;h&#39;, &#39;a&#39;, &#39;w&#39;, &#39;n&#39;, &#39;l&#39;, &#39;a&#39;, &#39;l&#39;, &#39;a&#39;, &#39;l&#39;, &#39;a&#39;] -- 插入了新元素 numbers = [1, 2] numbers[1:] = [4, 5, 6, 7, 8] print(numbers) # 返回[1, 4, 5, 6, 7, 8] -- 替换并且插入新元素  删除元素 可以通过del语句来删除列表元素，也可以使用分片实现删除效果，具体看代码：</description>
+    </item>
+    
+    <item>
+      <title>Python通用的序列（字符串、列表、索引等）操作</title>
+      <link>https://shawngu.com/2018/03/python%E9%80%9A%E7%94%A8%E7%9A%84%E5%BA%8F%E5%88%97%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%97%E8%A1%A8%E7%B4%A2%E5%BC%95%E7%AD%89%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Fri, 09 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E9%80%9A%E7%94%A8%E7%9A%84%E5%BA%8F%E5%88%97%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%97%E8%A1%A8%E7%B4%A2%E5%BC%95%E7%AD%89%E6%93%8D%E4%BD%9C/</guid>
+      <description>Python内建了多种序列类型，有字符串、列表、元组等等。其他可参考 https://docs.python.org/3/library/index.html
+而序列类型有一些通用的操作，下面概述介绍一下
+索引 序列中的所有元素都是有编号的，编号从0开始递增，而元素可以通过编号访问，这个编号就是索引。索引通过[n]来表示，n为编号。
+ 正数索引: 即从左向右正向索引。  name = &#39;shawn.gu&#39; name[1] # 返回 &#39;h&#39;   负数索引: 即从右向左反向索引。  name = &#39;shawn.gu&#39; name[-1] # 返回 &#39;u&#39;  分片 分片是一个非常有用的高级特性，合理利用，可以极大的提高程序编写和执行效率。分片通过冒号隔开索引来实现。完整的分片如:
+[1:5:2]
+第一数字1代表索引开始的编号，包含在索引结果内；第二个数字5代表索引结束的编号，不包含在索引结果内；第三个数字2代表的是步长，即每2个索引一个元素。
+1、直接上代码：
+url = &#39;https://docs.python.org/&#39; url[0:5] # 返回 &#39;https&#39; url[0:10:2] # 返回 &#39;hts/d&#39;  2、索引数字还可以是负数，表示从后向前索引。
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9] numbers[-5:-1] # 返回[5, 6, 7, 8]  注：分片中最左边的索引元素不能比它右边的索引元素晚出现在序列中，否则结果为空序列。什么意思呢？看代码
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9] numbers[-1:-3] # 返回 [] numbers[-2:-5] # 返回 [] numbers[-3:3] # 返回 []  3、当我们想从序列某个元素索引到最后一个元素时，可以省略右边索引编号。也同样适用于左边索引编号。</description>
+    </item>
+    
+    <item>
+      <title>Python字符串常用的方法</title>
+      <link>https://shawngu.com/2018/03/python%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
+      <description>Python为字符串的操作提供了相当丰富的方法，这里介绍一些常用的。
+介绍字符方法前，简单介绍一个下字符串常量。
+String constants Python字符串模块中，定义了一些字符串常量，可直接拿来用，很方便。
+ string.ascii_letters：包含所有大写和小写字母的字符串。  import string print(string.ascii_letters) # abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ   string.ascii_lowercase：包含所有小写字母的字符串。  print(string.ascii_lowercase) # abcdefghijklmnopqrstuvwxyz   string.ascii_uppercase：包含所有大写字母的字符串。  print(string.ascii_uppercase) # ABCDEFGHIJKLMNOPQRSTUVWXYZ   string.digits：包含0~9数字的字符串。  print(string.digits) # 0123456789   string.hexdigits：包含十六进制中所有字符的字符串。  print(string.hexdigits) # 0123456789abcdefABCDEF   string.octdigits ：包含八进制中所有数字的字符串。  print(string.octdigits) # 01234567   string.punctuation：包含所有的标点符号。  print(string.punctuation) # !&amp;quot;#$%&amp;amp;&#39;()*+,-./:;&amp;lt;=&amp;gt;?@[\]^_`{|}~   string.printable：包含可打印字符的字符串。  print(string.printable) # 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!&amp;quot;#$%&amp;amp;&#39;()*+,-./:;&amp;lt;=&amp;gt;?@[\]^_`{|}~  字符串方法 find find方法可以在一个较长的字符串中寻找子串。如果存在，返回子串所在位置的最左端索引，如果不存在该子串，则返回-1。另外可指定搜索索引范围。
+str = &#39;this is a test string for find method&#39; print(str.</description>
+    </item>
+    
+    <item>
+      <title>Python基本语法之普通数据类型</title>
+      <link>https://shawngu.com/2018/03/python%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E6%99%AE%E9%80%9A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</link>
+      <pubDate>Tue, 06 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/03/python%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E6%99%AE%E9%80%9A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</guid>
+      <description>不同的数据代表的不同的类型，那么在计算机语言中，使用不同的类型来定义不同的数据。
+在解释类型之前，先说一下变量：
+在python中，变量即某个值（或者引用）的名字，例如，num = 5，这时num这个名字就代表5。num就是一个变量，变量赋值（=）后，就可以在表达式中使用。
+整型 即整数，如1、2、5……，这些都是整数，整数常用的操作有+、-、*、/、%等
+a = 5 b = 20 print(a + b) # 25 print(a - b) # -15 print(a * b) # 100 print(a / b) # 0.25 print(a % b) # 5  浮点型 即浮点数、小数，如1.1、2.1、3.2、1.23e4等，浮点数和整数一样，有+、-、*、/、%等操作，结果还是浮点数
+a = 1.2 b = 2.5 print(a + b) # 3.7 print(a - b) # -1.3 print(a * b) # 3.0 print(a / b) # 0.48 print(a % b) # 1.</description>
+    </item>
+    
+  </channel>
+</rss>

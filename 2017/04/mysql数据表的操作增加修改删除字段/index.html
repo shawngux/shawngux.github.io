@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL数据表的操作（增加、修改、删除字段）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL数据表的操作（增加、修改、删除字段）</div>
+        <div class="post-date">Thursday, Apr 27, 2017</div>
+    </div>
+    <article><p>在项目开发过程中，我们的需求有时会发生变化，如修改表名、新增表字段、删除表字段、修改表字段等。对表的字段或相关结构的操作可通过<strong><font color="red">ALTER</font></strong>语句来实现。</p>
+
+<p>基本语法：</p>
+
+<p>1、新增字段</p>
+
+<blockquote>
+<p><strong><font color='red'>ALTER TABLE</font></strong> table_name <strong><font color='red'>ADD</font></strong> [<strong><font color='red'>COLUMN</font></strong>] col_name column_definition [<strong><font color='red'>FIRST</font></strong> ¦ <strong><font color='red'>AFTER</font></strong> col_name]</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色字为关键字，固定。</li>
+<li>[]里的表示可有可无</li>
+<li>table_name表示表名，col_name表示列（字段）名，column_definitin字段描述</li>
+<li>first表示让该字段位于第一个，这个时候就不能有后面的col_name，after表示在字段col_name之后。</li>
+</ul>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned not null default 0 comment '编号',
+    name varchar(32) not null default '' comment '名字'
+)CHARSET=utf8 COLLATE utf8_general_ci;
+
+-- 给`users`表name字段后面增加profile字段
+ALTER TABLE `users` ADD profile varchar(256) not null default '' comment '个人描述' AFTER name;
+
+DESC `users`;
+-- 表信息
+/*
++---------+------------------+------+-----+---------+-------+
+| Field   | Type             | Null | Key | Default | Extra |
++---------+------------------+------+-----+---------+-------+
+| id      | int(10) unsigned | NO   |     | 0       |       |
+| name    | varchar(32)      | NO   |     |         |       |
+| profile | varchar(256)     | NO   |     |         |       |
++---------+------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+*/
+</code></pre>
+
+<p>2、修改字段</p>
+
+<blockquote>
+<p><strong><font color='red'>ALTER TABLE</font></strong> table_name <strong><font color='red'>MODIFY</font></strong> [<strong><font color='red'>COLUMN</font></strong>] col_name column_definition [<strong><font color='red'>FIRST</font></strong> ¦ <strong><font color='red'>AFTER</font></strong> col_name]</p>
+</blockquote>
+
+<p>其中，语法和新增字段很类似，只是修改的关键字为<strong><font color='red'>MODIFY</font></strong>。</p>
+
+<pre><code class="language-sql">-- 修改profile字段信息，并让它位于第一个
+ALTER TABLE `users` MODIFY profile text comment '个人介绍' FIRST;
+
+DESC `users`;
+-- 修改后表
+/*
++---------+------------------+------+-----+---------+-------+
+| Field   | Type             | Null | Key | Default | Extra |
++---------+------------------+------+-----+---------+-------+
+| profile | text             | YES  |     | NULL    |       |
+| id      | int(10) unsigned | NO   |     | 0       |       |
+| name    | varchar(32)      | NO   |     |         |       |
++---------+------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+*/
+</code></pre>
+
+<p>3、删除字段</p>
+
+<blockquote>
+<p><strong><font color='red'>ALTER TABLE</font></strong> table_name <strong><font color='red'>DROP</font></strong> [<strong><font color='red'>COLUMN</font></strong>] col_name</p>
+</blockquote>
+
+<p>如：</p>
+
+<pre><code class="language-sql">-- 删除profile字段
+ALTER TABLE `users` DROP COLUMN profile;
+
+DESC `users`;
+/*
++-------+------------------+------+-----+---------+-------+
+| Field | Type             | Null | Key | Default | Extra |
++-------+------------------+------+-----+---------+-------+
+| id    | int(10) unsigned | NO   |     | 0       |       |
+| name  | varchar(32)      | NO   |     |         |       |
++-------+------------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+*/
+</code></pre>
+
+<p>小结：</p>
+
+<ul>
+<li>如果某个字段被删除了，该字段对应的所有信息都没有了。</li>
+<li>修改字段时要注意长度和类型，如varchar(32)改成varchar(8)可能会出问题，因为该字段对应的数据可能有超过8个字符长度的，另外如将varchar改成int，这种类型改前和改后类型不对应也有可能会出错。</li>
+</ul>
+
+<p>更多对表的修改如修改索引等可查看：<a href="https://dev.mysql.com/doc/refman/5.7/en/alter-table.html">https://dev.mysql.com/doc/refman/5.7/en/alter-table.html</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

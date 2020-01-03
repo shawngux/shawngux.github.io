@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Redis数据类型之列表（list）类型和哈希（hash）类型的使用</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Redis数据类型之列表（list）类型和哈希（hash）类型的使用</div>
+        <div class="post-date">Thursday, May 11, 2017</div>
+    </div>
+    <article>
+
+<h1 id="列表">列表</h1>
+
+<p>Redis列表是字符串列表，按照插入顺序排序，可以添加一个元素到列表的头部（左边）或尾部（右边）。一个列表最多可以包含 2^32-1 个元素。</p>
+
+<h2 id="lpush">lpush</h2>
+
+<p><strong>LPUSH</strong> key value [value&hellip;]</p>
+
+<p>将一个或多个值插入到列表的表头，即从左侧添加元素。如果key不存在，一个空列表会被创建并执行lpush操作。</p>
+
+<pre><code class="language-bash">redis&gt; LPUSH langs java python php
+(integer) 3
+</code></pre>
+
+<h2 id="rpush">rpush</h2>
+
+<p><strong>RPUSH</strong> key value [value&hellip;]</p>
+
+<p>将一个或多个值插入到列表的表尾，即从右侧插入元素。</p>
+
+<pre><code class="language-bash">redis&gt; RPUSH langs shell
+(integer) 4
+</code></pre>
+
+<h2 id="lrange">lrange</h2>
+
+<p><strong>LRANGE</strong> key start stop</p>
+
+<p>返回key中指定区间内的元素，区间以偏移量start和stop指定。0代表第一个元素，-1代表最后一个元素。</p>
+
+<pre><code class="language-bash">redis&gt; LRANGE langs 0 -1
+1) &quot;php&quot;
+2) &quot;python&quot;
+3) &quot;java&quot;
+4) &quot;shell&quot;
+</code></pre>
+
+<h2 id="lpushx">lpushx</h2>
+
+<p><strong>LPUSHX</strong> key value</p>
+
+<p>将值value插入到列表key的表头，当且仅当key存在并且是一个列表。</p>
+
+<pre><code class="language-bash">redis&gt; LPUSHX langs go
+redis&gt; LRANGE langs 0 -1
+1) &quot;go&quot;
+2) &quot;php&quot;
+3) &quot;python&quot;
+4) &quot;java&quot;
+5) &quot;shell&quot;
+</code></pre>
+
+<h2 id="rpushx">rpushx</h2>
+
+<p><strong>RPUSHX</strong> key value</p>
+
+<p>将值value插入到列表key的表尾，当且仅当key存在并且是一个列表。</p>
+
+<pre><code class="language-bash">redis&gt; RPUSHX langs r
+1) &quot;go&quot;
+2) &quot;php&quot;
+3) &quot;python&quot;
+4) &quot;java&quot;
+5) &quot;shell&quot;
+6) &quot;r&quot;
+</code></pre>
+
+<h2 id="lpop">lpop</h2>
+
+<p><strong>LPOP</strong> key</p>
+
+<p>移除并返回列表key的头元素</p>
+
+<pre><code class="language-bash">redis&gt; LPOP langs
+&quot;go&quot;
+</code></pre>
+
+<h2 id="rpop">rpop</h2>
+
+<p><strong>RPOP</strong> key</p>
+
+<p>移除并返回列表key的尾元素</p>
+
+<pre><code class="language-bash">redis&gt; RPOP langs
+&quot;r&quot;
+</code></pre>
+
+<h2 id="blpop">blpop</h2>
+
+<p><strong>BLPOP</strong> key [key&hellip;] timeout</p>
+
+<p>列表的阻塞式弹出。它是lpop命令的阻塞版本，当给定列表内没有任何元素可供弹出的时候，连接将被blpop命令阻塞，直到的等待超时或发现可弹出元素为止。</p>
+
+<pre><code class="language-bash">redis&gt; BLPOP langs 5
+1) &quot;langs&quot;
+2) &quot;php&quot;
+</code></pre>
+
+<h2 id="brpop">brpop</h2>
+
+<p><strong>BRPOP</strong> key [key&hellip;] timeout</p>
+
+<p>brpop时rpop命令的阻塞版本，当给定列表内没有任何元素可供弹出的时候，连接将被 brpop 命令阻塞，直到等待超时或发现可弹出元素为止。</p>
+
+<p>当给定多个 key 参数时，按参数 key 的先后顺序依次检查各个列表，弹出第一个非空列表的尾部元素。</p>
+
+<pre><code class="language-bash">redis&gt; BRPOP langs 10
+1) &quot;langs&quot;
+2) &quot;shell&quot;
+</code></pre>
+
+<h2 id="llen">llen</h2>
+
+<p><strong>LLEN</strong> key</p>
+
+<p>返回列表key的长度，如果key不存在，则key被解释为一个空列表，返回0</p>
+
+<pre><code class="language-bash">redis&gt; LLEN langs
+(integer) 2
+</code></pre>
+
+<h2 id="lset">lset</h2>
+
+<p><strong>LSET</strong> key index value</p>
+
+<p>将列表中下表为index的元素的值设置为value。</p>
+
+<pre><code class="language-bash">redis&gt; LSET langs 0 linux
+redis&gt; LRANGE langs 0 -1
+1) &quot;linux&quot;
+2) &quot;java&quot;
+</code></pre>
+
+<h2 id="lindex">lindex</h2>
+
+<p><strong>LINDEX</strong> key index</p>
+
+<p>返回列表key中，下表为index的元素</p>
+
+<pre><code class="language-bash">redis&gt; LINDEX langs 1
+&quot;java&quot;
+</code></pre>
+
+<h2 id="ltrim">ltrim</h2>
+
+<p><strong>LTRIM</strong> key start stop</p>
+
+<p>对一个列表进行修剪（trim），即让列表只保留指定区间内的元素，不在指定区间之内的元素将被删除。</p>
+
+<pre><code class="language-bash">redis&gt; LTRIM langs 0 1
+redis&gt; LRANGE langs 0 -1
+1) &quot;linux&quot;
+2) &quot;java&quot;
+</code></pre>
+
+<h2 id="linsert">linsert</h2>
+
+<p><strong>LINSERT</strong> key <strong>BEFORE|AFTER</strong> pivot value</p>
+
+<p>将值value插入到列表key汇总，位于值pivot之前或之后。</p>
+
+<pre><code class="language-bash">redis&gt; LINSERT langs BEFORE java python
+redis&gt; LRANGE langs 0 -1
+1) &quot;linux&quot;
+2) &quot;python&quot;
+3) &quot;java&quot;
+</code></pre>
+
+<h1 id="哈希">哈希</h1>
+
+<p>Redis中hash是一个string类型的field和value的映射表，hash特别适合存储对象。每个hash可以存储 2^32-1 键值对</p>
+
+<h2 id="hset">hset</h2>
+
+<p><strong>HSET</strong> key field value</p>
+
+<p>将哈希表key中的字段field的值设置为value，如果key不存在，则会创建一个新的哈希表</p>
+
+<pre><code class="language-bash">redis&gt; HSET users name kate
+(integer) 1
+</code></pre>
+
+<h2 id="hget">hget</h2>
+
+<p><strong>HGET</strong> key field</p>
+
+<p>返回哈希表key中给定字段的值</p>
+
+<pre><code class="language-bash">redis&gt; HGET users name
+&quot;kate&quot;
+</code></pre>
+
+<h2 id="hmset">hmset</h2>
+
+<p><strong>HMSET</strong> key field value [field value&hellip;]</p>
+
+<p>同时将多个field-value（字段-值）对设置到哈希表中，会覆盖哈希表已存在的字段。如果key不存在，会创建一个空的哈希表。</p>
+
+<pre><code class="language-bash">redis&gt; HMSET user name tom age 25 sex male
+</code></pre>
+
+<h2 id="hmget">hmget</h2>
+
+<p><strong>HMGET</strong> key field [field&hellip;]</p>
+
+<p>返回给定字段的值，所有字段不存在，返回nil。</p>
+
+<pre><code class="language-bash">redis&gt; HMGET user name age sex address
+1) &quot;tom&quot;
+2) &quot;25&quot;
+3) &quot;male&quot;
+4) (nil)
+</code></pre>
+
+<h2 id="hsetnx">hsetnx</h2>
+
+<p><strong>HSETNX</strong> key field value</p>
+
+<p>将哈希表中的field值设置为value，当且仅当field不存在。如field已经存在，操作无效。</p>
+
+<pre><code class="language-bash">redis&gt; HSETNX user address beijing
+(integer) 1
+
+redis&gt; HMGET user address
+1) &quot;beijing&quot;
+</code></pre>
+
+<h2 id="hkeys">hkeys</h2>
+
+<p><strong>HKEYS</strong> key</p>
+
+<p>返回哈希表key中所有的字段。</p>
+
+<pre><code class="language-bash">redis&gt; HKEYS user
+1) &quot;name&quot;
+2) &quot;age&quot;
+3) &quot;sex&quot;
+4) &quot;address&quot;
+</code></pre>
+
+<h2 id="hvals">hvals</h2>
+
+<p><strong>HVALS</strong> key</p>
+
+<p>返回哈希表key中所有字段的值。</p>
+
+<pre><code class="language-bash">redis&gt; HVALS user
+1) &quot;tom&quot;
+2) &quot;25&quot;
+3) &quot;male&quot;
+4) &quot;beijing&quot;
+</code></pre>
+
+<h2 id="hgetall">hgetall</h2>
+
+<p><strong>HGETALL</strong> key</p>
+
+<p>返回哈希表key中，所有的字段和值</p>
+
+<pre><code class="language-bash">redis&gt; HGETALL user
+1) &quot;name&quot;
+2) &quot;tom&quot;
+3) &quot;age&quot;
+4) &quot;25&quot;
+5) &quot;sex&quot;
+6) &quot;male&quot;
+7) &quot;address&quot;
+8) &quot;beijing&quot;
+</code></pre>
+
+<h2 id="hlen">hlen</h2>
+
+<p><strong>HLEN</strong> key</p>
+
+<p>返回哈希表中字段的数量</p>
+
+<pre><code class="language-bash">redis&gt; HLEN user
+(integer) 4
+</code></pre>
+
+<h2 id="hexists">hexists</h2>
+
+<p><strong>HEXISTS</strong> key field</p>
+
+<p>查看哈希表key中，给定的字段是否存在。</p>
+
+<pre><code class="language-bash">redis&gt; HEXISTS user name
+(integer) 1
+</code></pre>
+
+<h2 id="hincrby">hincrby</h2>
+
+<p><strong>HINCRBY</strong> key field increment</p>
+
+<p>给哈希表key中指定字段的整数值加上增量increment</p>
+
+<pre><code class="language-bash">redis&gt; HINCRBY user age 10
+(integer) 35
+</code></pre>
+
+<h2 id="hincrbyfloat">hincrbyfloat</h2>
+
+<p><strong>HINCRBYFLOAT</strong> key field increment</p>
+
+<p>给哈希表key中指定字段的值加上浮点数增量increment，如果没有指定的field，先创建并初始化字段值为0</p>
+
+<pre><code class="language-bash">redis&gt; HINCRBYFLOAT user age 13.3
+&quot;48.3&quot;
+</code></pre>
+
+<h2 id="hdel">hdel</h2>
+
+<p><strong>HDEL</strong> key field [field&hellip;]</p>
+
+<p>删除一个或多个给定字段</p>
+
+<pre><code class="language-bash">redis&gt; HDEL user name age
+(integer) 2
+redis&gt; HMGET user name age address
+1) (nil)
+2) (nil)
+3) &quot;beijing&quot;
+</code></pre>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

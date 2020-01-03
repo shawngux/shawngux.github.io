@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python访问数据库</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python访问数据库</div>
+        <div class="post-date">Thursday, Mar 29, 2018</div>
+    </div>
+    <article>
+
+<p>使用文件等相关方式存储数据总归是很有限的，当我们需要存储大量数据的时候，数据库这个时候就相当有用了。</p>
+
+<h1 id="sqlite">SQLite</h1>
+
+<p>SQLite是一种嵌入式数据库，体积很小，常常被嵌入到应用中。而Python就内置了SQLite，可以直接导入使用。</p>
+
+<pre><code class="language-python"> import sqlite3
+ 
+ # 创建连接，如果不存在该库就在当前目录下创建
+ conn = sqlite3.connect('test.db')
+ 
+ # 创建游标
+ curs = conn.cursor()
+ 
+ # 建表
+ query = 'create table user (id int primary key, name varchar(15))'
+ curs.execute(query) # &lt;sqlite3.Cursor object at 0x108fe9c70&gt;
+ 
+ # 插入数据
+ query = 'insert into user values (1, &quot;shawngu&quot;), (2, &quot;jack&quot;), (3, &quot;rose&quot;)'
+ curs.execute(query)
+ 
+ # 提交事务
+ conn.commit()
+ cursor.close()
+ 
+ # 查询
+ curs = conn.cursor()
+ query = 'select * from user'
+ curs.execute(query) # &lt;sqlite3.Cursor object at 0x108fe9c70&gt;
+ 
+ # 获取查询结果集
+ rows = curs.fetchall()
+ print(rows) # [(1, 'shawngu'), (2, 'jack'), (3, 'rose')]
+ 
+ # 关闭游标和连接
+ curs.close()
+ conn.close()
+</code></pre>
+
+<p>小结：SQLite比较适合存储非大量的轻量级数据。如需更详细的了解，可参考：<a href="https://sqlite.org/docs.html">文档</a></p>
+
+<h1 id="mysql">MySQL</h1>
+
+<p>mysql是目前使用的相当多的关系型数据库。而在Python中使用MySQL，首先需要安装驱动。</p>
+
+<pre><code class="language-shell">conda install mysql-connector-python
+</code></pre>
+
+<p>在Python中导入使用</p>
+
+<pre><code class="language-python"> import mysql.connector
+ 
+ # conn = mysql.connector.connect(user='root', password='pwd', database='test')
+ 
+ # 获取游标
+ cursor = conn.cursor()
+ 
+ # 查询数据
+ cursor.execute('select * from users')
+ rows = cursor.fetchall()
+ '''
+ [(1, 'tom', 24, 'America', 'An American'), (2, 'jack', 25, 'Australia', 'He lives in Australia'), (3, 'lucy', 19, 'England', 'She comes from England'), (4, 'tom', 26, 'Canada', 'come from Canada'), (4, 'tom', 26, 'Canada', 'come from Canada')]
+ '''
+ 
+ # 查询具体某一条记录
+ query = 'select * from users where id = %s'
+ cursor.execute(query, (2,))
+ row = cursor.fetchall() # [(2, 'jack', 25, 'Australia', 'He lives in Australia')]
+ 
+ # 插入和SQLite操作一样
+ 
+ # 关闭
+ cursor.close()
+ conn.close()
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>Python中可以使用多种数据库，并对所有的数据库访问提供了统一的访问接口。对应的数据库接口参考：<a href="https://wiki.python.org/moin/DatabaseInterfaces">https://wiki.python.org/moin/DatabaseInterfaces</a>，<a href="https://www.python.org/dev/peps/pep-0249/">https://www.python.org/dev/peps/pep-0249/</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

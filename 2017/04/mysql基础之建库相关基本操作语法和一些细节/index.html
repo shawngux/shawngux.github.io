@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL基础之建库相关基本操作语法和一些细节</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL基础之建库相关基本操作语法和一些细节</div>
+        <div class="post-date">Friday, Apr 21, 2017</div>
+    </div>
+    <article>
+
+<p>MySQL是目前使用的最广泛的关系型数据库管理系统之一，因其开源、免费、轻量、性能优越等优势深受企业的偏爱。</p>
+
+<p>在MySQL中，通过SQL语言，即<strong>结构化查询语言</strong>进行数据库管理。</p>
+
+<p>SQL语句分类：</p>
+
+<ul>
+<li><strong>DDL（数据定义语言）</strong>：如常见的 <font color="red">create</font>[创建]、<font color="red">drop</font>[删除]、<font color="red">alter</font>[修改]</li>
+<li><strong>DML（数据操纵语言）</strong>：如常见的 <font color="red">insert</font>[添加]、<font color="red">update</font>[修改]、<font color="red">delete</font>[删除]</li>
+<li><strong>DQL（数据查询语言）</strong>：常见就是 <font color="red">select</font>[查询]</li>
+<li><strong>DCL（数据控制语言）</strong>：常见的有 <font color="red">grant</font>[授权]、<font color="red">revoke</font>[回收]、<font color="red">savepoint</font>[事务保存点]、<font color="red">commit</font>[事务提交]、<font color="red">rollback</font>[事务回滚]</li>
+</ul>
+
+<h1 id="数据库创建">数据库创建</h1>
+
+<p>使用数据库管理系统，那么首先得有数据库</p>
+
+<h2 id="基本语法">基本语法</h2>
+
+<blockquote>
+<p><strong><font color="red">CREATE DATABASE</font></strong> [IF NOT EXISTS] db_name [create_specification,&hellip;]</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色的<strong>create database</strong> 是建库关键字，关键字一般用大写字母。</li>
+<li>中括号<strong>[]</strong>里内容是可选项，可有可无。</li>
+<li><strong>if not exists</strong>也是关键字，是指建库时做个判断，防止数据库已存在的问题。</li>
+<li><strong>db_name</strong> 是将要创建的数据库名，如：user等。</li>
+<li><strong>create_specification</strong> 是一些额外指定项，如指定字符编码：[default] character set utf8；指定字符校验规则：[default] collate utf8_general_ci(不区分字符大小写)</li>
+</ul>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">CREATE DATABASE `shop`;
+</code></pre>
+
+<p>说明：建库时，没有指定字符集和检验规则的时候，默认是<strong><font color="red">utf8</font></strong>和<strong><font color="red">utf8_general_ci</font></strong>，而库名上加反引号，用来防止数据库名和关键字一样而引起问题。</p>
+
+<p>创建指定字符集和校验规则的数据库：</p>
+
+<pre><code class="language-sql">-- way1:
+CREATE DATABASE `shop` CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+-- way2:
+CREATE DATABASE `shop` DEFAULT CHARACTER utf8 COLLATE utf8_general_ci;
+
+-- way3:
+CREATE DATABASE `shop` CHARSET = utf8 COLLATE utf8_general_ci;
+</code></pre>
+
+<p>注：不同的字符集对应的编码不一样，存储的数据也就不一样，如<strong>utf8</strong>编码可以存储中文汉字，而<strong>latin1</strong>编码只能存放字母。另外，检验规则分为区分大小写和不区分大小写两种形式，带<strong>_ci</strong>表示不区分大小写，而不带的则为区分大小写，如<strong>utf8_general_ci</strong>不区分大小写，<strong>utf8_general</strong>区分大小写。</p>
+
+<h6 id="查看mysql支持哪些编码">查看mysql支持哪些编码</h6>
+
+<pre><code class="language-sql">-- show all
+SHOW CHARACTER SET;
+
+-- show specified parts
+SHOW CHARACTER SET LIKE 'latin%';
+</code></pre>
+
+<h2 id="查看校验规则">查看校验规则</h2>
+
+<pre><code class="language-sql">-- show all
+SHOW COLLATION;
+
+-- show specified parts
+SHOW COLLATION WHERE Charset = 'latin1';
+</code></pre>
+
+<h1 id="查询数据库">查询数据库</h1>
+
+<p>1、 查看当前有哪些数据库</p>
+
+<pre><code class="language-sql">SHOW DATABASES;
+</code></pre>
+
+<p>2、查看创建指定库时的指令</p>
+
+<pre><code class="language-sql">SHOW CREATE DATABASE `shop`;
+-- 返回：CREATE DATABASE `shop` /*!40100 DEFAULT CHARACTER SET utf8 */
+</code></pre>
+
+<p>说明：<font color="red">/*!40100 DEFAULT CHARACTER SET utf8 */</font> 代表的含义是，<strong>当mysql版本大于等于v40100时，执行DEFAULT CHARACTER SET utf8</strong></p>
+
+<h1 id="修改数据库">修改数据库</h1>
+
+<p>修改数据库在开发中也是会有的事。</p>
+
+<h2 id="基本语法-1">基本语法</h2>
+
+<blockquote>
+<p><strong><font color="red">ALTER DATABASE</font></strong> [IF EXISTS] db_name [alter_specification,&hellip;]</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色<strong>alter database</strong>是关键字，一般大写。</li>
+<li><strong>IF EXISTS</strong>也是关键字，做判断。</li>
+<li><strong>alter_specification</strong>部分指定修改时的一些项，如字符编码、校验规则等。</li>
+</ul>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">ALTER DATABASE `shop` CHARACTER SET utf8 COLLATE utf8_bin;
+</code></pre>
+
+<h1 id="删除数据">删除数据</h1>
+
+<p>删除数据库通过 <strong>drop</strong> 语句</p>
+
+<pre><code class="language-sql">DROP DATABASE `shop`;
+</code></pre>
+
+<h1 id="数据库备份和恢复">数据库备份和恢复</h1>
+
+<p>定期备份数据，以避免数据丢失无法恢复造成损失。</p>
+
+<h2 id="单库备份">单库备份</h2>
+
+<p>基本语法：</p>
+
+<blockquote>
+<p>mysqldump -u admin_name -p password db_name &gt; target_fullname</p>
+</blockquote>
+
+<p>说明：</p>
+
+<ul>
+<li><strong>mysqldump</strong>是关键字</li>
+<li><strong>admin_name</strong>即管理员名字，如root</li>
+<li><strong>password</strong>即数据库的密码，有效长度的字符或数字</li>
+<li><strong>db_name</strong>即要备份的数据库</li>
+<li><strong>target_fullname</strong>是备份后的文件全名（包含保存路径，如/home/backup.sql）</li>
+</ul>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">mysqldump -uroot -p123456 shop &gt; /home/shop.sql.bak
+</code></pre>
+
+<h2 id="恢复备份的数据">恢复备份的数据</h2>
+
+<p>基本语法：</p>
+
+<blockquote>
+<p>mysql -u admin_name -p password [db_name] &lt; backup_file</p>
+</blockquote>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">mysql -uroot -p123456 &lt; shop.sql.bak
+</code></pre>
+
+<p>或者使用 <strong>source</strong> 语句。步骤：</p>
+
+<ol>
+<li>创建指定名字的数据库，shop</li>
+<li>使用当前创建的数据 USE shop</li>
+<li>通过source语句： source /home/shop.sql.bak</li>
+</ol>
+
+<h2 id="备份单库中的多张表">备份单库中的多张表</h2>
+
+<p>和备份库相似，只是先库名，然后表名。</p>
+
+<blockquote>
+<p>mysqldump -u admin_name -p password db_name tb_name1 tb_name2 &hellip; &gt; backup_file</p>
+</blockquote>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">mysqldump -uroot -p123456 shop user product &gt; /home/shop-tbs.sql.bak
+</code></pre>
+
+<p>说明：<strong>shop</strong>为数据库名，<strong>user</strong>和<strong>product</strong>为要备份的表名，表名之间用逗号隔开。</p>
+
+<p>使用<strong>source</strong>进行恢复的步骤和恢复单库相同。</p>
+
+<h2 id="多库备份">多库备份</h2>
+
+<p>多库备份时，只要在单库备份的语句上加上<strong><font color="red">-B</font></strong>即可。</p>
+
+<blockquote>
+<p>mysqldump -u admin_name -p password -B db_name1 db_name2 &hellip; &gt; backup_file</p>
+</blockquote>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">mysqldump -uroot -p123456 -B shop1 shop2 shop3 &gt; /home/shops.bak.sql
+</code></pre>
+
+<p>恢复时使用<strong>source</strong>即可：</p>
+
+<pre><code class="language-sql">source /home/shops.bak.sql
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>上面简述了SQL对数据库的相关操作，其中备份和恢复是必有的操作，而更详细的操作和相关备份和恢复的参数详情参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html">https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

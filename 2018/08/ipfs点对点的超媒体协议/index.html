@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IPFS:点对点的超媒体协议</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">IPFS:点对点的超媒体协议</div>
+        <div class="post-date">Sunday, Aug 5, 2018</div>
+    </div>
+    <article>
+
+<h1 id="ipfs是什么">IPFS是什么？</h1>
+
+<p>IPFS(InterPlanetary File System):中文全称叫<strong>星际文件系统</strong>，名字听起来就酷炸了有木有，它是一种全新的点对点超媒体分发协议，基于内容和身份寻址的方式来存储和传输数据及文件，旨在让互联网更加快速、安全和开放。</p>
+
+<p>IPFS是一种分布式文件系统，目的是将计算机设备通过相同的文件系统连接起来。</p>
+
+<h2 id="什么叫做超媒体">什么叫做超媒体？</h2>
+
+<blockquote>
+<p>超媒体就是指在互联网上传输的视音频、图片、文字等。我们目前广泛使用的http协议中文件的传输都是通过转成文本之间的传输，所以叫做超文本传输协议。</p>
+</blockquote>
+
+<h2 id="什么叫做点对点">什么叫做点对点？</h2>
+
+<blockquote>
+<p>说的简单点就是你我之间没有第三方。举个例子，我有一部小视频（咳咳，你懂得。。。），你想让我发给你爽一把，那么之前的话，我需要将小视频上传到第三方平台（百度云等），然后你从云盘下载，这个过程中百度云盘作为中间服务商存在，麻烦，还有可能存在其他问题。而现在，通过IPFS，你可以直接连接我的计算机文件系统，直接从我的这个文件系统中拿去爽就好，没有其他方参与，这就是点对点。如果是交易的话，便是没有中间商赚差价。</p>
+</blockquote>
+
+<h2 id="什么是基于内容和身份寻址">什么是基于内容和身份寻址？</h2>
+
+<blockquote>
+<p>在我们现有的http协议中，是通过ip或域名来寻找资源，而在IPFS中，直接通过内容来寻找存储地。通俗来说，就是在IPFS中，每一文件的内容都有一个具体的标识符，我们叫hash值（即为身份或者标识），我们通过这个文件的内容hash值来获取这个文件。</p>
+</blockquote>
+
+<h1 id="ipfs为什么存在">IPFS为什么存在？</h1>
+
+<p>存在即合理。在提到IPFS为什么存在时，我们先说说http的不足。</p>
+
+<p>在目前互联网协议中，http依旧占山为王。但随着互联网世界的高速发展，http的不足之处也凸显出来：</p>
+
+<ul>
+<li><strong>数据易丢失</strong></li>
+</ul>
+
+<p>有的时候我们在访问网页时会出现<strong>404</strong>这样的页面，一般人都知道这是访问的页面不存在，或者访问到的页面上存在内容缺失的情况。这是典型的数据丢失，造成这种情况的原因有好多，可能是数据传输过程中被劫持丢失、网络不稳定、服务器宕机或直接挂掉等，每一环节都可能造成数据数据丢失。老子账号可是冲了会员的，会员呢？账号里的钱呢？卧了个大槽子，全没了，Game Over了。</p>
+
+<ul>
+<li><strong>过度依赖主干网络</strong></li>
+</ul>
+
+<p>http高度依赖主干网，即简单说就是过度依赖那几根主要的光纤网络，谁也无法保证说主干网不会出问题。一旦出现问题，核心数据丢失，那没法愉快的玩耍了。</p>
+
+<ul>
+<li><strong>数据高度中心化</strong></li>
+</ul>
+
+<p>现有互联网中的数据高度集中在几个牛逼服务器提供商手中，但也不可避免可能出现问题。前段时间，某大厂服务器bug造成一创业公司数据丢失，直接造成创业公司濒临倒闭，这得哭死。。。，另外数据高度集中，面临被集中攻击的可能性就大了。这可能造成一系列连锁问题。</p>
+
+<ul>
+<li><strong>低效且服务器成本昂贵</strong></li>
+</ul>
+
+<p>http通过服务器来集中分发资源，传输效率低下，同时服务器本身带宽是很昂贵的。</p>
+
+<p><font color="pink">以上是http暴露出的一列了相关的问题。出现问题就得解决问题，那么这时，IPFS闪亮登场了。</font></p>
+
+<hr />
+
+<p>IPFS通过分布式存储（全网中的计算机全部参与存储）来解决数据高度集中的问题和原先过度依赖主干网络的问题，通过版本控制的方式（即可恢复的历史版本）来解决数据易丢失的问题，这样一来也就不存在服务器成本昂贵的问题了，方案看起来相当牛逼有木有，实际也很牛逼。这尼玛貌似是要完全替掉http的节奏（当然是否可以要待时间检验）。</p>
+
+<h1 id="ipfs有什么特点">IPFS有什么特点？</h1>
+
+<p>IPFS一些牛逼闪闪的特点：</p>
+
+<h2 id="1-本身是一个协议">1、本身是一个协议：</h2>
+
+<ul>
+<li>定义内容寻址文件系统</li>
+<li>协调内容传递</li>
+<li>整合Kademlia、BitTorrent、Git</li>
+</ul>
+
+<h2 id="2-也是一个文件系统">2、也是一个文件系统：</h2>
+
+<ul>
+<li>拥有特定结构的目录和文件</li>
+<li>本身是一个可安装的文件系统</li>
+</ul>
+
+<h2 id="3-本身也是一个网站">3、本身也是一个网站</h2>
+
+<ul>
+<li>可通过web端查看文件（<a href="https://ipfs.io/">https://ipfs.io/</a><path>）</li>
+<li>散列寻址内容保证真实性</li>
+</ul>
+
+<h2 id="4-使用加密">4、使用加密</h2>
+
+<ul>
+<li>通过加密hash内容类寻址</li>
+<li>块级重复数据删除</li>
+<li>文件完整性+版本控制</li>
+<li>文件系统级加密+签名支持</li>
+</ul>
+
+<h2 id="5-同时也是一个cdn-内容分发网络">5、同时也是一个CDN（内容分发网络）</h2>
+
+<ul>
+<li>在本地文件系统添加一个文件，可供全世界使用</li>
+<li>缓存十分友好，都是通过内容hash命名</li>
+<li>基于bittorrent的带宽分配</li>
+</ul>
+
+<h2 id="6-点对点-p2p">6、点对点（p2p）</h2>
+
+<ul>
+<li>全球对等文件传输</li>
+<li>没有中心化的概念及中心化可能带来的问题</li>
+<li>系统是完全分散的架构</li>
+</ul>
+
+<p><div>其他……</div></p>
+
+<h4 id="ipfs工作原理">IPFS工作原理</h4>
+
+<p>IPFS分为<strong>存储</strong>和<strong>检索</strong>。</p>
+
+<h2 id="存储">存储：</h2>
+
+<p>每个节点（计算机）有一个IPFS文件系统，也可叫做local repo，即本地文件仓库，而所有节点的repo都是对等的，即目录中的数据结构是一样的。这个节点仓库中维护着一个*<font color="red">分布式hash表</font>*。hash表中包含着数据块和目标节点的映射关系。当我们向仓库添加一个文件后，会生成一个基于这个文件内容的hash，这个hash便指向这个文件。同时对应关系保存到分布式hash表中。</p>
+
+<p>在底层，实际上通过每一个IPFS对象来指代每一个文件。一个IPFS对象有两个字段的数据结构：</p>
+
+<ul>
+<li><strong><font color="red">data</font></strong>: 小于256k的非结构化数据块</li>
+<li><strong><font color="red">links</font></strong>: 一个link结构体的数组。而每一个link都指向其他的IPFS对象</li>
+</ul>
+
+<p>link结构体字段：</p>
+
+<ul>
+<li><strong><font color="red">name</font></strong>: 此link的名称</li>
+<li><strong><font color="red">hash</font></strong>: 此link指向的IPFS对象的hash值</li>
+<li><strong><font color="red">size</font></strong>: 此link指向的对象的累计大小</li>
+</ul>
+
+<p>IPFS对象的data和links属性如：</p>
+
+<pre><code class="language-json">{ &quot;data&quot;:
+  [&quot;tree&quot;, &quot;blob&quot;, &quot;tree&quot;, &quot;list&quot;, &quot;blob&quot; &quot;blob&quot;],
+&quot;links&quot;: [
+  { &quot;hash&quot;: &quot;&lt;ttt222-hash&gt;&quot;, &quot;size&quot;: 1234
+    &quot;name&quot;: &quot;ttt222-name&quot; },
+  { &quot;hash&quot;: &quot;&lt;bbb111-hash&gt;&quot;, &quot;size&quot;: 123,
+    &quot;name&quot;: &quot;ttt222-name/bbb111-name&quot; },
+  { &quot;hash&quot;: &quot;&lt;ttt333-hash&gt;&quot;, &quot;size&quot;: 3456,
+    &quot;name&quot;: &quot;ttt333-name&quot; },
+  { &quot;hash&quot;: &quot;&lt;lll111-hash&gt;&quot;, &quot;size&quot;: 587,
+    &quot;name&quot;: &quot;ttt333-name/lll111-name&quot;},
+  { &quot;hash&quot;: &quot;&lt;bbb222-hash&gt;&quot;, &quot;size&quot;: 22,
+    &quot;name&quot;: &quot;ttt333-name/lll111-name/bbb222-name&quot; },
+  { &quot;hash&quot;: &quot;&lt;bbb222-hash&gt;&quot;, &quot;size&quot;: 22
+    &quot;name&quot;: &quot;bbb222-name&quot; }
+]}
+</code></pre>
+
+<h2 id="检索">检索：</h2>
+
+<p>IPFS是基于内容hash来寻址的，在我们在本地repo通过命令来检索时，会查询本节点中是否有对应文件，没有则通过分布式hash表检索网络中其他节点是否有该文件。如果有，则缓存到本节点仓库中。而当我们通过web端来检索时，IPFS自动通过匹配网络中的分布式hash表来定位该文件，并自行验证文件合理性。</p>
+
+<hr />
+
+<p><div>在IPFS中，大于256k的会分割成一个个小块进行存储，这时每一个小块IPFS对象中的links字段为空数组，而大块IPFS对象本身的links数组中每个link的hash指向的是每一个小块的内容。</div></p>
+
+<h4 id="更多">更多</h4>
+
+<p>IPFS协议栈：</p>
+
+<ul>
+<li><strong>Identities(身份层)</strong>：用作节点的身份生成和验证。</li>
+<li><strong>Network(网络层)</strong>：管理节点之间的联结，和任意传输层协议。</li>
+<li><strong>Routing(路由层)</strong>：维护指定节点和对象之间的关联信息，定位对等节点的对象信息等。</li>
+<li><strong>Exchange(交换层)</strong>：块交易协议，管理有效区块分布。</li>
+<li><strong>Object(对象层)</strong>：Merkle DAG(默克尔有向无环图)，内容寻址的不可变，管理对象数据结构和文件层次等。</li>
+<li><strong>Files(文件层)</strong>：版本化的文件管理，类似Git。</li>
+<li><strong>Naming(命名层)</strong>：self-certified filesystem，具有自我验证功能的文件系统。</li>
+</ul>
+
+<p>有的地方会加上第八层Applications，即应用层。创建完整功能的应用及其部署。</p>
+
+<p><a href="https://v.qq.com/x/page/b0528g425m0.html">简短视频介绍IPFS &amp; Filecoin</a></p>
+
+<p>更多细节有待研究：<a href="/post_files/blockchain/ipfs-p2p-file-system.pdf">ipfs论文</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

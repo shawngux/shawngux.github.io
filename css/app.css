@@ -1,0 +1,523 @@
+/* 定义字体 */
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('../fonts/TimesNewRomanPSStd-Regular.otf') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+html, body, head, div, ul, li, main, header, footer, section {
+    margin: 0;
+    padding: 0;
+}
+/* 清除浮动 */
+.clearfix::after,
+.clearfix::before {
+    content: ".";
+    line-height: 0;
+    height: 0;
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+body {
+    background: #333;
+    font-family: 'Times New Roman', Arial ,'微软雅黑', sans-serif;;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #8e8e8e;
+}
+h2 {
+    font-size: 18px;
+    font-weight: normal;
+    color: #1e9eb3;
+}
+h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #cf4813;
+}
+a {
+    text-decoration: none;
+    color: #41ae3c;
+    font-size: 14px;
+}
+.container {
+    color: #41ae3c;
+    margin: 0;
+    padding: 0;
+    min-width: 960px;
+}
+
+/* *******头部******** */
+header {
+    height: 48px;
+    width: 100%;
+    margin: 0 auto;
+    background: #222;
+    margin-top: 12px;
+}
+.header-navigation {
+    list-style: none;
+    display: block;
+    margin: 0 auto;
+    width: 960px;
+    height: 100%;
+    line-height: 48px;
+}
+.header-navigation > li {
+    list-style: none;
+    display: inline-block;
+    padding-right: 16px;
+    height: 100%;
+}
+.header-navigation > li > div {
+    height: 100%;
+    margin-right: 2px;
+    float: left;
+}
+.nav-icon {
+    width: 16px;
+    display: block;
+}
+.nav-icon > img {
+    display: block;
+    height: 14px;
+    width: 14px;
+    margin-top: 16px;
+}
+.nav-link > a {
+    text-decoration: none;
+    color: #e3e3e3;
+    font-size: 16px;
+    display: block;
+    position: relative;
+}
+.nav-link > a:hover {
+    text-decoration: underline;
+    color: #41ae3c;
+}
+
+/* *****中间内容部分****** */
+.main {
+    width: 960px;
+    margin: 48px auto;
+}
+/* *****banner部分***** */
+.banner-wrapper {
+    width: 100%;
+}
+.banner {
+    width: 600px;
+    height: 240px;
+    float: left;
+    background: url('../img/cat.jpg') center no-repeat;
+    background-size: 100% 100%;
+}
+/* *****侧边我的名片***** */
+.my-card {
+    width: 330px;
+    height: 240px;
+    float: right;
+    background: #222;
+    border-radius: 10px;
+}
+.avatar-wrapper {
+    height: 100px;
+    width: 100%;
+}
+.avatar {
+    height: 80px;
+    width: 80px;
+    margin: 0 auto;
+    margin-top: 24px;
+    border-radius: 50%;
+    background: url('../img/yinmu.jpg') center no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+.summary-wrapper {
+    height: 116px;
+}
+.profile-item {
+    height: 24px;
+    margin-top: 6px;
+    padding-left: 64px;
+}
+.profile-item > span {
+    display: block;
+    float: left;
+    font-size: 14px;
+    height: 100%;
+    line-height: 24px;
+    margin-left: 6px;
+}
+.name-icon {
+    width: 24px;
+    height: 24px;
+    background: url('../icons/name.png') center no-repeat;
+    background-size: 16px 16px;
+}
+.email-icon {
+    width: 24px;
+    height: 24px;
+    background: url('../icons/email.png') center no-repeat;
+    background-size: 16px 16px;
+}
+.main-middle {
+    width: 100%;
+    margin-top: 32px;
+    padding-bottom: 48px;
+}
+/* 内容部分 */
+.home-content {
+    width: 720px;
+    float: left;
+}
+.latest-wrapper {
+    width: 100%;
+}
+.latest-list {
+    display: block;
+    width: 100%;
+}
+.latest-item {
+    width: 100%;
+    margin-bottom: 20px;
+    background: #222;
+    padding: 24px 0;
+    border-radius: 6px;
+    display: block;
+}
+.latest-item a {
+    display: inline-block;
+    padding-left: 32px;
+    font-size: 16px;
+}
+.latest-post-remark {
+    margin-top: 12px;
+    padding-left: 12px;
+}
+.latest-post-remark > span {
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+}
+.latest-date {
+    color: #8e8e8e;
+    position: relative;
+    font-size: 13px;
+    padding-left: 38px;
+    display: inline-block;
+}
+.latest-date::before {
+    content: ' ';
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background: url('../icons/calendar.png') center no-repeat;
+    background-size: 100% 100%;
+    left: 20px;
+    top: 0px;
+}
+.latest-tags {
+    padding-left: 28px;
+    position: relative;
+    /* background: red; */
+}
+.latest-tags::before {
+    content: ' ';
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background: url('../icons/tag.png') center no-repeat;
+    background-size: 100% 100%;
+    left: 12px;
+    top: 2px;
+}
+.latest-tags > .tag {
+    font-size: 13px;
+    color: #8e8e8e;
+}
+/* 侧边导航 */
+.aside-navigation {
+    width: 220px;
+    float: right;
+}
+.common-title {
+    font-size: 24px;
+    padding-left: 16px;
+}
+.category-wrapper {
+    width: 100%;
+    padding-top: 24px;
+    background: #222;
+}
+.category-list {
+    width: 100%;
+    padding: 36px 0;
+    padding-top: 24px;
+}
+.category-items {
+    width: 100%;
+    padding-left: 48px;
+}
+.category-item {
+    width: 50%;
+    list-style-type: square;
+    margin-bottom: 6px;
+}
+.category-item > a {
+    margin: 4px auto;
+}
+.category-item > a:hover {
+    text-decoration: underline;
+}
+
+/* *****课程笔记****** */
+.chapter-wrapper {
+    width: 100%;
+    padding-top: 24px;
+    background: #222;
+    margin-top: 36px;
+}
+.chapter-list {
+    width: 100%;
+    padding: 36px 0;
+    padding-top: 24px;
+}
+.chapter-item {
+    border-bottom: 1px solid #333;
+    padding-left: 36px;
+    height: 42px;
+    line-height: 42px;
+}
+.chapter-item > a:hover {
+    text-decoration: underline;
+}
+
+/* ********************文章内容详情部分********************** */
+.content-details {
+    width: 720px;
+    background: #222;
+    float: left;
+}
+.post-wrapper {
+    padding-top: 32px;
+    padding-bottom: 12px;
+    margin: 0 32px;
+    border-bottom: 1px solid #333;
+}
+.post-title {
+    color: #F1C40E;
+    font-size: 20px;
+}
+.post-date {
+    text-align: left;
+    font-size: 12px;
+    color: #8e8e8e;
+    margin-top: 8px;
+}
+article {
+    padding: 0px 32px;
+    padding-top: 0;
+    font-size: 14px;
+    padding-top: 16px;
+    padding-bottom: 32px;
+}
+article ul {
+    padding-left: 1rem;
+}
+article img {
+    width: 100%;
+}
+article a:hover {
+    text-decoration: underline;
+}
+table {
+    border: 1px solid #444;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+table th, table tr, table td {
+    border: 1px solid #444;
+    text-align: center;
+}
+/* **********关于********** */
+.about {
+    width: 100%;
+}
+.about-wrapper {
+    width: 720px;
+    background: #222;
+    margin: 0 auto;
+    padding-bottom: 48px;
+}
+.about-base {
+    padding-top: 24px;
+}
+.about-profile {
+    padding: 12px 24px;
+    font-size: 14px;
+}
+.about-title {
+    margin: 0 24px;
+    font-size: 24px;
+    border-bottom: 1px solid #555;
+    padding-bottom: 12px;
+}
+.about-profile ul {
+    padding: 12px 48px;
+}
+.about-profile ul > li {
+    margin-bottom: 6px;
+    list-style-type: square;
+}
+
+/* ******文章列表******* */
+.post-list {
+    width: 720px;
+    float: left;
+}
+.post-list-item {
+    width: 100%;
+    margin-bottom: 16px;
+    background: #222;
+    padding: 16px 0;
+    display: block;
+}
+.post-list-item a {
+    display: inline-block;
+    padding-left: 32px;
+    font-size: 14px;
+}
+.post-list-item span {
+    color: #8e8e8e;
+    position: relative;
+    font-size: 13px;
+    padding-left: 36px;
+    display: inline-block;
+}
+.no-data {
+    width: 100%;
+    background: #222;
+    padding: 24px 0;
+    
+}
+.no-data > img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 4px;
+    width: 48px;
+}
+.no-data > .no-data-tip {
+    color: #8e8e8e;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* ******随手记部分****** */
+.notes {
+    width: 100%;
+    height: 500px;
+}
+.note-wrapper {
+    width: 720px;
+    margin: 0 auto;
+    padding-bottom: 36px;
+    border-left: 2px solid #222;
+    border-right: 2px solid #222;
+    padding: 0 32px;
+}
+
+.note-wrapper > ul {
+    padding: 0;
+    margin: 0;
+    display: block;
+    list-style: none;
+    width: 100%;
+    background: red;
+}
+
+.note-wrapper > ul > li {
+    display: block;
+    list-style: none;
+    width: 480px;
+    height: 64px;
+    margin-bottom: 36px;
+    background: #222;
+    position: relative;
+    padding-top: 24px;
+}
+.note-wrapper > ul > li:nth-child(odd) {
+    float: left;
+    text-align: left;
+    padding: 24px;
+}
+
+.note-wrapper > ul > li:nth-child(even) {
+    float: right;
+    text-align: right;
+    padding: 24px;
+}
+
+.note-wrapper > ul > li:nth-child(odd)::before {
+    content: ' ';
+    position: absolute;
+    left: -28px;
+    top: 24px;
+    width: 28px;
+    height: 20px;
+    background: url('../icons/triangle_left.png') center no-repeat;
+    background-size: 100% 100%;
+}
+
+.note-wrapper > ul > li:nth-child(even)::after {
+    content: ' ';
+    position: absolute;
+    right: -28px;
+    top: 24px;
+    width: 28px;
+    height: 20px;
+    background: url('../icons/triangle_right.png') center no-repeat;
+    background-size: 100% 100%;
+}
+
+/* ******分页组件******* */
+.pagination {
+    padding: 0;
+    margin: 0;
+    text-align: right;
+}
+.pagination span {
+    height: 24px;
+    line-height: 26px;
+    text-align: center;
+    font-size: 14px;
+}
+.page-number {
+    display: inline-block;
+}
+.prev-posts {
+    display: inline-block;
+    margin-left: 12px;
+    border: 1px solid #666;
+    padding: 0 4px;
+    width: 36px;
+}
+.next-posts {
+    display: inline-block;
+    margin-left: 12px;
+    border: 1px solid #666;
+    padding: 0 4px;
+    width: 36px;
+}
+.prev-posts > a:hover, .next-posts > a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+

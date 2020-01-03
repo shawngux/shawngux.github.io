@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidty变量类型之结构体（Struct）、映射（Mapping）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidty变量类型之结构体（Struct）、映射（Mapping）</div>
+        <div class="post-date">Tuesday, Jul 24, 2018</div>
+    </div>
+    <article>
+
+<h1 id="结构体">结构体</h1>
+
+<p>solidity中，结构体的定义很简单，通过struct关键字来声明。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+
+    // 定义的新类型包含两个属性。
+    struct Animal {
+        string name;
+        string color;
+    }
+    
+    Animal animal;
+    
+    function Test() {
+        animal = Animal({name: 'dog', color: 'black'});
+    }
+    
+    // output: dog, black
+    function show() constant returns (string, string) {
+        return (animal.name, animal.color);
+    }
+}    
+
+</code></pre>
+
+<p>注：solidity中可以通过元组的方式返回多个值，这个借鉴了Python的特性。元组通过()来表示。</p>
+
+<h1 id="映射">映射</h1>
+
+<p>在solidity中，映射通过mapping(_keyType =&gt; _valueType)的形式来声明。</p>
+
+<p><a href="https://solidity.readthedocs.io/en/latest/types.html#mappings">https://solidity.readthedocs.io/en/latest/types.html#mappings</a></p>
+
+<p>例如：mapping(address =&gt; string)</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+
+    // 声明映射
+    mapping(address =&gt; uint) public balances;
+    
+    function update(uint newBalance) public {
+        balances[msg.sender] = newBalance;
+    }
+    
+    function showBalance() public constant returns (uint) {
+        return balances[msg.sender];
+    } 
+}
+</code></pre>
+
+<h4 id="结构体和映射整合使用">结构体和映射整合使用</h4>
+
+<p>在智能合约中，结构体和映射一般会同时使用，下面贴出官方给的一个列子。</p>
+
+<p><a href="https://solidity.readthedocs.io/en/latest/types.html#structs">https://solidity.readthedocs.io/en/latest/types.html#structs</a></p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract CrowdFunding {
+    // Defines a new type with two fields.
+    struct Funder {
+        address addr;
+        uint amount;
+    }
+
+    struct Campaign {
+        address beneficiary;
+        uint fundingGoal;
+        uint numFunders;
+        uint amount;
+        mapping (uint =&gt; Funder) funders;
+    }
+
+    uint numCampaigns;
+    mapping (uint =&gt; Campaign) campaigns;
+
+    function newCampaign(address beneficiary, uint goal) public returns (uint campaignID) {
+        campaignID = numCampaigns++; // campaignID is return variable
+        // Creates new struct and saves in storage. We leave out the mapping type.
+        campaigns[campaignID] = Campaign(beneficiary, goal, 0, 0);
+    }
+
+    function contribute(uint campaignID) public payable {
+        Campaign storage c = campaigns[campaignID];
+        // Creates a new temporary memory struct, initialised with the given values
+        // and copies it over to storage.
+        // Note that you can also use Funder(msg.sender, msg.value) to initialise.
+        c.funders[c.numFunders++] = Funder({addr: msg.sender, amount: msg.value});
+        c.amount += msg.value;
+    }
+
+    function checkGoalReached(uint campaignID) public returns (bool reached) {
+        Campaign storage c = campaigns[campaignID];
+        if (c.amount &lt; c.fundingGoal)
+            return false;
+        uint amount = c.amount;
+        c.amount = 0;
+        c.beneficiary.transfer(amount);
+        return true;
+    }
+}
+</code></pre>
+
+<p>上面这个例子是solidity官方给出的一个简化版的众筹功能的智能合约。合约中给展示了结构体和映射的声明和使用。结构体类型可以作为元素存放于数组和映射中，另外结构体自身仍然可以包含结构体。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

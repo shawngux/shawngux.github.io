@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL查询中使用流程控制函数及多表查询</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL查询中使用流程控制函数及多表查询</div>
+        <div class="post-date">Sunday, Apr 30, 2017</div>
+    </div>
+    <article>
+
+<h1 id="流程控制">流程控制</h1>
+
+<p>在MySQL查询中，可以通过使用流程控制函数进行过滤或做一些额外的操作</p>
+
+<h2 id="if">IF</h2>
+
+<p><strong><font color='red'>IF</font></strong>(expr1, expr2, expr3)，如果expr1为True，则返回expr2，否则返回expr3。如：</p>
+
+<pre><code class="language-sql">SELECT name, IF(salary is null, 0.0, salary) FROM emps;
+</code></pre>
+
+<h2 id="ifnull">IFNULL</h2>
+
+<p><strong><font color='red'>IFNULL</font></strong>(expr1, expr2)，如果expr1为null值，则返回expr2。如：</p>
+
+<pre><code class="language-sql">SELECT sum(IFNULL(chiness, 0) + IFNULL(math, 0)) AS total FROM students;
+</code></pre>
+
+<h2 id="case-when-then-else-end">CASE&hellip;WHEN&hellip;THEN&hellip;ELSE&hellip;END</h2>
+
+<p><strong><font color='red'>CASE</font></strong>&hellip;<strong><font color='red'>WHEN</font></strong>&hellip;，条件分支</p>
+
+<pre><code class="language-sql">SELECT name,
+(
+CASE
+WHEN salary &lt;= 5000 THEN salary * 1.5
+WHEN salary &lt;= 8000 THEN salary * 1.2
+WHEN salary &gt;8000 AND salary &lt;= 10000 THEN salary * 1.1
+ELSE salary
+END
+) AS updSalary FROM emps;
+</code></pre>
+
+<p>其他的一些细节描述可参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/control-flow-functions.html">https://dev.mysql.com/doc/refman/5.7/en/control-flow-functions.html</a></p>
+
+<h1 id="多表查询">多表查询</h1>
+
+<p>多表查询是指基于两个或两个以上的表或试图进行的查询。</p>
+
+<p>多表查询的原理：</p>
+
+<p>当对两个表（A、B）进行查询时，从A表中取出一条记录，和B表中的每一条记录进行组合，这样就得到一个结果集，这个结果集叫做<strong>笛卡尔积</strong>，结果集中总记录数等于A表记录数乘以B表记录数。而我们多表查询的时候，往往需要避免出现笛卡尔积的情况，因为这包含的重复的记录。一般的，我们<strong>WHERE</strong>子句来进行筛选。如：</p>
+
+<pre><code class="language-sql">-- 从部门表（departments）和员工表（employees）两张表中查询部门、员工姓名、薪水等字段，通过部门编号关联
+SELECT dept_name, emp_name, salary FROM departments, employees WHERE departments.id = employees.deptId
+</code></pre>
+
+<h2 id="自连接">自连接</h2>
+
+<p>自连接是指同一张表的连接查询。</p>
+
+<p>如在员工表中，每个员工又可以是另一个员工的上级，这时我们要查询指定员工的上级的姓名</p>
+
+<pre><code class="language-sql">-- 查询姓名为Jack的上级的姓名
+SELECT name FROM emps WHERE empid = (SELECT manger FROM emps WHERE name = 'Jack');
+</code></pre>
+
+<h2 id="子查询">子查询</h2>
+
+<p>子查询是指嵌入在其他SQL查询中的<strong>SELECT</strong>语句，也叫做嵌套查询。</p>
+
+<p>分类：</p>
+
+<ul>
+<li>单行子查询：是指只返回一行数据的子查询语句</li>
+<li>多行子查询：是指返回多行数据的子查询语句</li>
+</ul>
+
+<pre><code class="language-sql">-- 查询与Jack同一部门的其他员工姓名（单行子查询）
+SELECT name FROM emps WHERE deptid = (SELECT deptid FROM emps WHERE name = 'Jack') AND name &lt;&gt; 'Jack';
+
+-- 查询和5号部门工作相同的员工的名字，工资，并且不包含5号部门的（多行子查询）
+SELECT name, salary FROM emps WHERE job in (SELECT DISTINCT job FROM emps WHERE deptid = 5) AND deptid &lt;&gt; 5;
+</code></pre>
+
+<p><strong>多列子查询</strong>：是指该查询返回的结果有多列。格式：</p>
+
+<p>(col1, col2, &hellip;) = (SELECT col1, col2, &hellip; FROM table_name);</p>
+
+<p>如从学生表中查询和Tom语文、数学、英语成绩完全相同的其他学生</p>
+
+<pre><code class="language-sql">SELECT name FROM students WHERE (chinese, math, english) = (SELECT chinese, math, english FROM students WHERE name = 'Tom') AND name != 'TOM';
+</code></pre>
+
+<p>在<strong>FROM</strong>后的子查询：</p>
+
+<pre><code class="language-sql">-- 查询高于自己部门平均工资的员工的名字、薪水和该部门的平均薪水
+SELECT name, salary, tmp.avgSalary
+FROM emps,
+(SELECT avg(salary) AS avgSalary, deptid FROM emps GROUP by deptid) AS tmp
+WHERE salary &gt; avgSalary
+AND emps.deptid = tmp.deptid;
+</code></pre>
+
+<h1 id="内连接和外连接">内连接和外连接</h1>
+
+<p>在MySQL查询中，我们又有内连接查询和外连接查询之分。</p>
+
+<h2 id="内连接">内连接</h2>
+
+<p>内连接由称为普通连接，它是对多表查询形成的笛卡尔积使用过滤条件删除没有匹配的所有行，内连接可能会有数据丢失。</p>
+
+<p>形式为：</p>
+
+<ul>
+<li>方式一：</li>
+</ul>
+
+<p><strong><font color='red'>SELECT</font></strong> col1, col2, &hellip; <strong><font color='red'>FROM</font></strong> table1, table2, &hellip; <strong><font color='red'>WHERE</font></strong> filter_expr</p>
+
+<ul>
+<li>方式二：</li>
+</ul>
+
+<p><strong><font color='red'>SELECT</font></strong> col1, col2, &hellip; <strong><font color='red'>FROM</font></strong> table1 <strong><font color='red'>INNER JOIN</font></strong> table2 <strong><font color='red'>INNER JOIN</font></strong> table3 <strong><font color='red'>ON</font></strong> filter_expr <strong><font color='red'>AND</font></strong> filter_expr</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">SELECT worker.name AS '员工', leader.name AS '领导' FROM emps AS worker INNER JOIN emps AS leader ON worker.manger = leader.empid;
+</code></pre>
+
+<h2 id="外连接">外连接</h2>
+
+<p>外连接又分为<strong><font color='red'>左外连接</font></strong>、<strong><font color='red'>右外连接</font></strong>、<strong><font color='red'>完全外连接</font></strong>（用的不多，早些版本的MySQL对其提供语法支持，但是实操时不一定起作用）。</p>
+
+<ul>
+<li><strong>左外连接</strong>：以左侧的表为准，左侧表的所有行都显示，而右侧表没有与左表匹配的，对应的列则均为空值。</li>
+</ul>
+
+<p>形式为：</p>
+
+<p>SELECT col1, col2, &hellip; FROM table1 LEFT JOIN table2 ON filter_expr AND filter_expr2&hellip;</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">-- 在学生表（students）和成绩表（grades）中查询所有人的姓名和分数，没有分数的，对应列为空值
+SELECT students.name, grades.score FROM students LEFT JOIN grades ON students.id = grades.stuid;
+</code></pre>
+
+<ul>
+<li><strong>右外连接</strong>：以右侧的表为准，右侧表的所有行都显示，而左侧表没有与之匹配的，则对应的列为空值。</li>
+</ul>
+
+<p>形式为：</p>
+
+<p>SELECT col1, col2, &hellip; FROM table1 RIGHT JOIN table2 ON filter_expr AND expr2 &hellip;</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">-- 在学生表（students）和成绩表（grades）中查询所有人的姓名和分数，没有名字的，对应列为空值
+SELECT students.name, grades.score FROM students RIGHT JOIN grades ON students.id = grades.stuid;
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>上面概述了MySQL的多表查询相关语法，而多个表查询中外连接查询用的是比较多的，更需着重掌握，如需查看更多描述，可参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/join.html">https://dev.mysql.com/doc/refman/5.7/en/join.html</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python异常处理</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python异常处理</div>
+        <div class="post-date">Thursday, Mar 22, 2018</div>
+    </div>
+    <article>
+
+<p>在编写程序的时候，难免会遇到程序可能出现异常的情况，这个时候如果我们不做捕获处理，异常就会一直往上抛，即回溯（traceback）终止程序往下执行，如：</p>
+
+<pre><code class="language-python">print(1/0)
+# 返回
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+ZeroDivisionError: division by zero
+</code></pre>
+
+<h1 id="处理异常">处理异常</h1>
+
+<p>异常可能在某些东西出错时自动引发，当异常触发后我们应当针对于其作出处理方式。</p>
+
+<h2 id="抛出异常">抛出异常</h2>
+
+<p>当我们指定某个程序可能出现的异常时，可以通过<strong><font color="red">raise</font></strong>抛出指定的异常，如：</p>
+
+<pre><code class="language-python">def test(n):
+    if n == 0:
+        raise ValueError('invalid value: %s' % n)
+    else:
+        return 1 / n
+
+# 调用
+test(0)
+# 返回信息
+Traceback (most recent call last):
+  File &quot;test.py&quot;, line 8, in &lt;module&gt;
+    test(0)
+  File &quot;test.py&quot;, line 3, in test
+    raise ValueError('invalid value: %s' % n)
+ValueError: invalid value: 0
+</code></pre>
+
+<p>其中，ValueError是Python内建的异常类对象，是Exception异常类的子类，所有异常类都继承与Exception。更多内建异常类参考：<a href="https://docs.python.org/3/library/exceptions.html">https://docs.python.org/3/library/exceptions.html</a></p>
+
+<p>另外也可以自定义异常类，只要继承内建异常类即可，如：</p>
+
+<pre><code class="language-python">class CustomError(Exception):
+    pass
+    
+def test_error(n):
+    if n == 0:
+        raise CustomError('the n cannot be zero')
+    print('n is %s' % n)
+    
+# 调用
+test_error(0)
+# 返回信息
+Traceback (most recent call last):
+  File &quot;test.py&quot;, line 11, in &lt;module&gt;
+    test_error(0)
+  File &quot;test.py&quot;, line 7, in test_error
+    raise CustomError('the n cannot be zero')
+__main__.CustomError: the n cannot be zero
+
+test_error(1)
+#返回信息
+n is 1
+</code></pre>
+
+<h2 id="捕捉异常对象">捕捉异常对象</h2>
+
+<p>通过try&hellip;except来捕捉异常，从而方便我们做出对应处理。看代码：</p>
+
+<pre><code class="language-python">def test(n):
+    try:
+        print('try...')
+        res = 1 / n
+        print('result:', res)
+    except ZeroDivisionError as e:
+        print('error:', e)
+
+# 调用
+test(0) 
+# 返回信息
+try...
+error: division by zero 
+</code></pre>
+
+<p>也可以使用多个except代码块来捕捉多个异常对象，代码：</p>
+
+<pre><code class="language-python">def test(n):
+    try:
+        res = 1 / n
+        print('result:', res)
+    except ValueError as e:
+        print('ValueError:', e)
+    except ZeroDivisionError as e:
+        print('ZeroDivisionError:', e)
+</code></pre>
+
+<p>多个异常对象也可以放到一个except后面，使用元组组装即可，代码：</p>
+
+<pre><code class="language-python">def test(n):
+    try:
+        res = 1 / n
+        print('result:', res)
+    except (ValueError, ZeroDivisionError, TypeError) as e:
+        print('Error:', e)
+</code></pre>
+
+<p>当没有发生时，我们可以给个else语句块来执行无异常的行为，代码：</p>
+
+<pre><code class="language-python">def test(n):
+    try:
+        res = 1 / n
+        print('result:', res)
+    except (ValueError, ZeroDivisionError, TypeError) as e:
+        print('Error:', e)
+    else:
+        print('without error')
+</code></pre>
+
+<h1 id="finally子句">finally子句</h1>
+
+<p>不管try块中程序是否发生异常，finally 子句都会执行，而完整的try&hellip;except&hellip;finally块也是高级语句一般都有的处理异常的机制。</p>
+
+<pre><code class="language-python">def test(n):
+    try:
+        res = 1 / n
+        print('result:', res)
+    except (ValueError, ZeroDivisionError, TypeError) as e:
+        print('Error:', e)
+    finally:
+        print('finally clean up...') # 一定会执行
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>异常处理并不是很复杂，如果知道某段程序可能会导致某种异常，而又不希望程序以堆栈跟踪的形式结束，那么最好的方式就是添加try&hellip;except&hellip;finally块进行处理，另外有时候加上else语句块或许更完善。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

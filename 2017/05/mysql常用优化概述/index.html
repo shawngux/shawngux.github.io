@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL常用优化概述</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL常用优化概述</div>
+        <div class="post-date">Sunday, May 7, 2017</div>
+    </div>
+    <article>
+
+<p>MySQL优化一般从四个层面着手。</p>
+
+<h1 id="设计">设计</h1>
+
+<p>设计方面包括字段类型的选择、存储引擎的选择、特定范式</p>
+
+<h2 id="字段选择">字段选择</h2>
+
+<p>在满足需求的情况下：</p>
+
+<ul>
+<li><strong>选择短数据类型</strong>：占用存储空间小</li>
+<li><strong>选择定长数据类型</strong>：占用固定的存储空间，运行速度比较快</li>
+<li><strong>使用整数替代字符串</strong>：整数的计算效率高，有时也会节省存储空间；如：性别sex使用tinyint类型要比enum类型或字符串效率高</li>
+<li><strong>限定表的字段数量</strong>：一个表字段数量尽量不要超过30个</li>
+<li><strong>字段设置NOT NULL</strong>：字段为null时，存储和计算都需要额外的特殊处理；如 null参与运算结果都为null，存储时也会消耗一定的空间。所以设置为not null，配合 default</li>
+<li><strong>使用注释</strong>：保证完整性</li>
+<li><strong>使用一些通过字段</strong>：如id、create_at、update_at等</li>
+</ul>
+
+<h2 id="存储引擎">存储引擎</h2>
+
+<p>MySQL中常用的存储引擎有：<strong>Myisam</strong>、<strong>InnoDB</strong>。推荐使用<strong><font color='red'>InnoDB</font></strong>。</p>
+
+<p>1、Myisam和InnoDB的存储方式：</p>
+
+<ul>
+<li><strong>Myisam</strong>：</li>
+</ul>
+
+<p>Myisam将数据和索引分别存储在不同的文件中，数据文件格式为<strong><font color='red'>xxx.MYD</font></strong>，索引文件格式为<strong><font color='red'>xxx.MYI</font></strong>，结构文件为<strong><font color='red'>xxx.frm</font></strong>。</p>
+
+<p>记录的存储顺序就是插入记录时的顺序。</p>
+
+<ul>
+<li><strong>InnoDB</strong>：</li>
+</ul>
+
+<p>InnoDB将数据和索引存储在一个文件中，格式为<strong><font color='red'>xxx.ibd</font></strong>（称为表空间文件）、以及一个结构结构文件<strong><font color='red'>xxx.frm</font></strong>。之外还包含公共的innodb文件。</p>
+
+<p>记录的存储顺序是主键值顺序。</p>
+
+<p>MySQL新版中每个表有一个表空间文件，如果不是，可通过指令来设置</p>
+
+<pre><code class="language-sql">-- 查看是否开启
+SHOW VARIABLES LIKE &quot;innodb_file_per_table&quot;;
+/*
++-----------------------+-------+
+| Variable_name         | Value |
++-----------------------+-------+
+| innodb_file_per_table | OFF   |
++-----------------------+-------+
+*/
+
+-- 开启
+SET GLOBAL innodb_file_per_table = ON;
+</code></pre>
+
+<p>注：Myisam的文件可以通过拷贝的方式备份，而InnoDB的文件只能通过mysqldump导出部分。</p>
+
+<p>2、事务和并发支持</p>
+
+<p>Myisam不支持事务，InnoDB支持事务，是事务安全型存储引擎。</p>
+
+<p>InnoDB的并发性优于Myisam，因为InnoDB支持<strong>ROW-LEVEL</strong>（行级）锁定，一次仅仅锁定操作的行，InnoDB支持<strong>MVCC</strong>（多版本控制），几乎可以做到无阻塞读操作。而Myisam仅仅支持<strong>TABLE-LEVEL</strong>（表级）锁定，只能锁定全表。</p>
+
+<h2 id="范式">范式</h2>
+
+<p>范式，即规范。数据库设计时遵循的规则。数据库设计中，目前依据级别定义有：1NF、2NF、3NF、4NF、5NF、6NF这6个范式。后面的每一个范式都必须满足前面的范式。</p>
+
+<p>而我们设计数据库时，一般满足前3个范式。</p>
+
+<p>1、<strong>第一范式（1NF）&ndash; 原子性</strong>：</p>
+
+<p>第一范式，保证字段（属性）不可再分，即每一个属性值都是不可再分的最小数据单位。</p>
+
+<p>所有的关系型数据库系统都满足原子性。</p>
+
+<p>2、<strong>第二范式（2NF）&ndash; 消除部分依赖</strong>：</p>
+
+<p>所谓部分依赖，即非主键字段对于复合主键中的部分字段存在依赖关系，叫做部分依赖。而第二范式是为了消除部分依赖，一般通过增加独立字段如id作为主键存在。</p>
+
+<p>3、<strong>第三范式（3NF）&ndash; 消除传递依赖</strong>：</p>
+
+<p>字段依赖于其他非主键字段，则该字段构成对主键的传递依赖。如：性别依赖于学生，学生依赖于id，这样就构成了性别传递依赖于id。</p>
+
+<p>第三范式是为了消除这种传递依赖，一般是每种实体独立创建一张表，使用关联字段进行关联。</p>
+
+<h1 id="功能">功能</h1>
+
+<p>功能方面一般设计到增加索引、分区分表、查询缓存等</p>
+
+<h2 id="索引">索引</h2>
+
+<p>常用的索引有：</p>
+
+<ul>
+<li><strong>普通索引</strong>：使用关键字<strong>index</strong>或<strong>key</strong>来创建</li>
+<li><strong>唯一索引</strong>：使用关键字<strong>unique</strong>来指定</li>
+<li><strong>主键索引</strong>：通过关键字<strong>primary key</strong>来指定</li>
+<li><strong>全文索引</strong>：关键字<strong>fulltext index</strong>，一般不会使用mysql自带的</li>
+</ul>
+
+<pre><code class="language-sql">CREATE TABLE `t`
+(
+    id int primary key auto_increment comment '自增主键',
+	name varchar(16) not null default '',
+	sku_no varchar(12) not null default '',
+	sn varchar(12) not null default '',
+	key (name), -- 普通索引
+	unique key uni_sku_no (sku_no), -- 唯一索引
+	index (sn) -- 普通索引
+)CHARSET=utf8 COLLATE utf8_general_ci;
+</code></pre>
+
+<p>注：使用Myisam引擎时，索引key对字段的长度限制为<strong>767</strong>个字节，innodb的长度限制为<strong>1000</strong>个字节。</p>
+
+<p>常使用到索引的场景：</p>
+
+<ul>
+<li><strong>WHERE</strong>条件检索</li>
+<li><strong>ORDER BY</strong>排序</li>
+<li><strong>JOIN</strong>关联查询</li>
+</ul>
+
+<p>索引使用时一些注意点：</p>
+
+<ul>
+<li>索引字段独立，如字段在进行不等式运算时，保证在一侧出现，不要参与表达式或函数调用</li>
+</ul>
+
+<pre><code class="language-sql">-- 这种方式会用到索引
+SELECT * FROM `t` WHERE id = 5;
+
+-- 这种情况不会用到索引
+SELECT * FROM `t` WHERE id + 1 = 5;
+</code></pre>
+
+<ul>
+<li><p>like左匹配原则：匹配的字符串，必须要左侧固定才会触发索引。如 like &lsquo;%keyword%&lsquo;不能触发索引；like &lsquo;keyword%&lsquo;可以触发索引。</p></li>
+
+<li><p>复合索引，只有左侧字段检索时可以用到索引</p></li>
+</ul>
+
+<pre><code class="language-sql">-- 这是一个复合索引
+index(first_name, last_name)
+
+-- 这种情况下会用到索引
+SELECT * FROM `stu` WHERE first_name = 'xxx';
+
+-- 这种情况下不会用到索引
+SELECT * FROM `stu` WHERE last_name = 'xxx';
+</code></pre>
+
+<p>为了让复合索引的每个字段检索时都用到索引，一般会额外增加字段的独立索引。如：</p>
+
+<pre><code class="language-sql">key (first_name, last_name);
+key (first_name);
+key (last_name);
+</code></pre>
+
+<p>复合索引适合于AND多条件检索，因为这种组合条件查询时mysql会优先选择复合索引。</p>
+
+<ul>
+<li>OR条件的每一个字段都尽可能有索引可用</li>
+</ul>
+
+<p>索引的存储结构：</p>
+
+<ul>
+<li>BTree（B树）索引</li>
+<li>聚簇索引（B+Tree，即B plus 树）</li>
+<li>hash索引</li>
+</ul>
+
+<h2 id="分区分表">分区分表</h2>
+
+<p>如果一张表的记录数量过多，可以将记录分散到不同的地方，每张表的数量就会显著减少。</p>
+
+<p>一般采用的方式为：分区、分表。</p>
+
+<p>1、<strong>分区</strong>（partition)：</p>
+
+<p>分区是将数据分布到不同的区域中。MySQL有自带的分区功能，推荐使用。而分区采用的算法有4中：hash、key、range、list。</p>
+
+<ul>
+<li>hash算法：求余均匀分布，即对给定的字段进行求余，然后映射到具体分区上。如</li>
+</ul>
+
+<pre><code class="language-sql">CREATE TABLE `stu`
+(
+    id int primary key auto_increment,
+	name varchar(16) not null default ''
+)CHARSET=utf8 COLLATE utf8_general_ci ENGINE InnoDB;
+
+-- 通过partition关键字进行分区，id求余均匀分布到分区中
+PARTITION BY hash(id) PARTITIONS 4;
+</code></pre>
+
+<ul>
+<li>key算法：和hash算法一致，但是key算法可以使用非整数字段进行分区</li>
+</ul>
+
+<pre><code class="language-sql">CREATE TABLE `stu`
+(
+    stu_no varchar(32) primary key,
+	name varchar(16) not null default ''
+)CHARSET=utf8 COLLATE utf8_general_ci ENGINE InnoDB;
+
+-- 通过partition关键字进行分区,非整数
+PARTITION BY key(stu_no) PARTITIONS 4;
+</code></pre>
+
+<ul>
+<li>range算法：即按范围条件分区，分区条件由用户给定</li>
+</ul>
+
+<pre><code class="language-sql">CREATE TABLE `stu`
+(
+    id int primary key auto_increment,
+	name varchar(16) not null default '',
+	birthday date not null default '1980'
+)CHARSET=utf8 COLLATE utf8_general_ci ENGINE InnoDB;
+
+-- 根据指定生日年份分区
+PARTITION BY range(year(birthday)) (
+    PARTITION b1 values less than (1980),
+	PARTITION b2 values less than (1990),
+	PARTITION b3 values less than (2000),
+	PARTITION b4 values less than (2010)
+);
+</code></pre>
+
+<ul>
+<li>list算法：列表条件分区，即值在某个列表中</li>
+</ul>
+
+<pre><code class="language-sql">CREATE TABLE `stu`
+(
+    id int primary key auto_increment,
+	name varchar(16) not null default '',
+	month tinyint not null default 1
+)CHARSET=utf8 COLLATE utf8_general_ci ENGINE InnoDB;
+
+PARTITION BY list(month) (
+    PARTITION p1 values in (1, 2, 3),
+	PARTITION p2 values in (4, 5, 6),
+	PARTITION p3 values in (7, 8, 9),
+	PARTITION p4 values in (10, 11, 12)
+);
+</code></pre>
+
+<p>对于分区的管理（针对于hash、key分区），可以使用<strong>ALTER</strong>来操作：</p>
+
+<pre><code class="language-sql">-- 增加分区 4 + 2
+ALTER TABLE `stu` ADD PARTITION PARTITIONS 2;
+
+-- 减少分区
+ALTER TABLE `stu` COALESCE PARTITION 1;
+</code></pre>
+
+<p>详细描述可查看：<a href="https://dev.mysql.com/doc/refman/5.7/en/alter-table-partition-operations.html">分区修改</a></p>
+
+<p>2、<strong>分表</strong>：</p>
+
+<p>分表是将记录分布到相同结构的多张表中，以分散单张表的记录数。</p>
+
+<h2 id="查询缓存">查询缓存</h2>
+
+<p>查询缓存是利用mysql提供缓存功能进行的优化。详情查看：<a href="https://dev.mysql.com/doc/refman/5.7/en/query-cache-configuration.html">传送</a></p>
+
+<h1 id="架构">架构</h1>
+
+<p>从架构层面优化一般有：读写分离、主从复制、负载均衡等。</p>
+
+<h2 id="读写分离">读写分离</h2>
+
+<p>读写分离，即读操作和写操作分布于不同的数据库服务器上，一般将写操作的数据库服务器称为主服务器，读操作的叫做从服务器；为了降低数据同步的难度，往往写服务器采用单点（单台），读服务器有多台。</p>
+
+<h2 id="主从复制">主从复制</h2>
+
+<p>即将主（写）服务器上的数据复制到从（读）服务器上。</p>
+
+<p>复制机制：master的写操作通过binlog传到slave生成中继日志，slave再将中继日志redo，使得主从库数据保持同步。</p>
+
+<p>涉及到的线程（slave主动请求拉取）：</p>
+
+<p>1、slave上的I/O线程，向master请求数据</p>
+
+<p>2、master上的binlog dump线程，读取binlog事件并把数据发送给slave的I/O线程</p>
+
+<p>3、slave上SQL线程，读取中继日志，更新数据库</p>
+
+<h2 id="负载均衡">负载均衡</h2>
+
+<p>一般使用插件来完成，如mysql-proxy、amoeba等</p>
+
+<h1 id="应用">应用</h1>
+
+<p>应用层面一般就是SQL语句的优化。</p>
+
+<p>为了降低SQL查询的复杂度，我们在设计表时就应该做好规范和优化，尽量采用单表查询。</p>
+
+<h2 id="explain分析sql">explain分析SQL</h2>
+
+<p>当服务器执行SQL前，我们可以通过explain(execution plain)，即执行计划先分析、优化SQL，然后形成最优的执行方案。</p>
+
+<pre><code class="language-sql">EXPLAIN SELECT * FROM `t`;
+/*
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t
+         type: system
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 0
+        Extra: const row not found
+1 row in set (0.00 sec)
+*/
+</code></pre>
+
+<p>其中：</p>
+
+<ul>
+<li><strong>type</strong>为查询类型（如全表扫描）</li>
+<li><strong>possible_keys</strong>为可能使用到的索引</li>
+<li><strong>key</strong>为最终会使用到的索引</li>
+<li><strong>rows</strong>为结果会返回的记录行数</li>
+</ul>
+
+<h2 id="慢查询日志">慢查询日志</h2>
+
+<p>用来记录执行缓慢的查询语句</p>
+
+<pre><code class="language-sql">-- 查看慢查询日志配置（是否开启、日志文件目录）
+SHOW VARIABLES LIKE 'slow_query_%';
+/*
++---------------------+-------------------------------------------+
+| Variable_name       | Value                                     |
++---------------------+-------------------------------------------+
+| slow_query_log      | OFF                                       |
+| slow_query_log_file | /home/MySQL/data/DESKTOP-FSNMFS2-slow.log |
++---------------------+-------------------------------------------+
+*/
+
+-- 查看容许的最慢的临界值
+SHOW VARIABLES LIKE 'long_query_time';
+/*
++-----------------+-----------+
+| Variable_name   | Value     |
++-----------------+-----------+
+| long_query_time | 10.000000 |
++-----------------+-----------+
+*/
+
+-- 开启，设置临界时间
+SET GLOBAL slow_query_log = ON;
+SET long_query_time = 3;
+</code></pre>
+
+<h2 id="profile">profile</h2>
+
+<p>profile工具可用来记录SQL的详细执行步骤和时间。</p>
+
+<p>要使用profile工具，首先得开启和设置相关配置。</p>
+
+<pre><code class="language-sql">-- 查看相关
+SHOW VARIABLES LIKE 'profil%';
+/*
++------------------------+-------+
+| Variable_name          | Value |
++------------------------+-------+
+| profiling              | OFF   |
+| profiling_history_size | 15    |
++------------------------+-------+
+*/
+
+-- 开启
+SET profiling = ON;
+
+--开启之后执行的SQL都会被详细记录
+SELECT * FROM `t`;
+SHOW profiles;
+/*
++----------+------------+-------------------------------+
+| Query_ID | Duration   | Query                         |
++----------+------------+-------------------------------+
+|        1 | 0.00125325 | SHOW VARIABLES LIKE 'profil%' |
+|        2 | 0.00067425 | SELECT * FROM `t`             |
++----------+------------+-------------------------------+
+*/
+
+-- 查看具体SQL的执行步骤
+SHOW profile FOR QUERY 2;
+/*
++----------------------+----------+
+| Status               | Duration |
++----------------------+----------+
+| starting             | 0.000036 |
+| checking permissions | 0.000006 |
+| Opening tables       | 0.000529 |
+| System lock          | 0.000011 |
+| init                 | 0.000010 |
+| optimizing           | 0.000003 |
+| statistics           | 0.000005 |
+| preparing            | 0.000002 |
+| executing            | 0.000010 |
+| end                  | 0.000003 |
+| query end            | 0.000003 |
+| closing tables       | 0.000005 |
+| freeing items        | 0.000049 |
+| logging slow query   | 0.000003 |
+| cleaning up          | 0.000002 |
++----------------------+----------+
+*/
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>上面是一些MySQL的优化，在使用MySQL时，从建库建表开始建议严格按照规范来，因为按照规范本身就是一种优化。另外，合理善用一些工具插件，事半功倍。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

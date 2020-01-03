@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL数据类型之数值类型</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL数据类型之数值类型</div>
+        <div class="post-date">Sunday, Apr 23, 2017</div>
+    </div>
+    <article>
+
+<p>在介绍数据类型前，先简单说一下MySQL表的创建。</p>
+
+<p>基本语法：</p>
+
+<blockquote>
+<p><strong><font color="red">CREATE TABLE</font></strong> table_name<br/>
+(<br/>
+   &ensp;&ensp;field1 datatype,<br/>
+   &ensp;&ensp;field2 datatype,<br/>
+   &ensp;&ensp;field3 datatype<br/>
+)<strong><font color="red">CHARACTER SET</font></strong> 字符集 <strong><font color="red">COLLATE</font></strong> 校验规则 <strong><font color="red">ENGINE</font></strong> 存储引擎</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色的字为建表关键字，一般大写</li>
+<li>field是字段名，如name、age等，一般采用下划线法。</li>
+<li>datatype是字段类型，下面介绍</li>
+<li>最后是一些额外指定项，如指定字符集、校验规则和存储引擎等</li>
+</ul>
+
+<p>代码：</p>
+
+<pre><code class="language-sql">CREATE TABLE `user`
+(
+ id int not null default 0 comment '编号',
+ name varchar(32) not null default '' comment '用户名'
+)CHARSET=utf8 COLLATE utf8_general_ci ENGINE = myisam;
+</code></pre>
+
+<p>说明：</p>
+
+<ul>
+<li>表名一般使用反引号``括起来，防止和关键字冲突</li>
+<li>not null表示该字段的值不能为空</li>
+<li>default指定默认值，当不给值时就使用默认值</li>
+<li>comment表示对该字段的注释</li>
+</ul>
+
+<h1 id="数据类型">数据类型</h1>
+
+<p>我们在创建表时，字段要设置数据类型，而根据具体的业务选择正确合适的数据类型很重要。</p>
+
+<h2 id="数值型">数值型</h2>
+
+<p>1、整数</p>
+
+<p>在MySQL中整数类型有五种，见下表：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">所占字节</th>
+<th align="center">最小值</th>
+<th align="center">最大值</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">tinyint</td>
+<td align="center">1</td>
+<td align="center">-128</td>
+<td align="center">127</td>
+</tr>
+
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center">255</td>
+</tr>
+
+<tr>
+<td align="center">smallint</td>
+<td align="center">2</td>
+<td align="center">-32768</td>
+<td align="center">32767</td>
+</tr>
+
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center">65535</td>
+</tr>
+
+<tr>
+<td align="center">mediumint</td>
+<td align="center">3</td>
+<td align="center">-8388608</td>
+<td align="center">8388607</td>
+</tr>
+
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center">16777215</td>
+</tr>
+
+<tr>
+<td align="center">int</td>
+<td align="center">4</td>
+<td align="center">-2147483648</td>
+<td align="center">2147483647</td>
+</tr>
+
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center">4294967295</td>
+</tr>
+
+<tr>
+<td align="center">bigint</td>
+<td align="center">8</td>
+<td align="center">-2^63</td>
+<td align="center">2^63 - 1</td>
+</tr>
+
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center">2^64 - 1</td>
+</tr>
+</tbody>
+</table>
+
+<p>解释：</p>
+
+<ol>
+<li>在MySQL中，5种整数表示的范围为：bigint &gt; int &gt; mediumint &gt; smallint &gt; tinyint</li>
+<li>在表的设计中，应该尽可能使用小的数据类型</li>
+
+<li><p>每种整型都有无符号和有符号两大类，默认是有符号的，即最小值为负数，而无符号的最小值为0，见上表。其中无符号的用关键字<font color="red">unsigned</font>声明，如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+id int unsigned not null default comment '编号'
+)
+</code></pre>
+
+<p>注：数值型可以使用<font color="red">zeroll</font>，即0填充，当我们的给定的值的宽度少于定义时的大小时，左边会使用0来填充，当一个字段使用zerofill指定后，该字段就自动称为unsigned。如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `test`
+(
+num1 int zerofill,
+num2 int(4) zerofill
+);
+
+INSERT INTO `test` values (123, 12);
+SELECT * FROM `test`;
+
+-- 返回
+/*
++------------+------+
+| num1       | num2 |
++------------+------+
+| 0000000123 | 0012 |
++------------+------+
+*/
+</code></pre></li>
+</ol>
+
+<p>2、bit型</p>
+
+<p>bit类型使用1位来存储数据，因此它的值默认只能存放0或1。而显示的时候是按照ascill对应的字符来显示，如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `t` (
+ b BIT(8)
+);
+INSERT INTO `t` values (00100);
+SELECT * FROM `t`;
+-- 显示
+/*
++------+
+| b    |
++------+
+| d    |
++------+
+*/
+</code></pre>
+
+<p>更多的细节可参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/bit-value-literals.html">https://dev.mysql.com/doc/refman/5.7/en/bit-value-literals.html</a></p>
+
+<p>3、小数</p>
+
+<p>MySQL中，小数类型主要有两种，一种是<font color="red">float(M, D)</font>，另一种是<font color="red">decimal(M, D)</font>。</p>
+
+<p>其中：M代表数字个数，D代表小数位数。如float(5, 2)，表示 -999.99 ~ 999.99，而当有unsigned修饰时，float(5, 2)表示 0 ~ 999.99。decimal(5, 2)也一样。当数据越界后，会采取四舍五入，如果还越界，就会报错。</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+ id tinyint unsigned not null default 0,
+ name varchar(32) not null default '',
+ salary float(5, 2) not null default 0.0
+);
+
+INSERT INTO `users` VALUES (1, 'tom', 250.69);
+INSERT INTO `users` VALUES (2, 'jack', 100.459);
+SELECT * FROM `users`;
+
+-- 显示
+/*
++----+------+--------+
+| id | name | salary |
++----+------+--------+
+|  1 | tom  | 250.69 |
+|  2 | jack | 100.46 |
++----+------+--------+
+*/
+</code></pre>
+
+<p>使用decimal：</p>
+
+<pre><code class="language-sql">CREATE TABLE `users2`
+(
+ id tinyint unsigned not null default 0,
+ name varchar(32) not null default '',
+ salary decimal(5, 2) not null default 0.0
+);
+
+INSERT INTO `users2` VALUES (1, 'kate', 48.69);
+INSERT INTO `users2` VALUES (2, 'lily', 79.459);
+SELECT * FROM `users2`;
+
+-- 显示
+/*
++----+------+--------+
+| id | name | salary |
++----+------+--------+
+|  1 | kate |  48.69 |
+|  2 | lily |  79.46 |
++----+------+--------+
+*/
+</code></pre>
+
+<p><strong>float</strong>和<strong>decimal</strong>的区别：</p>
+
+<ul>
+<li>float和decimal的默认值不一样。float(M, D)如果省略掉M和D，则会根据硬件允许的限制来保存值，float精确到大约小数点后7位；而decimal(M, D)中省略M和D时，则D默认为0，M默认为10。即decimal == decimal(10, 0)，本质上，decimal是以字符串的形式保存数值。</li>
+<li>精度不一样。decimal可以表示更高的精度，float表示的精度要低于decimal，当我们想要记录更高的精度时，应该选择decimal。</li>
+</ul>
+
+<h1 id="总结">总结</h1>
+
+<p>上面介绍了MySQL中的数值类型，根据需求选对合适的类型很重要，更多描述可参考官方文档：<a href="https://dev.mysql.com/doc/refman/5.7/en/numeric-types.html">https://dev.mysql.com/doc/refman/5.7/en/numeric-types.html</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

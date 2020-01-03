@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Redis数据类型之字符串（string）类型的使用</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Redis数据类型之字符串（string）类型的使用</div>
+        <div class="post-date">Wednesday, May 10, 2017</div>
+    </div>
+    <article>
+
+<p>Redis（remote dictionary server)，是一个基于<strong>key-value</strong>的高速存储系统，也称为缓存系统。他遵循BSD协议、支持网络、可基于内存也可以数据持久化的日志性、k-v数据库。</p>
+
+<p>Redis支持5中数据类型，有：字符串、列表、集合、有序集合、哈希。</p>
+
+<h1 id="键-key">键（key）</h1>
+
+<h2 id="keys">keys</h2>
+
+<p><strong>KEYS</strong> pattern</p>
+
+<p>用来查找复合给定模式pattern的key</p>
+
+<ul>
+<li>*：匹配所有的key，如keys *。</li>
+<li>?：匹配单个字符，如keys hell?，匹配hella、hello等。</li>
+<li>[]：匹配任意个给定的字符，可用“-”表示范围，如keys h[a-z]llo。</li>
+</ul>
+
+<h2 id="randomkey">randomkey</h2>
+
+<p>从当前库中随机返回一个key。有key存在时返回任意一个，不存在时返回nil。如：</p>
+
+<pre><code class="language-bash">redis&gt; MSET name 'shawn' age 24 sex 'male'
+redis&gt; RANDOMKEY
+&quot;age&quot;
+</code></pre>
+
+<h2 id="exists">exists</h2>
+
+<p><strong>EXISTS</strong> key</p>
+
+<p>检查给定key是否存在，如：</p>
+
+<pre><code class="language-bash">redis&gt; EXISTS name
+(integer) 1
+
+redis&gt; EXISTS profile
+(integer) 0
+</code></pre>
+
+<h2 id="ttl">ttl</h2>
+
+<p><strong>TTL</strong> key</p>
+
+<p>返回给定key的剩余生存时间（time to live)，以秒为单位。</p>
+
+<p>当key存在但没有设置剩余时间时，返回-1。</p>
+
+<p>当key不存在时，返回-2</p>
+
+<pre><code class="language-bash">redis&gt; TTL name
+(integer) -1
+
+redis&gt; TTL profile
+(integer) -2
+</code></pre>
+
+<h2 id="pttl">pttl</h2>
+
+<p><strong>PTTL</strong> key</p>
+
+<p>以毫秒为单位返回给定key的剩余生存时间，和ttl类型。</p>
+
+<pre><code class="language-bash">redis&gt; PTTL age
+(integer) -1
+
+redis&gt; PTTL address
+(integer) -2
+</code></pre>
+
+<h2 id="type">type</h2>
+
+<p><strong>TYPE</strong> key</p>
+
+<p>返回key所对应的类型，类型有none、string、list、set、zset、hash</p>
+
+<pre><code class="language-bash">redis&gt; TYPE sex
+string
+</code></pre>
+
+<h2 id="rename">rename</h2>
+
+<p><strong>RENAME</strong> key newkey</p>
+
+<p>给key重命名</p>
+
+<pre><code class="language-bash">redis&gt; RENAME name username
+redis&gt; KEYS *
+1) &quot;username&quot;
+2) &quot;sex&quot;
+3) &quot;age&quot;
+```language
+</code></pre>
+
+<h2 id="expire">expire</h2>
+
+<p><strong>EXPIRE</strong> key seconds</p>
+
+<p>设置过期时间，以秒数为单位。</p>
+
+<pre><code class="language-bash">redis&gt; EXPIRE username 100
+redis&gt; TTL username
+(integer) 91
+</code></pre>
+
+<h2 id="pexpire">pexpire</h2>
+
+<p><strong>PEXPIRE</strong> key milliseconds</p>
+
+<p>设置过期时间，以毫秒为单位。</p>
+
+<pre><code class="language-bash">redis&gt; PEXPIRE age 500000
+redis&gt; TTL age 500000
+(integer) 497
+</code></pre>
+
+<h2 id="persist">persist</h2>
+
+<p><strong>PERSIST</strong> key</p>
+
+<p>移除key的过期时间，将key转成持久的</p>
+
+<pre><code class="language-bash">redis&gt; PERSIST age
+redis&gt; TTL age
+(integer) -1
+</code></pre>
+
+<h2 id="del">del</h2>
+
+<p><strong>DEL</strong> key [key&hellip;]</p>
+
+<p>删除给定的一个或多个key</p>
+
+<pre><code class="language-bash">redis&gt; DEL username
+(integer) 1
+
+redis&gt; DEL age sex
+redis&gt; DEL username
+</code></pre>
+
+<h1 id="字符串">字符串</h1>
+
+<h2 id="set">set</h2>
+
+<p><strong>SET</strong> key value [EX seconds] [PX milliseconds]</p>
+
+<p>设置指定key的值，可以设置过期时间。</p>
+
+<p>EX seconds设置秒数过期时间</p>
+
+<p>PX milliseconds设置毫秒数过期时间</p>
+
+<pre><code class="language-bash">redis&gt; SET name 'shawngu' EX 500
+</code></pre>
+
+<h2 id="get">get</h2>
+
+<p><strong>GET</strong> key</p>
+
+<p>返回给定key对应的值</p>
+
+<pre><code class="language-bash">redis&gt; GET name
+&quot;shawngu&quot;
+</code></pre>
+
+<h2 id="setnx">setnx</h2>
+
+<p><strong>SETNX</strong> key value</p>
+
+<p>若给定的key不存在时设置key并给对应的值，当key存在时不作任何动作。</p>
+
+<pre><code class="language-bash">redis&gt; SETNX name tom
+(integer) 0
+
+redis&gt; SETNX username tom
+(integer) 1
+</code></pre>
+
+<h2 id="mset">mset</h2>
+
+<p><strong>MSET</strong> key value [key value&hellip;]</p>
+
+<p>同时设置一个或多个k-v键值对，原子性的，要么都设置成功，要么都失败。</p>
+
+<pre><code class="language-bash">redis&gt; MSET age 24 sex male address beijing
+OK
+</code></pre>
+
+<h2 id="mget">mget</h2>
+
+<p><strong>MGET</strong> key [key&hellip;]</p>
+
+<p>返回所有（一个或多个）给定的key对应的值。</p>
+
+<pre><code class="language-bash">redis&gt; MGET username age sex address
+1) &quot;tom&quot;
+2) &quot;24&quot;
+3) &quot;male&quot;
+4) &quot;beijing&quot;
+</code></pre>
+
+<h2 id="msetnx">msetnx</h2>
+
+<p><strong>MSETNX</strong> key value [key value&hellip;]</p>
+
+<p>同时设置一个或多个key-value对，当且仅当所有给定的key都不存在。原子性的，要么都成功，要么都失败。</p>
+
+<pre><code class="language-bash">redis&gt; MSETNX name tom profile nanjing
+(integer) 1
+</code></pre>
+
+<h2 id="setrange">setrange</h2>
+
+<p><strong>SETRANGE</strong> key offset value</p>
+
+<p>用value参数覆盖给定key所存储的值，从偏移量offset开始。不存在的key当作空白字符串处理。</p>
+
+<pre><code class="language-bash">redis&gt; SETRANGE username 0 jack
+redis&gt; GET username
+&quot;jack&quot;
+</code></pre>
+
+<h2 id="getrange">getrange</h2>
+
+<p><strong>GETRANGE</strong> key start end</p>
+
+<p>返回给定key中字符串的子字符串，字符串的截取范围从start开始到end结束（包含start和end）。</p>
+
+<pre><code class="language-bash">redis&gt; GETRANGE username 0 2
+&quot;jac&quot;
+</code></pre>
+
+<h2 id="getset">getset</h2>
+
+<p><strong>GETSET</strong> key value</p>
+
+<p>将给定的key的值设为value，并返回key的旧的值，不是字符串时，返回一个错误。</p>
+
+<pre><code class="language-bash">redis&gt; GETSET username rose_lily
+&quot;jack&quot;
+redis&gt; GET username
+&quot;rose_lily&quot;
+</code></pre>
+
+<h2 id="setex">setex</h2>
+
+<p><strong>SETEX</strong> key seconds value</p>
+
+<p>设置指定key的值，并设置过期时间，单位是秒。</p>
+
+<pre><code class="language-bash">redis&gt; SETEX address 500 shanghai
+redis&gt; TTL address
+(integer) 495
+redis&gt; GET address
+&quot;shanghai&quot;
+</code></pre>
+
+<h2 id="psetex">psetex</h2>
+
+<p><strong>PSETEX</strong> key milliseconds value</p>
+
+<p>设置指定的key的值，同时设置过期时间，单位为毫秒。</p>
+
+<pre><code class="language-bash">redis&gt; PSETEX profile 200000 it
+redis&gt; TTL profile
+(integer) 194
+redis&gt; GET profile
+&quot;it&quot;
+</code></pre>
+
+<h2 id="append">append</h2>
+
+<p><strong>APPEND</strong> key value</p>
+
+<p>如果key已经UC存在并且是一个字符串，append将value追加到key原来的值的末尾；如果不存在，就设定一个值。</p>
+
+<pre><code class="language-bash">redis&gt; APPEND name kate
+redis&gt; GET name
+&quot;tomkate&quot;
+</code></pre>
+
+<h2 id="incr">incr</h2>
+
+<p><strong>INCR</strong> key</p>
+
+<p>将key中存储的数字值增一。如果key不存在，那么key的值会被初始为0，然后incr操作。</p>
+
+<pre><code class="language-bash">redis&gt; INCR age
+(integer) 25
+</code></pre>
+
+<h2 id="incrby">incrby</h2>
+
+<p><strong>INCRBY</strong> key increment</p>
+
+<p>将key所存储的值加上增量increment，如果key不存在，那么key的值会被先初始化为0，然后做INCRBY运算</p>
+
+<pre><code class="language-bash">redis&gt; INCRBY age 10
+(integer) 36
+
+redis&gt; INCRBY idx 15
+(integer) 15
+</code></pre>
+
+<h2 id="decr">decr</h2>
+
+<p><strong>DECR</strong> key</p>
+
+<p>将key中存储的数字值减一，如果key不存在，key的值会被先初始化为0，然后再执行decr操作。</p>
+
+<pre><code class="language-bash">redis&gt; DECR age
+(integer) 35
+
+# 不存在的key
+redis&gt; DECR count
+(integer) -1
+</code></pre>
+
+<h2 id="decrby">decrby</h2>
+
+<p><strong>DECRBY</strong> key decrement</p>
+
+<p>key所存储对的值减去给定的减量值</p>
+
+<pre><code class="language-bash">redis&gt; DECRBY age 25
+(integer) 10
+
+# 不存在key时
+redis&gt; DECRBY age2 10
+(integer) -10
+</code></pre>
+
+<h2 id="strlen">strlen</h2>
+
+<p><strong>STRLEN</strong> key</p>
+
+<p>返回key所存储的字符串的长度</p>
+
+<pre><code class="language-bash">redis&gt; STRLEN name
+(integer) 7
+</code></pre>
+
+<h2 id="incrbyfloat">incrbyfloat</h2>
+
+<p><strong>INCRBYFLOAT</strong> key increment</p>
+
+<p>将key所存储的值加上给定的浮点增量值</p>
+
+<pre><code class="language-bash">redis&gt; INCRBYFLOAT price 15.6
+&quot;15.6&quot;
+</code></pre>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

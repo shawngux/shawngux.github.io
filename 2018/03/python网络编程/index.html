@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python网络编程</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python网络编程</div>
+        <div class="post-date">Saturday, Mar 31, 2018</div>
+    </div>
+    <article>
+
+<p>Python是一个很强大的网络编程语言，对网络协议的各个层次进行了封装。这样我们不必再去关系网络实现的细节，可以集中精力处理程序逻辑部分。</p>
+
+<h1 id="socket">Socket</h1>
+
+<p>Socket（套接字）可以看成是两个端点程序之间的信息通道。程序分布在不同的计算机或者网络上，通过套接字相互发送信息。在Python中，通过<a href="https://docs.python.org/3/library/socket.html#module-socket">Socket</a>模块来创建这样的连接。</p>
+
+<p>套接字包括两个：<strong>服务器套接字</strong>和<strong>客户端套接字</strong>。在创建一个服务器套接字后，让它等待连接，这样它就会在某个网络地址处（IP地址和端口的组合）监听，直到有客户端的套接字连接，连接成功后，就可以进行交互了。</p>
+
+<p>在Python的Socket模块中，一个套接字就是socket类的一个实例。实例化需要给定3个参数：第一个参数是地址族（默认是<strong>socket.AF_INET</strong>）;第2个参数是流（默认是<strong>socket.SOCK_STREAM</strong>）或数据报（<strong>socket.SOCK_DGRAM</strong>）,第3个参数是使用的协议（默认是0，一般使用默认值即可）。</p>
+
+<p>服务器套接字使用<strong><font color='red'>bind</font></strong>方法后，再调用<strong><font color='red'>listen</font></strong>方法去监听某个特定的地址。</p>
+
+<p>客户端套接字使用<strong><font color='red'>connect</font></strong>方法连接到服务器，在connect方法中使用的地址与服务器在bind方法中的地址相同。</p>
+
+<p>服务器套接字开始监听后，它就可以接受客户端的连接。通过<strong><font color='red'>accetp</font></strong>来完成。这个方法会阻塞（等待）直到客户端连接，然后返回一个格式为(client, address)的元组，client是一个客户端套接字。服务器处理完与该客户端的连接后，再次调用accept方法开始等待下一个连接。</p>
+
+<p>套接字有两个方法<strong><font color='red'>send</font></strong>（发送）和<strong><font color='red'>recv</font></strong>（接收），来传输数据。</p>
+
+<h1 id="tcp编程">TCP编程</h1>
+
+<p>TCP是面向于有连接的协议，建立可靠的协议，双方通信确认以后可传输数据。具体看代码：</p>
+
+<h2 id="服务器">服务器</h2>
+
+<pre><code class="language-python"> import socket
+ 
+ # 创建socket对象
+ s = socket.socket()
+ host = '127.0.0.1'
+ port = 8888
+ 
+ # 监听地址和端口
+ s.bind((host, port))
+ 
+ # 指定等待连接的最大数量
+ s.listen(5)
+ 
+ # 无限循环接口客户端的连接
+ while True:
+     sock, addr = s.accept()
+     print('connected from %s:%s :' % addr)
+     sock.send(b'thank you for connecting')
+     sock.close()
+</code></pre>
+
+<p>上面的程序是一个小型服务器，连接客户端的连接，连接成功后会给客户端发送一句话“thank you for connecting”</p>
+
+<h2 id="客户端">客户端</h2>
+
+<p>创建一个客户端来连接服务器</p>
+
+<pre><code class="language-python"> import socket
+ 
+ # 创建socket对象
+ s = socket.socket()
+ host = '127.0.0.1'
+ port = 8888
+ 
+ # 连接服务器
+ s.connect((host, port))
+ 
+ # 接收数据
+ print(s.recv(1024).decode('utf-8')) 
+</code></pre>
+
+<p>这样客户端连接上服务器后，会接收到服务器发来的“thank you for connecting”</p>
+
+<p>小结：Python中使用socket建立TCP连接很简单，服务器端监听端口，然后处理每个连接；客户端主动连接服务（指定服务器的IP和端口），然后做需要做的事即可。同一个端口，被一个socket使用后就不能被别的socket使用。</p>
+
+<h1 id="udp编程">UDP编程</h1>
+
+<p>UDP协议是面向于无连接的，它不需要建立服务器和客户端之间的连接，只要知道对方的IP和端口就可以发送数据，是否到达就无法保证了。因此UDP传输数据是不可靠的，但是它的传输速度被TCP协议要快，这也是它的优势。具体看代码：</p>
+
+<h2 id="服务器端">服务器端</h2>
+
+<pre><code class="language-python"> import socket
+ 
+ # socket.SOCK_DGRAM表示创建的socket使用udp协议
+ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+ host = '127.0.0.1'
+ port = 9999
+ 
+ # 绑定地址和端口
+ s.bind((host, port))
+ 
+ # 无限接收数据中
+ while True:
+     data, addr = s.recvfrom(1024)
+     print('Received from %s:%s.' % addr)
+     
+     # 发送数据
+     s.sendto(b'Hello, %s!' % data, addr)
+</code></pre>
+
+<h2 id="客户端-1">客户端</h2>
+
+<pre><code class="language-python"> import socket
+ 
+ # socket.SOCK_DGRAM表示创建的socket使用udp协议
+ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+ host = '127.0.0.1'
+ port = 9999
+ 
+ # 发送数据给服务器
+ data = b'Hello, server'
+ s.sendto(data, (host, port))
+ 
+ # 接收数据
+ print(s.recv(1024).decode('utf-8'))
+ s.close()
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>tcp协议是面向于连接的，udp协议是面向于无连接的。Python的socket模块很方便的让我们创建所需的连接。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

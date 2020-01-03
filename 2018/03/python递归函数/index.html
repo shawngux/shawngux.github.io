@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python递归函数</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python递归函数</div>
+        <div class="post-date">Monday, Mar 19, 2018</div>
+    </div>
+    <article>
+
+<p>递归函数说的简单一点就是在函数内部自己调用自己。那么这个函数就是递归函数。如：</p>
+
+<pre><code class="language-python"> def recursion():
+     return recursion()
+</code></pre>
+
+<p>上面这个就是一个简单的递归函数。当然这样的函数什么事情也做不了，并且是个无穷递归，一旦执行就永不结束，很快程序就会崩溃。所以这样的递归函数时没有意义的。</p>
+
+<p>一个有用的递归应当包含几个部分：</p>
+
+<ul>
+<li>必须有结束条件，即一般说的有返回值</li>
+<li>包含一个或多个问题较小部分的递归调用，简单的说就是每一次递归调用都更接近于最小可能性的解</li>
+</ul>
+
+<p>下面两个经典递归应用</p>
+
+<h1 id="阶乘">阶乘</h1>
+
+<p>n的阶乘定义为 n x (n-1) x (n-2) x (n-3) x &hellip; x 1。</p>
+
+<p>简单分析：</p>
+
+<ol>
+<li>1的阶乘为1</li>
+<li>大于1的数的阶乘为n x (n-1) 的阶乘</li>
+</ol>
+
+<p>代码实现：</p>
+
+<pre><code class="language-python"> def factorial(n):
+     if n == 1:
+         return 1
+     else:
+         return n * factorial(n-1)
+</code></pre>
+
+<h1 id="二分法查找">二分法查找</h1>
+
+<p>即每次折半查找，如要查找一个数是否在序列内，以中间序列中中间数字为基准进行判断，如果比中间数字大，将序列折半，然后再取右侧折半后的序列的中间数再进行比较查找，依次这样下去，找到返回。如果数比原序列中间数小，则左边做同样的查找。</p>
+
+<p>代码实现：</p>
+
+<pre><code class="language-python"> def binary_search(seq, target_number, lower=0, upper=None):
+     if upper is None:
+         upper = len(seq)-1
+     if lower == upper:
+         assert target_number == seq[upper]
+         return upper
+     else:
+         middle = (lower + upper) // 2 # 先除以2再向下取整
+         if target_number &gt; seq[middle]:
+             return binary_search(seq, target_number, middle+1, upper)
+         else:
+             return binary_search(seq, target_number, lower, middle)
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>所有的递归一般都可以写成循环的形式，递归优点是逻辑要比循环清晰，但是递归存在栈溢出的问题。所有是否要使用递归，酌情选择。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Redis数据类型之集合（set）类型和有序集合（sorted set）类型的使用</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Redis数据类型之集合（set）类型和有序集合（sorted set）类型的使用</div>
+        <div class="post-date">Saturday, May 13, 2017</div>
+    </div>
+    <article>
+
+<h1 id="集合">集合</h1>
+
+<p>Redis的set集合时string类型的无序集合。集合的每一元素时唯一的，不能出现重复的数据。</p>
+
+<h2 id="sadd">sadd</h2>
+
+<p><strong>SADD</strong> key member [member&hellip;]</p>
+
+<p>将一个或多个member元素加入到集合key中，已经存在集合的member元素将被忽略。</p>
+
+<pre><code class="language-bash">redis&gt; SADD sports football basketball
+(integer) 2
+</code></pre>
+
+<h2 id="smembers">smembers</h2>
+
+<p><strong>SMEMBERS</strong> key</p>
+
+<p>返回集合key中的所有成员，不存在的key视为空集合。</p>
+
+<pre><code class="language-bash">redis&gt; SMEMBERS sports
+1) &quot;basketball&quot;
+2) &quot;football&quot;
+</code></pre>
+
+<h2 id="sismember">sismember</h2>
+
+<p><strong>SISMEMBER</strong> key member</p>
+
+<p>判断member是否在集合中</p>
+
+<pre><code class="language-bash">redis&gt; SISMEMBER sports football
+(integer) 1
+
+redis&gt; SISMEMBER sports pingpong
+(integer) 0
+</code></pre>
+
+<h2 id="srem">srem</h2>
+
+<p><strong>SREM</strong> key member [member&hellip;]</p>
+
+<p>移除集合key中一个或多个member元素，不存在的忽略</p>
+
+<pre><code class="language-bash">redis&gt; SREM sports pingpong football
+(integer) 1
+
+redis&gt; SMEMBERS sports
+1) &quot;basketball&quot;
+</code></pre>
+
+<h2 id="scard">scard</h2>
+
+<p><strong>SCARD</strong> key</p>
+
+<p>返回集合key中的元素的数量</p>
+
+<pre><code class="language-bash">redis&gt; SADD sports football pingpong swimming
+redis&gt; SCARD sports
+(integer) 4
+</code></pre>
+
+<h2 id="smove">smove</h2>
+
+<p><strong>SMOVE</strong> source destination member</p>
+
+<p>将member元素从source集合移动到destination集合中，如果source集合不存在或不包含指定元素。则smove不执行任何操作，仅返回0</p>
+
+<pre><code class="language-bash">redis&gt; SMEMBERS sports2
+redis&gt; SMOVE sports sports2 football
+redis&gt; SMEMBERS sports2
+1) &quot;football&quot;
+</code></pre>
+
+<h2 id="spop">spop</h2>
+
+<p><strong>SPOP</strong> key</p>
+
+<p>移除并返回集合中的一个随机元素</p>
+
+<pre><code class="language-bash">redis&gt; SPOP sports
+&quot;swimming&quot;
+</code></pre>
+
+<h2 id="sinter">sinter</h2>
+
+<p><strong>SINTER</strong> key [key&hellip;]</p>
+
+<p>返回一个集合的所有成员，所有给定多个key，返回多个集合的交集</p>
+
+<pre><code class="language-bash">redis&gt; SINTER sports
+1) &quot;basketball&quot;
+2) &quot;pingpong&quot;
+
+redis&gt; SADD sports2 pingpong
+redis&gt; SINTER sports sports2
+1) &quot;pingpong&quot;
+</code></pre>
+
+<h2 id="sinterstore">sinterstore</h2>
+
+<p><strong>SINTERSTORE</strong> destination key [key&hellip;]</p>
+
+<p>类似于sinter，但它将结果保存到destination集合，而不是简单返回结果集</p>
+
+<pre><code class="language-bash">redis&gt; SMEMBERS sports_store
+redis&gt; SINTERSTORE sports_store sports sports2
+redis&gt; SMEMBERS sports_store
+1) &quot;pingpong&quot;
+</code></pre>
+
+<h2 id="sunion">sunion</h2>
+
+<p><strong>SUNION</strong> key [key&hellip;]</p>
+
+<p>返回一个集合的所有成员，该集合时所有给定集合的并集，不存在的key视为空集。</p>
+
+<pre><code class="language-bash">redis&gt; SUNION sports sports2
+1) &quot;basketball&quot;
+2) &quot;football&quot;
+3) &quot;pingpong&quot;
+</code></pre>
+
+<h2 id="sunionstore">sunionstore</h2>
+
+<p><strong>SUNIONSTORE</strong> destination key [key&hellip;]</p>
+
+<p>类似于sunion，但它将结果保存到destination集合中</p>
+
+<pre><code class="language-bash">redis&gt; SMEMBERS sports_union
+redis&gt; SUNIONSTORE sports_union sports sports2
+(integer) 3
+redis&gt; SMEMBERS sports_union
+1) &quot;basketball&quot;
+2) &quot;football&quot;
+3) &quot;pingpong&quot;
+</code></pre>
+
+<h2 id="sdiff">sdiff</h2>
+
+<p><strong>SDIFF</strong> key [key&hellip;]</p>
+
+<p>返回一个（前面）集合的所有成员，该集合是所有给定集合之间的差集。</p>
+
+<pre><code class="language-bash">redis&gt; SDIFF sports sports2
+1) &quot;basketball&quot;
+</code></pre>
+
+<h2 id="sdiffstore">sdiffstore</h2>
+
+<p>** SDIFFSTORE** destination key [key&hellip;]</p>
+
+<p>类似于sdiff，但它将结果保存到destination集合中，而不是简单返回结果集。destination可以是key本身。</p>
+
+<pre><code class="language-bash">redis&gt; SDIFFSTORE sports sports sports2
+redis&gt; SMEMBERS sports
+1) &quot;basketball&quot;
+</code></pre>
+
+<h2 id="srandmember">srandmember</h2>
+
+<p><strong>SRANDOMEMBER</strong> key [count]</p>
+
+<p>随机返回count个元素，如果count省略，随机返回一个元素。</p>
+
+<pre><code class="language-bash">redis&gt; SRANDMEMBER sports2
+&quot;pingpong&quot;
+
+redis&gt; SRANDMEMBER sports2 2
+1) &quot;football&quot;
+2) &quot;pingpong&quot;
+</code></pre>
+
+<h1 id="有序集合">有序集合</h1>
+
+<p>Redis中有序集合（sorted set）也是string类型元素的集合，不允许重复。</p>
+
+<p>集合中的每一元素会关联一个double类型的分数（score）。Redis通过分数来为集合中的成员进行从小到大的排序。有序集合的成员唯一，但分数可以重复。</p>
+
+<p>可用场景有：电影、产品的排行榜等</p>
+
+<h2 id="zadd">zadd</h2>
+
+<p><strong>ZADD</strong> key score member [[score member]&hellip;]</p>
+
+<p>将一个或多个member元素及其score值加入到有序集key中，如果member已经存在，那么更新member的score值，并通过重新插入这个member元素，来保证member在正确的位置上。</p>
+
+<p>score可以是正数或双精度浮点数。</p>
+
+<pre><code class="language-bash">redis&gt; ZADD movies 96 fulian
+redis&gt; ZADD movies 98 afanda 94 lovespartment
+</code></pre>
+
+<h2 id="zrange">zrange</h2>
+
+<p><strong>ZRANGE</strong> key start stop [WITHSCORES]</p>
+
+<p>返回有序集指定区间的成员，成员的位置按score值递增。start和end代表位置，0代表第一个，-1代表最后一个</p>
+
+<pre><code class="language-bash">redis&gt; ZRANGE movies 0 -1
+1) &quot;lovespartment&quot;
+2) &quot;fulian&quot;
+3) &quot;afanda&quot;
+</code></pre>
+
+<h2 id="zrevrange">zrevrange</h2>
+
+<p><strong>ZREVRANGE</strong> key start stop [WITHSCORES]</p>
+
+<p>返回有序集key中，指定区间内的成员。成员位置按score递减来排序。</p>
+
+<pre><code class="language-bash">redis&gt; ZREVRANGE movies 0 -1 WITHSCORES
+1) &quot;afanda&quot;
+2) &quot;98&quot;
+3) &quot;fulian&quot;
+4) &quot;96&quot;
+5) &quot;lovespartment&quot;
+6) &quot;94&quot;
+</code></pre>
+
+<h2 id="zrangebyscore">zrangebyscore</h2>
+
+<p><strong>ZRANGEBYSCORE</strong> key min max  [<strong>WITHSCORES</strong>] [<strong>LIMIT</strong> offset count]</p>
+
+<p>返回有序集key中，所有score值介于min和max之间（包括）的成员，按score值递增排序</p>
+
+<pre><code class="language-bash">redis&gt; ZRANGEBYSCORE movies 80 100
+1) &quot;lovespartment&quot;
+2) &quot;fulian&quot;
+3) &quot;afanda&quot;
+</code></pre>
+
+<h2 id="zrevrangebyscore">zrevrangebyscore</h2>
+
+<p><strong>ZREVRANGEBYSCORE</strong> key max min [<strong>WITHSCORES</strong>] [<strong>LIMIT</strong> offset count]</p>
+
+<p>返回有序集key中，score介于max和min之间（包括）的所有成员，按score递减排序。</p>
+
+<pre><code class="language-bash">redis&gt; ZREVRANGEBYSCORE movies 100 50
+1) &quot;afanda&quot;
+2) &quot;fulian&quot;
+3) &quot;lovespartment&quot;
+</code></pre>
+
+<h2 id="zcount">zcount</h2>
+
+<p><strong>ZCOUNT</strong> key min max</p>
+
+<p>返回有序集key中，score值在min和max之间（包括）的成员的数量</p>
+
+<pre><code class="language-bash">redis&gt; ZCOUNT movies 90 100
+(integer) 3
+</code></pre>
+
+<h2 id="zcard">zcard</h2>
+
+<p><strong>ZCARD</strong> key</p>
+
+<p>返回有序集的元素的个数。</p>
+
+<pre><code class="language-bash">redis&gt; ZCARD movies
+(integer) 3
+</code></pre>
+
+<h2 id="zscore">zscore</h2>
+
+<p><strong>ZSCORE</strong> key member</p>
+
+<p>返回有序集中，成员member的score值，如果member或key不存在，返回nil。</p>
+
+<pre><code class="language-bash">redis&gt; ZSCORE movies fulian
+&quot;96&quot;
+</code></pre>
+
+<h2 id="zrank">zrank</h2>
+
+<p><strong>ZRANK</strong> key member</p>
+
+<p>返回有序集key中member的排名，按score值递增。排名以0开始</p>
+
+<pre><code class="language-bash">redis&gt; ZRANK movies fulian
+(integer) 1
+
+redis&gt; ZRANK movies lovespartment
+(integer) 0
+</code></pre>
+
+<h2 id="zincrby">zincrby</h2>
+
+<p><strong>ZINCRBY</strong> key increment member</p>
+
+<p>为有序集key的成员member的score值加上增量increment，可以传负值，表示减。</p>
+
+<pre><code class="language-bash">redis&gt; ZINCRBY movies 10 fulian
+&quot;106&quot;
+
+redis&gt; ZINCRBY movies -30 fulian
+&quot;76&quot;
+
+redis&gt; ZRANGE movies 0 -1 WITHSCORES
+1) &quot;fulian&quot;
+2) &quot;76&quot;
+3) &quot;lovespartment&quot;
+4) &quot;94&quot;
+5) &quot;afanda&quot;
+6) &quot;98&quot;
+</code></pre>
+
+<h2 id="zrem">zrem</h2>
+
+<p><strong>ZREM</strong> key member</p>
+
+<p>移除有序集key中的一个或多个成员，不存在则忽略。</p>
+
+<pre><code class="language-bash">redis&gt; ZREM movies fulian
+(integer) 1
+
+redis&gt; ZRANGE movies 0 -1 WITHSCORES
+1) &quot;lovespartment&quot;
+2) &quot;94&quot;
+3) &quot;afanda&quot;
+4) &quot;98&quot;
+</code></pre>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

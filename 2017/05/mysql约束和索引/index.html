@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL约束和索引</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL约束和索引</div>
+        <div class="post-date">Monday, May 1, 2017</div>
+    </div>
+    <article>
+
+<h1 id="约束">约束</h1>
+
+<p>在设计表时，我们往往需要字段满足某个条件，如该字段值不能重复、不能为空等，这些都是约束。</p>
+
+<p>分类：</p>
+
+<ul>
+<li>主键约束（primary key）</li>
+<li>唯一约束（unique）</li>
+<li>不为空约束（not null）</li>
+<li>外键约束（foreign key），一般不设置，表与表之间的主从关系从开发人员维护</li>
+</ul>
+
+<h2 id="主键约束">主键约束</h2>
+
+<p>关键字：<strong><font color='red'>PRIMARY KEY</font></strong></p>
+
+<p>使用：</p>
+
+<pre><code class="language-sql">-- 建表时设置主键约束
+CREATE TABLE `users`
+(
+    id int unsigned primary key
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 或在最后语句中设置
+CREATE TABLE `users`
+(
+    id int unsigned，
+    primary key(id)
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+
+<p>注：当字段设置为主键后，主键的字段默认不能null，且值不能重复。一张表只能有一个主键，但可以设置复合主键。</p>
+
+<p>复合主键：</p>
+
+<pre><code class="language-sql">-- id和name两个字段组成一个复合主键
+CREATE TABLE `users`
+(
+    id int unsigned，
+    name varchar(32),
+    primary key(id, name)
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+
+<h2 id="唯一约束">唯一约束</h2>
+
+<p>关键字：<strong><font color='red'>UNIQUE</font></strong></p>
+
+<p>使用：</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned primary key,
+    name varchar(32) unique
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+
+<p>注：字段设置唯一约束后，该字段值不能重复。如何未设置不为空约束，该字段可为null。一张表可以设置多个唯一约束。</p>
+
+<h2 id="不为空约束">不为空约束</h2>
+
+<p>关键字：<strong><font color='red'>NOT NULL</font></strong>，一般设置不为空的字段会给个默认值</p>
+
+<p>使用：</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned primary key,
+    name varchar(32) unique not null default '',
+    email varchar(64) not null default 'example@com'
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+
+<p>注：当字段设置为<strong>unique</strong>和<strong>not null</strong>约束后，其效果和设置主键约束一样。</p>
+
+<p>我们也可以在表设计创建好后通过<strong><font color='red'>ALTER</font></strong>来添加或修改约束。</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int,
+    name varchar(32),
+    email varchar(64)
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 通过alter来添加约束
+ALTER TABLE `users` ADD CONSTRAINT primary key(id);
+
+--设置不为空
+ALTER TABLE `users` MODIFY name varchar(32) not null default '';
+
+-- 增加唯一约束
+ALTER TABLE `users` MODIFY name varchar(32) unique not null default '';
+-- 通过create unique创建唯一约束
+CREATE UNIQUE INDEX uni_email ON `users` (email);
+</code></pre>
+
+<p>注：其中关键字<strong>CONSTRAINT</strong>可以省略。</p>
+
+<h2 id="删除约束">删除约束</h2>
+
+<p>有的时候可能需要删除已有的约束。</p>
+
+<p>1、 删除主键约束
+格式：
+&gt; <strong><font color='red'>ALTER TABLE</font></strong> table_name <strong><font color='red'>DROP PRIMARY KEY</font></strong></p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">ALTER TABLE `users` DROP primary key;
+</code></pre>
+
+<p>2、 删除不为空约束
+删除不为空约束可以通过<strong><font color='red'>ALTER</font></strong> &hellip; <strong><font color='red'>MODIFY</font></strong> &hellip; 来处理。</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">ALTER TABLE `users` MODIFY name varchar(32);
+</code></pre>
+
+<p>3、 删除唯一约束
+格式：
+&gt; <strong><font color='red'>ALTER TABLE</font></strong> table_name <strong><font color='red'>DROP INDEX index_name</font></strong></p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">ALTER TABLE `users` DROP INDEX uni_email;
+</code></pre>
+
+<h2 id="自增长">自增长</h2>
+
+<p>当我们需要将字段值设置为自动增长时，可以通过<strong>auto_increment</strong>关键字来设置。</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned primary key auto_increment
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+
+<p>注：自增长默认从1开始，步长为1，但可以修改开始值</p>
+
+<pre><code class="language-sql">ALTER TABLE `users` auto_increment = 2;
+</code></pre>
+
+<h1 id="索引">索引</h1>
+
+<p>对于数据库查询速度及一些性能的提高，索引是最必不可少的。</p>
+
+<p>常见索引分类：</p>
+
+<ul>
+<li>主键索引（即当字段设置为主键后，就拥有了主键索引）</li>
+<li>唯一索引（当字段设置unique后，就有了唯一键索引）</li>
+<li>普通索引（用的最多）</li>
+<li>全文索引（针对于文字进行关键字索引）</li>
+</ul>
+
+<h2 id="索引的创建">索引的创建</h2>
+
+<p>1、主键索引：在建表时指定即可</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned primary key auto_increment
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 或
+CREATE TABLE `users`
+(
+    id int unsigned auto_increment,
+	primary key(id)
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 或
+CREATE TABLE `users`
+(
+    id int unsigned
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+ALTER TABLE `users` ADD PRIMARY KEY (id);
+</code></pre>
+
+<p>2、唯一索引</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned primary key auto_increment,
+	idx int unsigned unique
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 或
+CREATE TABLE `users`
+(
+    id int unsigned primary key auto_increment,
+	idx int unsigned,
+	unique (idx)
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 建表后指定
+CREATE TABLE `users`
+(
+	idx int unsigned
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+--1.
+ALTER TABLE `users` ADD UNIQUE (idx);
+--2.
+CREATE UNIQUE INDEX uni_idx ON `users` (idx);
+</code></pre>
+
+<p>3、普通索引：用的最多</p>
+
+<pre><code class="language-sql">-- 建表时指定
+CREATE TABLE `users2`
+(
+	idx int unsigned,
+	index (idx)
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- 建表后
+CREATE TABLE `users3`
+(
+	idx int unsigned
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+-- 方式1
+ALTER TABLE `users3` ADD INDEX (idx);
+-- 方式2
+CREATE INDEX inx_idx ON `users` (idx);
+</code></pre>
+
+<p>4、全文索引</p>
+
+<p>全文索引是针对于文字、文章进行关键字检索的索引，MySQL提供默认全文索引，但是功能相对于第三方全文索引技术还是很弱的，对于要求比较高的全文索引，我们可以使用专门的全文索引技术，如：coreseek、sphinx、xunsearch等</p>
+
+<h2 id="索引的查询">索引的查询</h2>
+
+<pre><code class="language-sql">-- way 1
+SHOW KEYS FROM `users`;
+
+-- way 2
+SHOW INDEX FROM `users`;
+
+-- way 3
+SHOW INDEXES FROM `users`;
+</code></pre>
+
+<h2 id="索引的删除">索引的删除</h2>
+
+<ul>
+<li><strong>DROP INDEX</strong> index_name <strong>ON</strong> table_name</li>
+<li><strong>ALTER TABLE</strong> table_name <strong>DROP INDEX</strong> index_name</li>
+<li><strong>ALTER TABLE</strong> table_name <strong>DROP PRIMARY KEY</strong>（删除主键索引）</li>
+</ul>
+
+<h2 id="索引的修改">索引的修改</h2>
+
+<p>对于索引的修改，我们一般采取先删掉，然后添加新的索引。</p>
+
+<h1 id="总结">总结</h1>
+
+<p>上面概述的MySQL的约束和索引相关操作，若需查看更详细描述，可参考官网：<a href="https://dev.mysql.com/doc/refman/5.7/en/constraint-primary-key.html">约束</a>、<a href="https://dev.mysql.com/doc/refman/5.7/en/create-index.html">索引</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

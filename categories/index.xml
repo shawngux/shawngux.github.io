@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Shawngu的网络日志</title>
+    <link>https://shawngu.com/categories/</link>
+    <description>Recent content in Categories on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://shawngu.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>blockchain</title>
+      <link>https://shawngu.com/categories/blockchain/</link>
+      <pubDate>Sun, 05 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/blockchain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>solidity_chapter</title>
+      <link>https://shawngu.com/categories/solidity_chapter/</link>
+      <pubDate>Thu, 26 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/solidity_chapter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://shawngu.com/categories/python/</link>
+      <pubDate>Sat, 31 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python_chapter</title>
+      <link>https://shawngu.com/categories/python_chapter/</link>
+      <pubDate>Sat, 31 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/python_chapter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>computerbase</title>
+      <link>https://shawngu.com/categories/computerbase/</link>
+      <pubDate>Fri, 19 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/computerbase/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>database</title>
+      <link>https://shawngu.com/categories/database/</link>
+      <pubDate>Tue, 16 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/database/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql_chapter</title>
+      <link>https://shawngu.com/categories/mysql_chapter/</link>
+      <pubDate>Sun, 07 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/categories/mysql_chapter/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

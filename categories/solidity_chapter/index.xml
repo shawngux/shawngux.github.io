@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>solidity_chapter on Shawngu的网络日志</title>
+    <link>https://shawngu.com/categories/solidity_chapter/</link>
+    <description>Recent content in solidity_chapter on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 26 Jul 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://shawngu.com/categories/solidity_chapter/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Solidity函数类型</title>
+      <link>https://shawngu.com/2018/07/solidity%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B/</link>
+      <pubDate>Thu, 26 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidity%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B/</guid>
+      <description>Solidity中，函数可以使用不同的关键字进行修饰，代表不同的类型函数，函数类型关键字常用的有view、constant、pure、payable。
+View类型函数 将函数声明为view类型，代表该函数不会修改区块链中的状态。可看成只读类型的函数。调用只读状态类型的函数不会消耗gas。
+pragma solidity ^0.4.24; contract Test { function func() public view returns (uint) { return 2 * 4 + now; } }  constant修饰函数时是view的别名，作用和view一样，代表只读状态。
+pragma solidity ^0.4.24; contract Test { // constant &amp;lt;==&amp;gt; view function func() public constant returns (uint) { return 4 * 8 + now; } }  不修改状态相对的则是修改状态，以下情况被认为是修改状态。
+ 修改定义的状态变量 产生事件 创建其他合约 使用selfdestruct自毁函数 通过调用发送以太币 调用任何没有被标记为view或pure的函数 使用低级调用 包含特定操作码的内联汇编  注：在solidity中，编译器没有强制view函数一定不能修改状态，只是尽可以保证不修改以让其只读。
+Pure函数 将函数声明为pure类型，这种情况下看成承诺不读取或修改状态。这个地方可理解为局部变量值返回。
+pragma solidity ^0.4.24; contract Test { // 不会去读取和修改区块链中的状态。 function func() public pure returns (string) { return &#39;shawn.</description>
+    </item>
+    
+    <item>
+      <title>Solidity函数修饰器</title>
+      <link>https://shawngu.com/2018/07/solidity%E5%87%BD%E6%95%B0%E4%BF%AE%E9%A5%B0%E5%99%A8/</link>
+      <pubDate>Wed, 25 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidity%E5%87%BD%E6%95%B0%E4%BF%AE%E9%A5%B0%E5%99%A8/</guid>
+      <description>函数修饰器 在solidity中，当我们想要在执行某个函数之前处理一些行为，例如检查某个条件，这个时候函数修饰器可以轻松实现这样的要求。
+pragma solidity ^0.4.24; contract Test { address owner; function Test() { owner = msg.sender; } // 定义修饰器，用于在执行函数前判断当前调用者是为合约拥有者 // _; 修饰器修饰的函数体会被插入到这个符号的位置。 modifier onlyOwner { require(msg.sender == owner); _; } // 使用修饰器修饰 function add() public constant onlyOwner returns (uint) { return 1 + 2; } }  修饰器也可以被继承，一个函数也可以被多个修饰器修饰，被多个修饰器修饰时，使用空格隔开。
+pragma solidity ^0.4.24; contract Parent { address public owner; uint public value; modifier onlyOwner { require(msg.sender == owner); _; } modifier check { require(value &amp;gt; 10); _; } } contract Child is Parent{ function Child() { owner = msg.</description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型之结构体（Struct）、映射（Mapping）</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E7%BB%93%E6%9E%84%E4%BD%93struct%E6%98%A0%E5%B0%84mapping/</link>
+      <pubDate>Tue, 24 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E7%BB%93%E6%9E%84%E4%BD%93struct%E6%98%A0%E5%B0%84mapping/</guid>
+      <description>结构体 solidity中，结构体的定义很简单，通过struct关键字来声明。
+pragma solidity ^0.4.24; contract Test { // 定义的新类型包含两个属性。 struct Animal { string name; string color; } Animal animal; function Test() { animal = Animal({name: &#39;dog&#39;, color: &#39;black&#39;}); } // output: dog, black function show() constant returns (string, string) { return (animal.name, animal.color); } }  注：solidity中可以通过元组的方式返回多个值，这个借鉴了Python的特性。元组通过()来表示。
+映射 在solidity中，映射通过mapping(_keyType =&amp;gt; _valueType)的形式来声明。
+https://solidity.readthedocs.io/en/latest/types.html#mappings
+例如：mapping(address =&amp;gt; string)
+pragma solidity ^0.4.24; contract Test { // 声明映射 mapping(address =&amp;gt; uint) public balances; function update(uint newBalance) public { balances[msg.</description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型之枚举（Enums）</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E6%9E%9A%E4%B8%BEenums/</link>
+      <pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E6%9E%9A%E4%B8%BEenums/</guid>
+      <description>枚举可以看成是有确定元素值的数据类型，例如，我们平常提到的方向，简单来说有东、南、西、北四个方向，那么我们可以定义一个Direction这个枚举类型。
+pragma solidity ^0.4.24; contract Test { enum Direction {East, South, West, North} Direction direction; function setDirection() { direction = Direction.East; } // output: 0 可看成下标 function getDirection() constant returns (Direction) { return direction; } }  </description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型之数组（Arrays）</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E6%95%B0%E7%BB%84arrays/</link>
+      <pubDate>Sat, 21 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E6%95%B0%E7%BB%84arrays/</guid>
+      <description>solidity中，数组分为固定长度数组，和可变长度数组。数组直接通过类型加[]来定义。
+https://solidity.readthedocs.io/en/latest/types.html#arrays
+例如：uint[3] arr = [1, 2, 3] 或者 uint[] arr = [1, 2, 3]
+固定长度数组 固定长度数组是指在定义时就指定好长度的数组，指定长度后，长度不可再改变，索引下的值可以修改。
+pragma solidity ^0.4.24; contract Test { uint[5] arr = [1, 2, 3, 4, 5]; // output: 5 function len() constant returns (uint) { return arr.length; } function setValue() { arr[0] = 10; } }  可变长度数组 可变长度数组即在声明的时候并没有指定长度大小，可以动态的改变。数组内的值可修改，亦可通过push来追加元素。
+pragma solidity ^0.4.24; contract Test { string[] names = [&#39;shawn&#39;]; function pushValue() { names.push(&#39;tom&#39;); } function len() constant returns (uint) { return names.</description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型之字节数组（Byte Arrays）</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%AD%97%E8%8A%82%E6%95%B0%E7%BB%84byte-arrays/</link>
+      <pubDate>Fri, 20 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%AD%97%E8%8A%82%E6%95%B0%E7%BB%84byte-arrays/</guid>
+      <description>定长字节数组（Fixed-size byte arrays） https://solidity.readthedocs.io/en/latest/types.html#fixed-size-byte-arrays
+定长字节数组是值类型变量。通过bytes1、bytes2、bytes3、&amp;hellip;&amp;hellip;、bytes32来定义。而byte是bytes1的别名。
+例如：byte5 bt = 0x736861776e;
+1、支持的运算符有：
+ 比较运算符：&amp;gt;=、&amp;gt;、&amp;lt;=、&amp;lt;、==、!=（返回布尔值）。 位运算符：&amp;amp;、|、^（异或）、~（取反）、&amp;lt;&amp;lt;（左移）、&amp;gt;&amp;gt;（右移）。 索引访问：如果 x 是 bytesI 类型，那么 x[k]（其中 0 &amp;lt;= k &amp;lt; I）返回第 k 个字节（只读）。  pragma solidity ^0.4.24; contract Test { // 0x736861776e =&amp;gt; shawn // 十六进制的两个字符或数字代表一个字节 bytes1 bt1 = 0x73; // 01110011 -&amp;gt; 一个字节 bytes2 bt2 = 0x7368; // 01110011 01101000 -&amp;gt; 两个字节 bytes3 bt3 = 0x736861; // 01110011 01101000 01100001 -&amp;gt; 三个字节 bytes4 bt4 = 0x73686177; // 01110011 01101000 01100001 01110111 -&amp;gt; 四个字节 bytes5 bt5 = 0x736861776e; // 01110011 01101000 01100001 01110111 01101110 -&amp;gt; 五个字节 // .</description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型之地址（address）</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%9C%B0%E5%9D%80address/</link>
+      <pubDate>Wed, 18 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%9C%B0%E5%9D%80address/</guid>
+      <description>地址类型（Address） 在以太坊中，任何的交易都是通过地址来进行的，因此在智能合约中，地址类型是比较重要的一个变量类型。
+以太坊区块链网络中，每一份智能合约有一个地址，每一个账户有一个独立的地址，地址的长度为20个字节，一个字节有8位。所以地址一共有160位。
+地址的字面量表示为：0x14723a09acff6d2a60dcdf7aa4aff308fddc160c，0x代表十六进制，一个十六进制的数字等于4个字节，因此地址呈现出来的数字和字符是40个（除去0x）。
+支持的运算符：
+ &amp;gt;=、&amp;gt;、&amp;lt;=、&amp;lt;、==、!=。  pragma solidity ^0.4.24; contract Test { address addr1 = 0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db; address addr2 = 0x583031d1113ad414f02576bd6afabfb302140225; // &amp;gt;= output: false function fnA() constant returns (bool) { return addr1 &amp;gt;= addr2; } // &amp;gt; output: false function fnB() constant returns (bool) { return addr1 &amp;gt; addr2; } // &amp;lt;= output: true function fnC() constant returns (bool) { return addr1 &amp;lt;= addr2; } // &amp;lt; output: true function fnD() constant returns (bool) { return addr1 &amp;lt; addr2; } // == output: false function fnE() constant returns (bool) { return addr1 == addr2; } // !</description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型之布尔类型（Boolean）、整型（Integer）</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8Bboolean%E6%95%B4%E5%9E%8Binteger/</link>
+      <pubDate>Tue, 17 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B9%8B%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8Bboolean%E6%95%B4%E5%9E%8Binteger/</guid>
+      <description>布尔类型（Booleans） https://solidity.readthedocs.io/en/latest/types.html#booleans
+bool：可能的取值为true和false。
+支持的运算符有：
+ !（逻辑非） &amp;amp;&amp;amp;（逻辑与，&amp;rdquo;and&amp;rdquo;） ||（逻辑或） ==（等于） !=（不等于）  注：运算符||和&amp;amp;&amp;amp;遵循短路规则。
+pragma solidity ^0.4.24; contract Test { uint a; uint b; bool c; bool d; function Test() { a = 1; b = 2; c = true; d = false; } // output: false function fnA() constant returns (bool) { return !c; } // output: false function fnB() constant returns (bool) { return c &amp;amp;&amp;amp; d; } // output: true function fnC() constant returns (bool) { return c || d; } // output: false function fnD() constant returns (bool) { return a == b; } // output: true function fnE() constant returns (bool) { return a !</description>
+    </item>
+    
+    <item>
+      <title>Solidty变量类型</title>
+      <link>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B/</link>
+      <pubDate>Sun, 15 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidty%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B/</guid>
+      <description> Solidity是一种静态类型语言，需要和Java等静态语言一样，需要在编译时给每个变量指定具体的类型。Solidity提供了一些基本类型，通过基本类型，可以组合成一些复杂类型。
+值类型 值类型的变量始终按值来传递，即当这些变量被用作函数参数或者赋值语句中，总是会进行值拷贝。当修改新的变量时，不会影响到原来变量的值。
+ 布尔类型（Booleans） 整型（Integers） 定长浮点型（Fixed Point Numbers） 地址类型（Address） 定长字节数组（Fixed-size byte arrays） 有理数和整型（Rational and Integer Literals） 字符串字面常量（String Literals） 枚举类型（Enums）  引用类型 引用类型在赋值的时候，既可以*值传递*，也可以*引用传递*（即地址传递），值传递时，仅是拷贝原变量的值，而引用传递时，修改新的引用变量，原来变量引用的值也会改变。
+ 字符串（String） 不定长字节数组（Dynamically-sized byte array） 数据位置（Data location） 数组（Arrays） 结构体（Structs）  </description>
+    </item>
+    
+    <item>
+      <title>Solidity访问修饰符（可见性）</title>
+      <link>https://shawngu.com/2018/07/solidity%E8%AE%BF%E9%97%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6%E5%8F%AF%E8%A7%81%E6%80%A7/</link>
+      <pubDate>Fri, 13 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidity%E8%AE%BF%E9%97%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6%E5%8F%AF%E8%A7%81%E6%80%A7/</guid>
+      <description>编辑器 例子中涉及到的代码，都是选用Remix这个编辑器来编译执行，并且都是执行通过的。以下简单介绍一下Remix编辑器的布局。
+状态变量可见性 在solidity中，状态变量的访问修饰符有3种，分别是public、internal和private。默认是internal。
+1、public：当访问修饰符为public时，该状态变量可以在合约内部、子合约和合约外部被调用。同时会自动生成一个同名的getter函数。
+pragma solidity ^0.4.24; contract Test { string public name; function Test() public { name = &#39;shawn&#39;; } }  Output: fn &amp;ndash;&amp;gt; name
+2、internal：当访问修饰符为internal时，该状态变量只能在内部访问，即可从当前合约内部或者有它派生的子合约中访问。与Java等其他语言的protected类似但不完全一样。
+pragma solidity ^0.4.24; contract Parent { string internal name; } contract Child is Parent { function Child() public { name = &#39;shawn&#39;; } // output =&amp;gt; &amp;quot;shawn&amp;quot; function getName() returns (string) { return name; } }  3、private: 当访问修饰符为private时，该状态变量只能在当前定义它的合约中使用，也不可以被继承。
+pragma solidity ^0.</description>
+    </item>
+    
+    <item>
+      <title>Solidity开发第一个智能合约</title>
+      <link>https://shawngu.com/2018/07/solidity%E5%BC%80%E5%8F%91%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/</link>
+      <pubDate>Thu, 12 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/solidity%E5%BC%80%E5%8F%91%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/</guid>
+      <description>Solidity概述 solidity是以太坊官方推出的编写智能合约的面向对象的高级编程语言，是一门图灵完备的程序设计语言，语法和风格类似JavaScript。通过solidity，我们可以根据自己的需求编写复杂的合约逻辑，其编写的智能合约运行在以太坊虚拟机（EVM），即Ethereum Virtual Machine中。
+编辑器选择 编写代码，必不可少需要开发工具。以下简介三款开发工具：Remix、Atom、VS Code。
+1、 Remix -&amp;gt; https://remix.ethereum.org
+基于web浏览器的IDE，继承编译器和solidity运行时环境，无需服务器端组件。官方文档推荐说尝试solidity编程最好的方式，不习惯web编程的小伙伴应该不完全赞同这种说法，取决于各个喜好。界面如下：
+2、Atom -&amp;gt; https://atom.io
+github出品，专为程序员推出的跨平台轻量级编辑器，界面简介美观，插件丰富。界面如下：
+3、VS Code -&amp;gt; https://code.visualstudio.com
+微软开发的免费开源的编辑器，界面美观，性能出色，插件同样丰富。界面如下：
+编写第一个智能合约 pragma solidity ^0.4.24; contract Person { string _name; uint _age; address _owner; // 合约拥有者 function Persion() { _owner = msg.sender; } /** * 修改名字 */ function setName(string name) public { _name = name; } /** * 返回名称 */ function name() public constant returns (string) { return _name; } function setAge(uint age) public { _age = age; } function age() public constant returns (uint) { return _age; } function destroy() { if (_owner !</description>
+    </item>
+    
+  </channel>
+</rss>

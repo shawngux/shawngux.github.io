@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>随手记 on Shawngu的网络日志</title>
+    <link>https://shawngu.com/notes/</link>
+    <description>Recent content in 随手记 on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://shawngu.com/notes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

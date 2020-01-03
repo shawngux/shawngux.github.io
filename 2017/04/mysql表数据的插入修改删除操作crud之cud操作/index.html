@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL表数据的插入、修改、删除操作（crud之cud操作）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL表数据的插入、修改、删除操作（crud之cud操作）</div>
+        <div class="post-date">Friday, Apr 28, 2017</div>
+    </div>
+    <article>
+
+<p>所谓的crud是指：</p>
+
+<p>c(create): 添加、r(read): 读取、u(update): 修改、d(delete): 删除。</p>
+
+<p>其中cud在MySQL中对应(insert、update、delete)，即<strong><font color='red'>DML</font></strong>。</p>
+
+<h1 id="insert">insert</h1>
+
+<p>插入数据操作。</p>
+
+<h2 id="基本语法">基本语法</h2>
+
+<blockquote>
+<p><strong><font color='red'>INSERT INTO </font></strong> table_name [(col_name, col_name, &hellip;)] <strong><font color='red'>VALUES</font></strong> (val, val, &hellip;), &hellip;</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色的为关键字</li>
+<li>col_name要和val一一对应，省略col_name时，表示所有字段都插入数据。</li>
+<li>insert也可以一次性插入多条记录</li>
+</ul>
+
+<pre><code class="language-sql">-- 插入一条记录
+INSERT INTO `users` (id, name, profile) VALUES (1, 'peter', 'this is peter');
+
+-- 插入多条记录
+INSERT INTO `users` (id, name, profile) VALUES (2, 'lucy', 'this is lucy'), (3, 'jack', 'this is jack'), (4, 'tom', 'this is tom');
+
+-- 查询结果
+SELECT * FROM `users`;
+/*
++----+-------+---------------+
+| id | name  | profile       |
++----+-------+---------------+
+|  1 | peter | this is peter |
+|  2 | lucy  | this is lucy  |
+|  3 | jack  | this is jack  |
+|  4 | tom   | this is tom   |
++----+-------+---------------+
+4 rows in set (0.00 sec)
+*/
+
+-- 省略col_name
+INSERT INTO `users` VALUES (5, 'Lily', 'lily am i');
+</code></pre>
+
+<p>注：</p>
+
+<ul>
+<li>插入数据时，类型要与字段类型一致，否则可能报错（部分MySQL会自动转换）</li>
+<li>插入的数据长度要小于等于指定的最大长度</li>
+<li>插入日期类型时，要用引号包裹起来</li>
+</ul>
+
+<h1 id="update">update</h1>
+
+<p>update是修改表中数据</p>
+
+<h2 id="基本语法-1">基本语法</h2>
+
+<blockquote>
+<p><strong><font color='red'>UPDATE</font></strong> table_name <strong><font color='red'>SET</font></strong> col_name1=val1, col_name2=val2, &hellip; [<strong><font color='red'>WHERE</font></strong> where_definition] [<strong><font color='red'>ORDER BY</font></strong> &hellip;] [<strong><font color='red'>LIMIT</font></strong> row_count]</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色为关键字，一般大写</li>
+<li>[]中内容可有可无，其中，当where条件子句不存在时，表示对整个所有记录进行修改</li>
+<li>col_name对应的值val可以是一个表达式，如name = (select name from &hellip;)</li>
+</ul>
+
+<pre><code class="language-sql">-- 修改users表中id为1的数据
+UPDATE `users` SET name = '修改后的名字', profile = '修改后的描述' WHERE id = 1;
+
+-- 查看结果
+SELECT * FROM `users` WHERE id = 1;
+/*
++----+--------------------+--------------------+
+| id | name               | profile            |
++----+--------------------+--------------------+
+|  1 | 修改后的名字         | 修改后的描述         |
++----+--------------------+--------------------+
+1 row in set (0.00 sec)
+*/
+
+-- 省略where字句时
+UPDATE `users` SET name = 'KATE', profile = 'THIS IS PROFILE';
+
+-- 查看结果
+SELECT * FROM `users`;
+/*
++----+------+-----------------+
+| id | name | profile         |
++----+------+-----------------+
+|  1 | KATE | THIS IS PROFILE |
+|  2 | KATE | THIS IS PROFILE |
+|  3 | KATE | THIS IS PROFILE |
+|  4 | KATE | THIS IS PROFILE |
+|  5 | KATE | THIS IS PROFILE |
++----+------+-----------------+
+*/
+
+-- 当字段类型为数值型时，可以进行累加计算，如增加一个age字段，然后进修改操作
+ALTER TABLE `users` ADD age int not null default 0 comment '年龄' AFTER profile;
+
+-- 累加
+UPDATE `users` SET age = age + 10 WHERE id = 1;
+
+-- 查看结果
+SELECT * FROM `users` WHERE id = 1;
+/*
++----+------+-----------------+-----+
+| id | name | profile         | age |
++----+------+-----------------+-----+
+|  1 | KATE | THIS IS PROFILE |  10 |
++----+------+-----------------+-----+
+*/
+</code></pre>
+
+<p>另外也可以修改多个表，使用一个表中的字段值给另一个表字段赋值，如：</p>
+
+<pre><code class="language-sql">UPDATE items,month SET items.price=month.price
+WHERE items.id=month.id;
+</code></pre>
+
+<p>更多细节叙述可查看: <a href="https://dev.mysql.com/doc/refman/5.7/en/update.html">https://dev.mysql.com/doc/refman/5.7/en/update.html</a></p>
+
+<p>####delete
+当我们不再需要一些记录时，可以使用delete来删除。</p>
+
+<h2 id="基本语法-2">基本语法</h2>
+
+<blockquote>
+<p><strong><font color='red'>DELETE FROM</font></strong> table_name [<strong><font color='red'>WHERE</font></strong> where_definition] [<strong><font color='red'>ORDER BY</font></strong> &hellip;] [<strong><font color='red'>LIMIT</font></strong> row_count]</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>如果没有where字句，将会删除表中所有记录，表的结构保留。</li>
+<li>where子句用来指定条件。</li>
+</ul>
+
+<pre><code class="language-sql">-- 删除id为5的记录
+DELETE FROM `users` WHERE id = 5;
+
+-- 查看结果
+SELECT * FROM `users` WHERE id = 5;
+/*
+Empty set (0.00 sec)
+*/
+
+-- 删除所用记录
+DELETE FROM `users`;
+
+-- 删除所有记录还可以使用truncate命令
+TRUNCATE TABLE `users`;
+</code></pre>
+
+<p>delete和truncate的区别：</p>
+
+<ul>
+<li>最终的效果一样，都会清空所有记录，但是truncate的执行速度快</li>
+<li>delete删除可以带where子句，这样删除记录更加灵活</li>
+<li>delete可以返回被删除的记录数，而truncate返回的是0</li>
+</ul>
+
+<h1 id="总结">总结</h1>
+
+<p>上面介绍了表数据插入、修改、删除操作，需要查看更多描述信息可查看官网：<a href="https://dev.mysql.com/doc/refman/5.7/en/insert.html">插入</a>、<a href="https://dev.mysql.com/doc/refman/5.7/en/update.html">修改</a>、<a href="https://dev.mysql.com/doc/refman/5.7/en/delete.html">删除</a>。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

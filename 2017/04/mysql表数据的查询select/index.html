@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL表数据的查询（select）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL表数据的查询（select）</div>
+        <div class="post-date">Saturday, Apr 29, 2017</div>
+    </div>
+    <article>
+
+<p>查询select是数据库中最重要的部分。也是开发中最常见的功能。</p>
+
+<h1 id="简单查询">简单查询</h1>
+
+<p>即单表查询</p>
+
+<h2 id="基本语法">基本语法</h2>
+
+<blockquote>
+<p><strong><font color='red'>SELECT</font></strong> [<strong><font color='red'>DISTINCT</font></strong>] * ¦ {col1, col2, col3, &hellip;} <strong><font color='red'>FROM</font></strong> table_name [<strong><font color='red'>WHERE</font></strong> where_expr] [<strong><font color='red'>GROUP BY</font></strong> {col_name ¦ expr} [<strong><font color='red'>ASC</font></strong> ¦ <strong><font color='red'>DESC</font></strong>]] [<strong><font color='red'>HAVING</font></strong> where_condition] [<strong><font color='red'>ORDER BY</font>&gt;</strong> {col_name ¦ expr} [<strong><font color='red'>ASC</font></strong> ¦ <strong><font color='red'>DESC</font></strong>]] [<strong><font color='red'>LIMIT</font></strong> row_count]</p>
+</blockquote>
+
+<p>其中：</p>
+
+<ul>
+<li>红色字为关键字，一般大写</li>
+<li>[]的内容可有可无，基本都为过滤条件</li>
+<li>distinct表示过滤掉重复的记录</li>
+<li>*表示查询所有字段，一般不用，效率太低</li>
+</ul>
+
+<p>在查询之前先创建一张表，并插入一些数据</p>
+
+<pre><code class="language-sql">-- 创建一张users表，用来查询
+CREATE TABLE `users`
+(
+	id int(8) unsigned not null default 0 comment '编号',
+	name varchar(32) not null default '' comment '姓名',
+	age smallint(4) unsigned not null default 0 comment '年龄',
+	address varchar(64) not null default '' comment '地址',
+	profile text comment '个人介绍'
+)CHARSET=utf8 COLLATE utf8_general_ci;
+
+-- 显示表创建时的结构
+SHOW CREATE TABLE `users` \G
+/*
+*************************** 1. row ***************************
+       Table: users
+Create Table: CREATE TABLE `users` (
+  `id` int(8) unsigned NOT NULL DEFAULT '0' COMMENT '编号',
+  `name` varchar(32) NOT NULL DEFAULT '' COMMENT '姓名',
+  `age` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '年龄',
+  `address` varchar(64) NOT NULL DEFAULT '' COMMENT '地址',
+  `profile` text COMMENT '个人介绍'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+1 row in set (0.00 sec)
+*/
+
+-- 或使用DESC命令
+DESC `users`;
+/*
++---------+----------------------+------+-----+---------+-------+
+| Field   | Type                 | Null | Key | Default | Extra |
++---------+----------------------+------+-----+---------+-------+
+| id      | int(8) unsigned      | NO   |     | 0       |       |
+| name    | varchar(32)          | NO   |     |         |       |
+| age     | smallint(4) unsigned | NO   |     | 0       |       |
+| address | varchar(64)          | NO   |     |         |       |
+| profile | text                 | YES  |     | NULL    |       |
++---------+----------------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+*/
+
+-- 插入数据
+INSERT INTO users (id, name, age, address, profile) VALUES 
+(1, 'tom', 24, 'America', 'An American'), 
+(2, 'jack', 25, 'Australia', 'He lives in Australia'), 
+(3, 'lucy', 19, 'England', 'She comes from England');
+</code></pre>
+
+<p>演示查询语句</p>
+
+<pre><code class="language-sql">-- 查询所有记录的所有字段
+SELECT * FROM `users`;
+-- 查询也可以指定某个数据库的某个表
+SELECT * FROM `test`.`users`;
+
+-- 查询指定所有记录的指定列
+SELECT name, age FROM `users`;
+
+-- 查询指定记录的指定列
+SELECT name, age, address FROM `users` WHERE id = 2;
+
+-- 过滤掉重复的记录
+SELECT DISTINCT name, age, address, profile FROM `users`;
+</code></pre>
+
+<h6 id="设置别名">设置别名</h6>
+
+<p>在SELECT查询语句中也可以通过<strong><font color='red'>AS</font></strong>来设置别名。AS也可以省略。</p>
+
+<p>语法为：</p>
+
+<blockquote>
+<p><strong><font color='red'>SELECT</font></strong> col_name <strong><font color='red'>AS</font></strong> alias &hellip;</p>
+</blockquote>
+
+<pre><code class="language-sql">-- 形式一
+SELECT name AS u FROM `users`;
+-- 形式二，加引号
+SELECT name AS 'u' FROM `users`;
+-- 形式三，省略AS
+SELECT name u FROM `users`;
+-- 形式四，省略AS，加引号
+SELECT name 'u' FROM `users`;
+</code></pre>
+
+<p>注：当查询的col为一个表达式时，别名就非常有用了。如：</p>
+
+<pre><code class="language-sql">SELECT name, age, address, 5 + 10 AS grade FROM `users`;
+</code></pre>
+
+<h6 id="where字句">where字句</h6>
+
+<p>查询语句中where字句支持<strong>比较运算符</strong>和<strong>逻辑运算符</strong>。</p>
+
+<p>比较运算符：</p>
+
+<ul>
+<li>&lt;（小于）、&gt;（大于）、&lt;=（小于等于）、&gt;=（大于等于）、=（等于）、&lt;&gt;（不等于）、!=（不等于）</li>
+<li><strong>BETWEEN &hellip; AND &hellip;</strong> (在某一区间的值)</li>
+<li><strong>IN</strong>（在某个列表中的值），如in(1, 2, 3, 4)</li>
+<li><strong>LIKE</strong>、<strong>NOT LIKE</strong>（模糊查询），可接<strong><font color='red'>%</font></strong>模式匹配符，如LIKE &lsquo;%小明&rsquo;（表示末尾是小明，前面任意）。</li>
+<li><strong>IS NULL</strong>（为空）</li>
+</ul>
+
+<p>逻辑运算符：</p>
+
+<ul>
+<li><strong>and</strong>，表示同时有多个条件成立</li>
+<li><strong>or</strong>，多个条件中任意一个成立</li>
+<li><strong>not</strong>，不成立</li>
+</ul>
+
+<pre><code class="language-sql">-- 查询id大于1的所有用户
+SELECT name, age, address, profile FROM `users` WHERE id &gt; 1;
+
+-- 查询id在（2, 4）范围内的用户
+SELECT name, age, address, profile FROM `users` WHERE id BETWEEN 2 AND 4;
+
+-- 查询name中包含om的用户
+SELECT name, age, address, profile FROM `users` WHERE name LIKE '%om%';
+
+-- 多个条件
+SELECT name, age, address, profile FROM `users` WHERE address = 'Canada' AND id &gt; 2;
+
+-- ...
+</code></pre>
+
+<h2 id="order-by">order by</h2>
+
+<p>查询语句中，可使用order by进行排序，order by后可接多个列，并且排序可以使用别名</p>
+
+<pre><code class="language-sql">-- 根据id进行排序
+SELECT name, age, address, profile FROM `users` ORDER BY id;
+
+-- 使用别名，默认升序
+SELECT name, age AS u_age, address, profile FROM `users` ORDER BY u_age;
+
+-- 降序
+SELECT name, age AS u_age, address, profile FROM `users` ORDER BY u_age DESC;
+</code></pre>
+
+<h2 id="group-by">group by</h2>
+
+<p>当我们需要对数据进行分组统计时，可以使用group by 来实现。并可以通过having筛选条件。</p>
+
+<p>基本语法：</p>
+
+<blockquote>
+<p><strong><font color='red'>SELECT</font></strong> col1, col2, &hellip;, <strong><font color='red'>FROM</font></strong> table_name <strong><font color='red'>GROUP BY</font></strong> col_name <strong><font color='red'>HAVING</font></strong> &hellip;</p>
+</blockquote>
+
+<p>如统计每个部门的平均工资：</p>
+
+<pre><code class="language-sql">-- 显示部门编号和部门的平均工资
+SELECT depno, avg(salary) FROM `emps` GROUP BY depno;
+
+-- 增加过滤条件
+SELECT depno, avg(salary) AS avgSal FROM `emps` GROUP BY depno HAVING avgSal &gt; 2000;
+</code></pre>
+
+<h2 id="limit分页">limit分页</h2>
+
+<p>分页也是在查询中经常使用到的功能。</p>
+
+<p><strong><font color='red'>LIMIT</font></strong>后接两个数字，第一数字表示偏移量（offset，记录索引，从0开始），第二个数字为每页记录数（pagesize）。</p>
+
+<pre><code class="language-sql">-- 从第6条记录开始，取10条
+SELECT name, age, salary FROM `emps` LIMIT 5, 10
+</code></pre>
+
+<p>其中，LIMIT后也可以只接一个数字，表示只取n条，如：</p>
+
+<pre><code class="language-sql">-- 只取前6条
+SELECT name, age, salary FROM `emps` LIMIT 6
+</code></pre>
+
+<p>一般的，我们在使用时，是通过前端传入第几页（page），一页几条这样的形式来查询，因此，需要转换。page和offset的转换为：</p>
+
+<p><strong>offset = (page - 1) * pagesize</strong></p>
+
+<h1 id="总结">总结</h1>
+
+<p>上面介绍了单表查询时一些操作，当where、group by、having、order by、limit这些条件都存在时，它们的顺序为：</p>
+
+<p><strong><font color='red'>where =&gt; group by =&gt; having =&gt; order by =&gt; limit</font></strong></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

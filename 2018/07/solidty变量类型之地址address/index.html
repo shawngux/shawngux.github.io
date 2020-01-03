@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidty变量类型之地址（address）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidty变量类型之地址（address）</div>
+        <div class="post-date">Wednesday, Jul 18, 2018</div>
+    </div>
+    <article>
+
+<h1 id="地址类型-address">地址类型（Address）</h1>
+
+<p>在以太坊中，任何的交易都是通过地址来进行的，因此在智能合约中，地址类型是比较重要的一个变量类型。</p>
+
+<p>以太坊区块链网络中，每一份智能合约有一个地址，每一个账户有一个独立的地址，地址的长度为20个字节，一个字节有8位。所以地址一共有160位。</p>
+
+<p>地址的字面量表示为：<font color="red">0x14723a09acff6d2a60dcdf7aa4aff308fddc160c</font>，<strong><font color="red">0x</font></strong>代表<strong>十六进制</strong>，一个十六进制的数字等于4个字节，因此地址呈现出来的数字和字符是40个（除去0x）。</p>
+
+<p>支持的运算符：</p>
+
+<ul>
+<li><strong><font color="red">&gt;=</font></strong>、<strong><font color="red">&gt;</font></strong>、<strong><font color="red">&lt;=</font></strong>、<strong><font color="red">&lt;</font></strong>、<strong><font color="red">==</font></strong>、<strong><font color="red">!=</font></strong>。</li>
+</ul>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    address addr1 = 0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db;
+    address addr2 = 0x583031d1113ad414f02576bd6afabfb302140225;
+    
+    // &gt;=  output: false
+    function fnA() constant returns (bool) {
+        return addr1 &gt;= addr2;
+    }
+    
+    // &gt;   output: false
+    function fnB() constant returns (bool) {
+        return addr1 &gt; addr2;
+    }
+    
+    // &lt;=  output: true
+    function fnC() constant returns (bool) {
+        return addr1 &lt;= addr2;
+    }
+    
+    // &lt;  output: true
+    function fnD() constant returns (bool) {
+        return addr1 &lt; addr2;
+    }
+    
+    // ==  output: false
+    function fnE() constant returns (bool) {
+        return addr1 == addr2;
+    }
+    
+    // !=  output: true
+    function fnF() constant returns (bool) {
+        return addr1 != addr2;
+    }
+}
+</code></pre>
+
+<h1 id="地址类型成员变量">地址类型成员变量</h1>
+
+<p><strong>1、balance</strong>：用来查询一个地址的余额。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    address cAddr = this;
+    
+    function getBalance() public constant returns (uint) {
+        return cAddr.balance;
+    }
+}
+
+</code></pre>
+
+<p>注：<strong><font color="red">this</font></strong>指代当前合约的地址。</p>
+
+<p><strong>2、transfer</strong>：用来给一个地址发送以太币（以wei为单位）</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    address targetAddr = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
+    
+    // 向targetAddr转账10wei以太币
+    function testTransfer() payable {
+        targetAddr.transfer(10);
+    }
+}
+
+</code></pre>
+
+<p>注：转账功能是由合约调用者向目标地址（targetAddr）转账，涉及到转账等交易时，合约方法必须要加<strong><font color="red">payable</font></strong>关键字。如果地址目标地址无效或者调用者余额不足，转账交易终止并抛出异常。</p>
+
+<p><strong>3、send</strong>：send是transfer的低级版本，本身也偏向于底层。 如果执行成功，返回true，如果执行失败，合约不会终止执行，但是send会返回false。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    address targetAddr = 0xdd870fa1b7c4700f2bd7f44238821c26f7392148;
+    
+    // 向targetAddr转账10wei以太币
+    function testSend() payable returns (bool) {
+        return targetAddr.send(10);
+    }
+}
+
+</code></pre>
+
+<p>注：调用方式和transfer一样，但是send会有一定的风险，当调用栈深度为1024时会导致失败。所以建议使用transfer。</p>
+
+<p><strong>4、call、callcode、delegatecall等</strong>：，主要是为了解决与一些不符合应用二进制接口交互等需求。详情<a href="https://solidity.readthedocs.io/en/latest/types.html#address">https://solidity.readthedocs.io/en/latest/types.html#address</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

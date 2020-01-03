@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidty变量类型之字节数组（Byte Arrays）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidty变量类型之字节数组（Byte Arrays）</div>
+        <div class="post-date">Friday, Jul 20, 2018</div>
+    </div>
+    <article>
+
+<h1 id="定长字节数组-fixed-size-byte-arrays">定长字节数组（Fixed-size byte arrays）</h1>
+
+<p><a href="https://solidity.readthedocs.io/en/latest/types.html#fixed-size-byte-arrays">https://solidity.readthedocs.io/en/latest/types.html#fixed-size-byte-arrays</a></p>
+
+<p>定长字节数组是值类型变量。通过<strong><font color="red">bytes1</font></strong>、<strong><font color="red">bytes2</font></strong>、<strong><font color="red">bytes3</font></strong>、&hellip;&hellip;、<strong><font color="red">bytes32</font></strong>来定义。而<strong><font color="red">byte</font></strong>是<strong>bytes1</strong>的别名。</p>
+
+<p>例如：byte5 bt = 0x736861776e;</p>
+
+<p>1、支持的运算符有：</p>
+
+<ul>
+<li>比较运算符：<strong><font color="red">&gt;=</font></strong>、<strong><font color="red">&gt;</font></strong>、<strong><font color="red">&lt;=</font></strong>、<strong><font color="red">&lt;</font></strong>、<strong><font color="red">==</font></strong>、<strong><font color="red">!=</font></strong>（返回布尔值）。</li>
+<li>位运算符：<strong><font color="red">&amp;</font></strong>、<strong><font color="red">|</font></strong>、<strong><font color="red">^（异或）</font></strong>、<strong><font color="red">~（取反）</font></strong>、<strong><font color="red">&lt;&lt;（左移）</font></strong>、<strong><font color="red">&gt;&gt;（右移）</font></strong>。</li>
+<li>索引访问：如果 <strong><font color="red">x</font></strong> 是 <strong><font color="red">bytesI</font></strong> 类型，那么 <strong><font color="red">x[k]</font></strong>（其中 <strong><font color="red">0 &lt;= k &lt; I</font></strong>）返回第 <strong><font color="red">k</font></strong> 个字节（只读）。</li>
+</ul>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    // 0x736861776e =&gt; shawn
+    
+    // 十六进制的两个字符或数字代表一个字节
+    
+    bytes1 bt1 = 0x73; // 01110011 -&gt; 一个字节
+    bytes2 bt2 = 0x7368; // 01110011 01101000 -&gt; 两个字节
+    bytes3 bt3 = 0x736861; // 01110011 01101000 01100001 -&gt; 三个字节
+    bytes4 bt4 = 0x73686177; // 01110011 01101000 01100001 01110111 -&gt; 四个字节
+    bytes5 bt5 = 0x736861776e; // 01110011 01101000 01100001 01110111 01101110 -&gt; 五个字节
+    
+    // ......
+    
+    byte a = 0x63;
+    
+    // output: false
+    function fnA() constant returns (bool) {
+        return bt1 &gt;= a;
+    }
+    
+    // output: 0x63
+    function fnB() constant returns (bytes1) {
+        return bt1 &amp; a;
+    }
+    
+    // 左移一位 output: 0xe6d0
+    function fnC() constant returns (bytes2) {
+        return bt2 &lt;&lt; 1;
+    }
+    
+    // 索引计算 output: 0x61
+    function fnD() constant returns (byte){
+        return bt5[2];
+    }
+}
+
+</code></pre>
+
+<p>2、成员变量：</p>
+
+<ul>
+<li><strong><font color="red">.length</font></strong>：表示字节的长度（只读）。</li>
+</ul>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    bytes5 bt5 = 0x736861776e;
+    
+    // output: 5
+    function getLen() constant returns (uint) {
+        return bt5.length;
+    }
+}
+</code></pre>
+
+<p>小结：定长字节数组一旦声明，字节内容和字节数组长度不可再改变。</p>
+
+<h1 id="变长字节数组">变长字节数组</h1>
+
+<p>变长字节数组又叫动态字节数组，属于引用类型变量。数组里面的字节内容和数组的长度可以动态的改变。通过<strong><font color="red">bytes</font></strong>来定义。</p>
+
+<p>例如：bytes dbt = new bytes(5); 括号里的5表示初始长度，是可以改变的。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    bytes dbt = new bytes(5);
+    
+    // 修改长度
+    function setLen() {
+        dbt.length = 10;
+    }
+    
+    // 获取长度
+    function getLen() constant returns (uint) {
+        return dbt.length;
+    }
+    
+    // 修改内容
+    function setBtContent() {
+        for (var i = 0; i &lt;dbt.length; ++i) {
+            dbt[i] = 0x98;
+        }
+    }
+    
+    // 获取内容
+    function getBtContent() constant returns (byte) {
+        return dbt[2];
+    }
+}
+
+</code></pre>
+
+<p>成员：</p>
+
+<ul>
+<li>length：获取字节数组的长度。</li>
+<li>push：追加新的字节到数组末尾。</li>
+</ul>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    bytes dbt = new bytes(5);
+        
+    // 获取长度
+    function getLen() constant returns (uint) {
+        return dbt.length;
+    }
+    
+    // 追加字节
+    function pushBtContent() {
+        byte b = 0x99;
+        dbt.push(b);
+    }
+}
+</code></pre>
+
+<h1 id="字符串string">字符串string</h1>
+
+<p>solidity中，字符串string是一个特殊的可变字节数组，并且是引用类型。字符串不可以通过length来获取字符的个数。但是可以通过转换成字节数组bytes来操作。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    string name = 'shawn';
+    
+    // output: 5
+    function len() constant returns (uint) {
+        return bytes(name).length;
+    }
+    
+    // 修改单个字符 output: Shawn
+    function setContent() constant returns (string){
+        bytes(name)[0] = 'S';
+        return name;
+    }
+}
+</code></pre>
+
+<p>小结：在字符串变量中，每个字符对应一个字节。</p>
+
+<h1 id="固定字节数组和动态字节数组间的转换关系">固定字节数组和动态字节数组间的转换关系</h1>
+
+<p>1、固定字节数组不能直接转成动态数组，但是可以通过定义动态字节数组变量的方式来转换。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    bytes5 name = 0x736861776e;
+    
+    function translate() constant returns (bytes) {
+    
+        // memory 表示定义的是一个临时变量，存储在内存中。
+        bytes memory dbt = new bytes(name.length);
+        
+        for (uint i = 0; i &lt; name.length; ++i) {
+            dbt[i] = name[i];
+        }
+        
+        return dbt;
+    }
+}
+</code></pre>
+
+<p>2、动态字节数组转成string。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    bytes name = new bytes(5);
+
+    function Test() {
+        name[0] = 0x73;
+        name[1] = 0x68;
+        name[2] = 0x61;
+        name[3] = 0x77;
+        name[4] = 0x6e;
+    }
+
+    // output: shawn
+    function translate() constant returns(string) {
+        return string(name);
+    }
+}
+</code></pre>
+
+<p>3、固定字节数组转换成string，需要先将固定字节数组转换成动态字节数组，然后再转成string。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    bytes5 name = 0x736861776e;
+
+    // output: shawn
+    function translate() constant returns(string) {
+        bytes memory dbt = new bytes(name.length);
+        
+        for (uint i = 0; i &lt; dbt.length; ++i) {
+            dbt[i] = name[i];
+        }
+    
+        return string(dbt);
+    }
+}
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>当确定字节长度的时候，使用固定字节数组更精准，而要更灵活的选择时，那么动态字节数组便是最好的选择，string是特殊的动态字节数组，属于引用类型变量。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python高级类型之字典(dict)和集合(set)</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python高级类型之字典(dict)和集合(set)</div>
+        <div class="post-date">Monday, Mar 12, 2018</div>
+    </div>
+    <article>
+
+<h1 id="dict">Dict</h1>
+
+<p>字典是Python中唯一内建的映射类型，在Python中用dict表示。字典中的项没有特定的顺序，使用键值对（k-v）来存储元素，其中键（k）唯一，但值（v）可以不唯一。</p>
+
+<h2 id="创建和使用字典">创建和使用字典</h2>
+
+<p>字典的创建可以直接通过{}；也可以使用dict函数，给参数来创建，参数可以是其他字典或者(k, v)形式的元组。具体看代码：</p>
+
+<pre><code class="language-python"> # 直接通过{}创建，键值间用冒号隔开，项间用逗号隔开
+ students = {'jack': 20, 'tom': 23, 'shawn': 18}
+ 
+ # 通过dict函数，加参数形式，
+ items = [('name', 'shawn'), ('age', 18)]
+ d = dict(items) # 返回{'name': 'shawn', 'age': 18}
+ 
+ animal = dict(name='dog', color='grey') # 返回{'name': 'dog', 'color': 'grey'}
+</code></pre>
+
+<p>字典是一种映射类型，但一些操作和通过序列很相似：</p>
+
+<ul>
+<li>len()返回字典中项的数量</li>
+</ul>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ len(d) # 返回3
+</code></pre>
+
+<ul>
+<li>d[k] 返回键对应的值</li>
+</ul>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ d['name'] # 返回'shawn'
+</code></pre>
+
+<ul>
+<li>d[k] = v 赋值</li>
+</ul>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ d['name'] = 'jack'
+ print(d) # 返回{'name': 'jack', 'sex': 'male', 'age': 18}
+</code></pre>
+
+<ul>
+<li>del d[k]删除键为k的项</li>
+</ul>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ del d['name']
+ print(d) # 返回{'sex': 'male', 'age': 18}
+</code></pre>
+
+<ul>
+<li>k in d 检查是否存在键为k的项</li>
+</ul>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ 'name' in d # 返回True
+</code></pre>
+
+<h2 id="字典的格式化字符串">字典的格式化字符串</h2>
+
+<p>使用字典来格式化字符串有时非常便捷高效，直接看代码：</p>
+
+<pre><code class="language-python"> areas = {'beijing': '帝都', '上海': '魔都', 'shenzhen': '鹏城'}
+ greet = 'welcome to %(beijing)s' % areas # 返回 'welcome to 帝都'
+</code></pre>
+
+<p>下面介绍一些字典常用方法</p>
+
+<h2 id="clear">clear</h2>
+
+<p>clear函数用来清空字典的项，无返回值：</p>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'age': 18}
+ d.clear()
+ print(d) # 返回{}
+</code></pre>
+
+<h2 id="copy">copy</h2>
+
+<p>copy用来拷贝一个字典，并返回一个相同的新字典。copy方法的拷贝是浅拷贝，即不会拷贝元素对象的子对象：</p>
+
+<pre><code class="language-python"> # 这种情况下是正常的，拷贝的字典和原字典独立
+ d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ copy_d = d.copy() # 返回{'name': 'shawn', 'sex': 'male', 'age': 18}
+ 
+ # 当存在子对象时，子对象值被修改后，拷贝的字典对应部分也一样改变
+ d2 = {'university':['Peking University', 'Tsinghua', 'Nanjing University']}
+ d2_copy = d2.copy()
+ d2['university'][0] = 'Harvard'
+ print(d2) # 返回{'university': ['Harvard', 'Tsinghua', 'Nanjing University']}
+ print(d2_copy) # 返回{'university': ['Harvard', 'Tsinghua', 'Nanjing University']}
+</code></pre>
+
+<p>如果需要深拷贝，即原字典和拷贝字典各自独立，可以使用copy模块的deepcopy函数来完成：</p>
+
+<pre><code class="language-python"> from copy import deepcopy
+ d = {'university':['Peking University', 'Tsinghua', 'Nanjing University']}
+ d_copy = deepcopy(d)
+ d['university'].append('Stanford')
+ print(d) # 返回{'university': ['Peking University', 'Tsinghua', 'Nanjing University', 'Stanford']}
+ print(d_copy) # {'university':['Peking University', 'Tsinghua', 'Nanjing University']}
+</code></pre>
+
+<h2 id="fromkeys">fromkeys</h2>
+
+<p>使用给定的键来建立新的字典：</p>
+
+<pre><code class="language-python"> d = {}.fromkeys(['name', 'age']) # 返回{'name': None, 'age': None}
+ 
+ # 给默认的值
+ d = dict.fromkeys(['name', 'age'], 'default') # 返回{'name': 'default', 'age': 'default'}
+</code></pre>
+
+<h2 id="get">get</h2>
+
+<p>get通过给定的键访问对应的值，当键不存在时，返回None，也可给一个缺省返回值：</p>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ d.get('sex') # 返回'male'
+ d.get('school') # 返回None
+ d.get('company', 'N/A') # 返回'N/A'
+</code></pre>
+
+<h2 id="pop">pop</h2>
+
+<p>删除字典里给定键的项，并返回对应键的值：</p>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ d.pop('name') # 返回'shawn'
+ print(d) # 返回{'sex': 'male', 'age': 18}
+</code></pre>
+
+<h2 id="popitem">popitem</h2>
+
+<p>弹出字典中随机的项。</p>
+
+<pre><code class="language-python"> d = {'name': 'shawn', 'sex': 'male', 'age': 18}
+ d.popitem()
+</code></pre>
+
+<h2 id="setdefault">setdefault</h2>
+
+<p>setdefault功能类似get,当字典中存在给定的键对应的项时，返回该键对应的值，没有则设置该键并赋值。看代码：</p>
+
+<pre><code class="language-python"> d = {'name': 'shawn'}
+ d.setdefault('name', 'jack') # 返回'shawn'
+ d.setdefault('age', 25) # 返回25
+ print(d) # 变成{'name': 'shawn', 'age': 25}
+</code></pre>
+
+<h2 id="update">update</h2>
+
+<p>用一个字典项来更新另一个，可看作追加：</p>
+
+<pre><code class="language-python"> d = {'name': 'tom'}
+ d2 = {'age': 20}
+ d.update(d2)
+ print(d) # 返回{'name': 'tom', 'age': 20}
+</code></pre>
+
+<h1 id="set">Set</h1>
+
+<p>set和dict类似，也是一组键的集合，但是set不存储值，由于键(key)不能重复，所有set也可以用来去重。</p>
+
+<h2 id="set创建">set创建</h2>
+
+<p>set可以通过{}来创建，也可以使用set方法，给序列参数的形式来创建</p>
+
+<pre><code class="language-python"> s = {1, 3, 5}
+ s2 = set([1, 'name', (5,)])
+</code></pre>
+
+<p>set也有一些和通过序列类似的操作：</p>
+
+<ul>
+<li>len(s)返回set集合元素的个数</li>
+</ul>
+
+<pre><code class="language-python"> s = set([1, 'name', (5,)])
+ len(s) # 返回3
+</code></pre>
+
+<ul>
+<li>k in s 检查键是否存在</li>
+</ul>
+
+<pre><code class="language-python"> s = {1, 2, 3}
+ 1 in s # 返回True
+</code></pre>
+
+<p>下面概述一下set常用方法：</p>
+
+<h2 id="clear-1">clear</h2>
+
+<p>清空集合set</p>
+
+<pre><code class="language-python"> s = {1, 2, 3}
+ s.clear()
+ print(s) # 返回{}
+</code></pre>
+
+<h2 id="add">add</h2>
+
+<p>add方法用来向set中添加元素：</p>
+
+<pre><code class="language-python"> s = {'name', 2}
+ s.add('age')
+ print(s) # 返回{2, 'age', 'name'}
+</code></pre>
+
+<h2 id="remove">remove</h2>
+
+<p>remove方法删除set中指定的元素：</p>
+
+<pre><code class="language-python"> s = {'name', 2}
+ s.remove('name')
+ print(s) # 返回{2}
+</code></pre>
+
+<h2 id="pop-1">pop</h2>
+
+<p>pop用来移除set中的元素并返回，默认最后一个</p>
+
+<pre><code class="language-python"> s = {'name', 2, ('age',)}
+ s.pop() # 返回('age',)
+ print(s) # 返回{'name', 2}
+</code></pre>
+
+<h2 id="copy-1">copy</h2>
+
+<p>copy用来拷贝一个set集合，并返回一个新的set集合对象，和dict一样，这里也是浅拷贝：</p>
+
+<pre><code class="language-python"> s = {1, 'shawn', 2}
+ s_copy = s.copy() # 返回{1, 2, 'shawn'}
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>以上介绍了字典dict和集合set的使用以及一些注意点。特别要注意，键一定要是不可变得类型，如字符串、元组、数值等。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

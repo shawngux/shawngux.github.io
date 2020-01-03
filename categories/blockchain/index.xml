@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>blockchain on Shawngu的网络日志</title>
+    <link>https://shawngu.com/categories/blockchain/</link>
+    <description>Recent content in blockchain on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://shawngu.com/categories/blockchain/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>IPFS:点对点的超媒体协议</title>
+      <link>https://shawngu.com/2018/08/ipfs%E7%82%B9%E5%AF%B9%E7%82%B9%E7%9A%84%E8%B6%85%E5%AA%92%E4%BD%93%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Sun, 05 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/08/ipfs%E7%82%B9%E5%AF%B9%E7%82%B9%E7%9A%84%E8%B6%85%E5%AA%92%E4%BD%93%E5%8D%8F%E8%AE%AE/</guid>
+      <description>IPFS是什么？ IPFS(InterPlanetary File System):中文全称叫星际文件系统，名字听起来就酷炸了有木有，它是一种全新的点对点超媒体分发协议，基于内容和身份寻址的方式来存储和传输数据及文件，旨在让互联网更加快速、安全和开放。
+IPFS是一种分布式文件系统，目的是将计算机设备通过相同的文件系统连接起来。
+什么叫做超媒体？  超媒体就是指在互联网上传输的视音频、图片、文字等。我们目前广泛使用的http协议中文件的传输都是通过转成文本之间的传输，所以叫做超文本传输协议。
+ 什么叫做点对点？  说的简单点就是你我之间没有第三方。举个例子，我有一部小视频（咳咳，你懂得。。。），你想让我发给你爽一把，那么之前的话，我需要将小视频上传到第三方平台（百度云等），然后你从云盘下载，这个过程中百度云盘作为中间服务商存在，麻烦，还有可能存在其他问题。而现在，通过IPFS，你可以直接连接我的计算机文件系统，直接从我的这个文件系统中拿去爽就好，没有其他方参与，这就是点对点。如果是交易的话，便是没有中间商赚差价。
+ 什么是基于内容和身份寻址？  在我们现有的http协议中，是通过ip或域名来寻找资源，而在IPFS中，直接通过内容来寻找存储地。通俗来说，就是在IPFS中，每一文件的内容都有一个具体的标识符，我们叫hash值（即为身份或者标识），我们通过这个文件的内容hash值来获取这个文件。
+ IPFS为什么存在？ 存在即合理。在提到IPFS为什么存在时，我们先说说http的不足。
+在目前互联网协议中，http依旧占山为王。但随着互联网世界的高速发展，http的不足之处也凸显出来：
+ 数据易丢失  有的时候我们在访问网页时会出现404这样的页面，一般人都知道这是访问的页面不存在，或者访问到的页面上存在内容缺失的情况。这是典型的数据丢失，造成这种情况的原因有好多，可能是数据传输过程中被劫持丢失、网络不稳定、服务器宕机或直接挂掉等，每一环节都可能造成数据数据丢失。老子账号可是冲了会员的，会员呢？账号里的钱呢？卧了个大槽子，全没了，Game Over了。
+ 过度依赖主干网络  http高度依赖主干网，即简单说就是过度依赖那几根主要的光纤网络，谁也无法保证说主干网不会出问题。一旦出现问题，核心数据丢失，那没法愉快的玩耍了。
+ 数据高度中心化  现有互联网中的数据高度集中在几个牛逼服务器提供商手中，但也不可避免可能出现问题。前段时间，某大厂服务器bug造成一创业公司数据丢失，直接造成创业公司濒临倒闭，这得哭死。。。，另外数据高度集中，面临被集中攻击的可能性就大了。这可能造成一系列连锁问题。
+ 低效且服务器成本昂贵  http通过服务器来集中分发资源，传输效率低下，同时服务器本身带宽是很昂贵的。
+以上是http暴露出的一列了相关的问题。出现问题就得解决问题，那么这时，IPFS闪亮登场了。
+IPFS通过分布式存储（全网中的计算机全部参与存储）来解决数据高度集中的问题和原先过度依赖主干网络的问题，通过版本控制的方式（即可恢复的历史版本）来解决数据易丢失的问题，这样一来也就不存在服务器成本昂贵的问题了，方案看起来相当牛逼有木有，实际也很牛逼。这尼玛貌似是要完全替掉http的节奏（当然是否可以要待时间检验）。
+IPFS有什么特点？ IPFS一些牛逼闪闪的特点：
+1、本身是一个协议：  定义内容寻址文件系统 协调内容传递 整合Kademlia、BitTorrent、Git  2、也是一个文件系统：  拥有特定结构的目录和文件 本身是一个可安装的文件系统  3、本身也是一个网站  可通过web端查看文件（https://ipfs.io/） 散列寻址内容保证真实性  4、使用加密  通过加密hash内容类寻址 块级重复数据删除 文件完整性+版本控制 文件系统级加密+签名支持  5、同时也是一个CDN（内容分发网络）  在本地文件系统添加一个文件，可供全世界使用 缓存十分友好，都是通过内容hash命名 基于bittorrent的带宽分配  6、点对点（p2p）  全球对等文件传输 没有中心化的概念及中心化可能带来的问题 系统是完全分散的架构  其他……</description>
+    </item>
+    
+    <item>
+      <title>基于Truffle和Openzeppelin-solidity创建标准代币</title>
+      <link>https://shawngu.com/2018/08/%E5%9F%BA%E4%BA%8Etruffle%E5%92%8Copenzeppelin-solidity%E5%88%9B%E5%BB%BA%E6%A0%87%E5%87%86%E4%BB%A3%E5%B8%81/</link>
+      <pubDate>Thu, 02 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/08/%E5%9F%BA%E4%BA%8Etruffle%E5%92%8Copenzeppelin-solidity%E5%88%9B%E5%BB%BA%E6%A0%87%E5%87%86%E4%BB%A3%E5%B8%81/</guid>
+      <description>在以太坊中创建代币需要符合ERC20协议标准，Openzeppelin是一个用来编写安全的以太坊智能合约的库，实现了RRC20协议，因此基于Openzeppelin和Truffle，我们可以很方便的创建我们自己的标准代币。
+1、首先我们需要确保已经安装了npm 和 truffle
+node-npm: https://nodejs.org/en/download/
+$ npm install -g truffle  2、我们通过truffle unbox命令下载truffle官方给的tutorialtoken项目骨架，在此基础上开发自己的代币
+首先我们新建一个目录，作为我们的项目目录
+$ mkdir encrypted-token $ cd encrypted-token  然后下载tutorialtoken骨架
+$ truffle unbox tutorialtoken Downloading... Unpacking... Setting up... Unbox successful. Sweet! Commands: Compile: truffle compile Migrate: truffle migrate Test contracts: truffle test Run dev server: npm run dev  4、然后安装openzeppelin-solidity库
+$ npm install openzeppelin-solidity + openzeppelin-solidity@1.12.0 added 1 package in 13.191s  至此，项目结构搭建完成
+encrypted-token contracts Migrations.sol migrations 1_initial_migraions.</description>
+    </item>
+    
+    <item>
+      <title>基于truffle、web3等框架的以太坊智能合约开发流程</title>
+      <link>https://shawngu.com/2018/07/%E5%9F%BA%E4%BA%8Etruffleweb3%E7%AD%89%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Tue, 31 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/%E5%9F%BA%E4%BA%8Etruffleweb3%E7%AD%89%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/</guid>
+      <description>Truffle 官网：https://truffleframework.com
+Truffle是针对于以太坊开发的一套框架，集成了以太坊智能合约的编译、部署环境和资产管理。旨在让基于以太坊开发变得更简单，更容易测试。同时truffle内部也整合的web3，方便调用以太坊底层接口。
+1、安装
+首先得安装npm，然后通过npm来全局安装。
+$ npm install -g truffle  2、初始化项目
+新建一个空的项目目录，然后通过命令进行初始目录
+$ truffle init Downloading... Unpacking... Setting up... Unbox successful. Sweet! Commands: Compile: truffle compile Migrate: truffle migrate Test contracts: truffle test  初始化完成，生成对应项目结构
+&amp;gt; demo &amp;gt; contracts // 合约文件目录 Migrations.sol &amp;gt; migrations // 编译文件目录 1_initial_migration.js &amp;gt; test // 测试文件目录 truffle-config.js truffle.js  3、创建合约
+在contracts目录中创建自己的合约myContract.sol
+pragma solidity ^0.4.24; contract MyContract { // 显示账户地址余额 function showBalance(address who) public constant returns (uint) { return who.</description>
+    </item>
+    
+    <item>
+      <title>挖矿的基本原理及代码模拟实现nonce</title>
+      <link>https://shawngu.com/2018/07/%E6%8C%96%E7%9F%BF%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0nonce/</link>
+      <pubDate>Sun, 08 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/%E6%8C%96%E7%9F%BF%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0nonce/</guid>
+      <description>基本原理 区块链网络中存储交易信息的区块源源不断的生成本质上是通过节点的挖矿来实现的，节点即所谓的矿工，而挖矿通俗点来说是指矿工抢夺记录交易信息（记账）权的过程。而隐藏在挖矿背后的是PoW共识（比特币）。
+PoW(Proof of Work)，即工作量证明，所谓工作量证明，是指根据矿工贡献的算力多少来获得奖励，简单点说就是多劳多得。
+挖矿的过程 节点根据上一个节点的hash值、当前时间戳、打包的交易信息去寻找一个nonce，从而让这几个数据整合生成的hash满足一定的难度，这个难度一般是指hash值前面0的个数。而nonce寻找过程是由1开始，依次累加，直到找到满足条件的hash为止，即生成了满足难度的区块。然后矿工将这个区块广播到区块链网络中，得其他节点检验，其他节点检验通过，便会将这个区块加到自己维护的链上。而生成区块的这个节点矿工便会在此后5个区块后，即第6个区块被确认后，获得奖励。
+模拟生成nonce伪代码 /** * 检验hash值难度 * @param targetHash: 给定的hash值 * @param difficulty: 给定的难度 */ function isValidDifficulty(targetHash, difficulty) { var i; for (i = 0; len = targetHash.length, i &amp;lt; len; ++i) { if (&#39;0&#39; !== targetHash[i]) { break; } } return i &amp;gt;= difficulty; } /** * 生成nonce和目标hash值 */ function generate() { var nonce = 0; // 从0开始累加 var targetHash; // 目标hash var input; // hash运算的数据 var difficulty = 4; // 初始难度为4 while(isValidDifficulty(targetHash, difficulty)) { nonce = nonce + 1; input = index + prevHash + timestamp + data + nonce; targetHash = CryptoJS.</description>
+    </item>
+    
+    <item>
+      <title>区块链基础</title>
+      <link>https://shawngu.com/2018/07/%E5%8C%BA%E5%9D%97%E9%93%BE%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Fri, 06 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2018/07/%E5%8C%BA%E5%9D%97%E9%93%BE%E5%9F%BA%E7%A1%80/</guid>
+      <description>一、区块链诞生的背景 在社会发展进程中，金融科技是保障社会文明的重要支柱，而记账这一行为或称为记账科技则是金融科技最核心的支柱基石。
+以往，无论是传统的交易，还是互联网上的经济金融贸易，几乎都需要借助可被广泛大众认可和信赖的第三方信用结构（银行、支付宝等）中的账本来记录，这样的话交易信息掌握在个体手中，同时涉及到多个交易方的情况下，需要分别维护各自的账本，可能出现不一致抑或对账困难的情况，而且，一旦出现数据遗失，则有可能无法找回。
+随着交易信息受限于“基于信用”这一模式的一系列可能出现的问题，去中心化，分布式账本这一概念出现。于是，区块链技术随之而来。
+二、区块链的发展历程 区块链发展至今，经历了三次浪潮：
+ 第一个浪潮出现在2013左右，此前，一个名为中本聪的在一封加密邮件中发布比特币白皮书《比特币：一种点对点的电子现金系统》，并在09年公开最初的实现代码，由此比特币项目上线，但在很长一段时间内并未引起太多的关注，直到比特币的价值暴涨，各种加密货币在此时期纷纷出现，因此，隐藏在其背后的区块链技术才首次引起大家的关注。这一时期，我们称之为区块链1.0时代。 第二个浪潮出现在2016年前后，这一时期，区块链技术也有了自身的突破，首个大规模的公有智能合约引擎&amp;ndash;以太坊（Ethereum）项目正式上线（我们称之为区块链2.0）。于此时期内，首个面向企业应用的联盟式分布式账本&amp;ndash;超级账本（HyperLedger Fabric）,在一些企业巨头支持下成立（我们称之为区块链2.5）。 第三个浪潮，从2017年开始至今，众多互联网领域的资本开始关注区块链，人才缺口也相应的持续加大，区块链成为继人工智能后的又一个资本追逐以及技术的热点。由此及未来的一段时间，我们称之为区块链3.0时代。  三、区块链中一些概念  定义  狭义上：区块链就是一种以区块为基本单位的链式存储结构。 广义上：区块链是指基于区块链存储结构实现的分布式账本。    基本原理  矿工：即参与维护区块链网络的每一个节点 挖矿：矿工通过不断计算得出一个满足给定难度的随机数从而生成符合记录交易数据的区块并获得奖励的过程，即矿工争夺记账权的过程。 交易：一次对账本的操作，如添加一条转账记录。 hash：一种摘要算法，将给定的输入经过hash运算，得到一个固定长度的无规律字符串，给定的输入即使有非常细微的不同，hash过后的字符串也会有非常大的差别。 nonce：随机串，即节点通过将上一个区块打包的内容加上不断计算得出的这个nonce进行hash，从而可以得出一个满足指定难度的一个hash值。 PoW(Proof of Work)：即工作量证明，在区块链网络中指的是节点贡献的算力，也就是共识（此种共识存在一定的不足，因此PoW和PoS之争的话题常有）。   以比特币为例阐述基本原理：
+首先，比特币客户端（比特币钱包等）发起一个转账交易，这笔交易广播到比特币网络中等待确认，网络中的节点接收到广播，便将待确认的交易记录打包在一起，组成一个候选区块，然后通过不断的暴力计算，试图找到一个随机串nonce，放到这个候选区块里，从而让这个候选区块的hash值满足一定的条件（例如小于某个特定的值）。一旦某个节点找到了这个nonce值，这个区块就可被认为是合法的，节点就会尝试将这个区块广播到区块链网络中。其他节点接收到这个区块后，进行验证，验证通过，则会将这个区块添加到自己维护的区块链上。当大部分节点都将这个区块添加到自己维护的区块链上后，这个区块则被全网接受，区块中的交易得到确认。而生成该区块的节点（即矿工）会接收到比特币奖励，但比特币不是立刻到达矿工的钱包，而是会在该区块之后的5个新区块被确认后，即第6个区块确认时收到。
+四、比特币(BTC)的一些特点 比特币本质上就是一种加密货币，基于区块链技术的一种数字货币实现，也是历史上首个经过大规模长时间检验的数字货币系统。
+ 去中心化：没有第三方的机构或者中介可以对网络中的交易进行破坏，任何交易都是基于共识来进行。 隐私匿名性：网络中交易的地址是匿名的，通过一个34位的地址来进行交易，避免了直接关联到具体的个体。 安全性：网络中交易存储是分布式的，每一个节点都维护一个完整的区块链，即使其中有个别节点异常也不会影响网络的运转。除非掌握全网51%及其以上算力，即可控制整个区块链。 总量一定：比特币总量固定，只有2100万枚。 每产生210000个区块后，比特币产量减半。 系统给矿工的奖励每4年减半，最开始是50个。 比特币区块的大小不超过1M，最多不超过4000笔交易，每个交易250字节。 共识机制：工作量证明（PoW)、只在最长链上添加，即只认可最长链。 比特币网络不是图灵完备的。  交易输入和输出
+比特币交易中有一个重要的概念叫UTXO(Unspent Transaction Outputs)，即未被引用的交易输出，也可以将其看作是比特币交易中的单位，通俗点将类似人民币中的10、20、100这样的面额。
+ 交易输出：不同面额的UTXO由交易输出提供。一个交易输出中包含两个部分，一是定量的比特币，单位为“聪”，二是包含一个锁定脚本。 交易输入：前一个有效的交易输出可以被新的交易引用作为其输入，这也就称之为交易输入。 比特币中最小单位即为“聪”，1“聪”等于10^-8比特币，即一亿分之一比特币。  交易脚本
+为了保障交易的完成，比特币交易中引入交易脚本（Script），交易脚本主要用来检验交易的合法性。每个交易一般会包含两个脚本，负责输入的解锁脚本（scriptSig）和负责输出的锁定脚本（scriptPubKey）。
+ 解锁脚本：也可称之为输入脚本，是接收方用来证明自己是发送方发送的对象，即自己满足解锁认领对方输出的比特币。 锁定脚本：也可称为输出脚本，是由付款方对当前发送的交易进行锁定，规定谁能动这笔交易的输出，例如限定了只有拥有某个公钥的另一方才有对这笔交易的花费权。  五、以太坊（Ethereum）的一些特点 随着区块链技术的进一步发展，以太坊项目对以比特币为主的数字货币交易系统的功能进一步扩展，支持智能合约这一特性，从而让基于区块链的数字货币系统有了更灵活的应用场景。
+ 支持图灵完备的智能合约，可以运行更复杂的自定义合约规则。 平台独立设计了solidity语言，并运行于EVM（Ethereum Virtual Machine），即以太坊虚拟机。 支持PoW共识算法，同时支持效率更高的PoS共识算法 抛弃UTXO,采用账户系统和世界状态。 叔块（Uncle Block）激励机制，降低集中式矿池的优势。所谓叔块激励，是指一个矿工生成了满足条件的区块后，另一个矿工随后或同时也生成了满足条件的另一个区块，这两个区块属于不同分支的同辈，对于一个分支上的下一个区块而言，另一个分支上的区块则是称为它的叔块，生成叔块的节点同样会获得奖励。 采用gas来限制执行合约数，避免循环执行攻击。即每执行一次合约，都会消耗一定的gas，gas可与以太币进行兑换。  核心概念</description>
+    </item>
+    
+  </channel>
+</rss>

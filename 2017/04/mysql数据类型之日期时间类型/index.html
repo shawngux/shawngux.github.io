@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL数据类型之日期时间类型</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL数据类型之日期时间类型</div>
+        <div class="post-date">Wednesday, Apr 26, 2017</div>
+    </div>
+    <article>
+
+<p>日期时间类型也是常用的数据类型，而用的最多的有：date、datetime、timestamp。</p>
+
+<h2 id="date">date</h2>
+
+<p>date类型用来存储日期，没有时间，存储的格式为<font color="red">&lsquo;YYYY-MM-DD&rsquo;</font>，而支持的日期范围为<font color="red">&lsquo;1000-01-01&rsquo;</font> ~ <font color="red">&lsquo;9999-12-31&rsquo;</font>。</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned not null default 0,
+    name varchar(32) not null default '',
+    birthday date not null default '1900-01-01'
+)CHARSET=utf8;
+INSERT INTO `users` (id, name, birthday) VALUES (1, 'tom', '1993-02-10');
+SELECT * FROM `users`;
+
+-- 返回信息
+/*
++----+------+------------+
+| id | name | birthday   |
++----+------+------------+
+|  1 | tom  | 1993-02-10 |
++----+------+------------+
+*/
+</code></pre>
+
+<h2 id="datetime">datetime</h2>
+
+<p>datetime类型存储日期和时间，存储格式为<font color="red">&lsquo;YYYY-MM-DD HH:MM:SS&rsquo;</font>，支持的范围为<font color="red">&lsquo;1000-01-01 00:00:00&rsquo;</font> ~ <font color="red">&lsquo;9999-12-31 23:59:59&rsquo;</font>。</p>
+
+<pre><code class="language-sql">CREATE TABLE `users2`
+(
+    id int unsigned not null default 0,
+    name varchar(32) not null default '',
+    birthday datetime not null default '1900-01-01 00:00:00'
+)CHARSET=utf8;
+INSERT INTO `users2` (id, name, birthday) VALUES (1, 'kate', '1993-02-10 15:30:59');
+SELECT * FROM `users2`;
+
+-- 返回信息
+/*
++----+------+---------------------+
+| id | name | birthday            |
++----+------+---------------------+
+|  1 | kate | 1993-02-10 15:30:59 |
++----+------+---------------------+
+*/
+</code></pre>
+
+<h2 id="timestamp">timestamp</h2>
+
+<p>timestamp类型也包含日期和时间两部分，timestamp存储时会将给定的日期时间转成时间戳进行存储，支持的范围为<font color="red">&lsquo;1970-01-01 00:00:01&rsquo;</font> ~ <font color="red">&lsquo;2038-01-19 03:14:07&rsquo;</font>。默认采用<font color='red'>UTC</font>时区的日期时间。另外当表中有字段进行添加或者修改时，timestamp会自动的更新。</p>
+
+<pre><code class="language-sql">CREATE TABLE `users3`
+(
+    id int unsigned not null default 0,
+    name varchar(32) not null default '',
+    login_time timestamp not null default '2000-01-01 00:00:01' on update current_timestamp
+)CHARSET=utf8;
+INSERT INTO `users3` (id, name, login_time) VALUES (1, 'jack', '2017-02-01 13:14:15');
+SELECT * FROM `users3`;
+
+-- 返回信息
+/*
++----+------+---------------------+
+| id | name | login_time          |
++----+------+---------------------+
+|  1 | jack | 2017-02-01 13:14:15 |
++----+------+---------------------+
+1 row in set (0.00 sec)
+*/
+
+UPDATE `users3` SET name = 'lina' WHERE id = 1;
+SELECT * FROM `users3`;
+
+-- 返回信息
+/*
++----+------+---------------------+
+| id | name | login_time          |
++----+------+---------------------+
+|  1 | lina | 2018-10-03 17:47:22 |
++----+------+---------------------+
+*/
+</code></pre>
+
+<p>注：新版本中，datetime类型也可以设置自动更新。详细说明可查看<a href="https://dev.mysql.com/doc/refman/5.7/en/timestamp-initialization.html">https://dev.mysql.com/doc/refman/5.7/en/timestamp-initialization.html</a></p>
+
+<h1 id="总结">总结</h1>
+
+<p>上面概述了常用的日期时间类型，MySQL还提供了其他相关的类型如年(year)、时间(time)，需了解详情可查看<a href="https://dev.mysql.com/doc/refman/5.7/en/date-and-time-types.html">https://dev.mysql.com/doc/refman/5.7/en/date-and-time-types.html</a>。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

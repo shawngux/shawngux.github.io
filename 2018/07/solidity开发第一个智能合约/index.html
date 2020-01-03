@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidity开发第一个智能合约</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidity开发第一个智能合约</div>
+        <div class="post-date">Thursday, Jul 12, 2018</div>
+    </div>
+    <article>
+
+<h1 id="solidity概述">Solidity概述</h1>
+
+<p>solidity是以太坊官方推出的编写智能合约的面向对象的高级编程语言，是一门图灵完备的程序设计语言，语法和风格类似JavaScript。通过solidity，我们可以根据自己的需求编写复杂的合约逻辑，其编写的智能合约运行在<strong>以太坊虚拟机（EVM）</strong>，即Ethereum Virtual Machine中。</p>
+
+<h1 id="编辑器选择">编辑器选择</h1>
+
+<p>编写代码，必不可少需要开发工具。以下简介三款开发工具：Remix、Atom、VS Code。</p>
+
+<p>1、 <strong>Remix</strong> -&gt; <a href="https://remix.ethereum.org">https://remix.ethereum.org</a></p>
+
+<p>基于web浏览器的IDE，继承编译器和solidity运行时环境，无需服务器端组件。官方文档推荐说尝试solidity编程最好的方式，不习惯web编程的小伙伴应该不完全赞同这种说法，取决于各个喜好。界面如下：</p>
+
+<p><img src="/post_images/solidity/remix-ide.jpg" alt="Remix" /></p>
+
+<p>2、<strong>Atom</strong> -&gt; <a href="https://atom.io">https://atom.io</a></p>
+
+<p>github出品，专为程序员推出的跨平台轻量级编辑器，界面简介美观，插件丰富。界面如下：</p>
+
+<p><img src="/post_images/solidity/atom-ide.jpg" alt="Atom" /></p>
+
+<p>3、<strong>VS Code</strong> -&gt; <a href="https://code.visualstudio.com">https://code.visualstudio.com</a></p>
+
+<p>微软开发的免费开源的编辑器，界面美观，性能出色，插件同样丰富。界面如下：</p>
+
+<p><img src="/post_images/solidity/vscode-ide.jpg" alt="VS Code" /></p>
+
+<h1 id="编写第一个智能合约">编写第一个智能合约</h1>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Person {
+    string _name;
+    uint _age;
+    
+    address _owner; // 合约拥有者
+    
+    function Persion() {
+        _owner = msg.sender;
+    }
+    
+    /**
+     * 修改名字
+     */
+    function setName(string name) public {
+        _name = name;
+    }
+    
+    /**
+     * 返回名称
+     */
+    function name() public constant returns (string) {
+        return _name;
+    }
+    
+    function setAge(uint age) public {
+        _age = age;
+    }
+    
+    function age() public constant returns (uint) {
+        return _age;
+    }
+    
+    function destroy() {
+    	if (_owner != msg.sender) {
+    		return false;
+    	}
+    	selfdestruct(_owner)
+    }
+}
+</code></pre>
+
+<p>代码解释：</p>
+
+<ul>
+<li><strong>pragma solidity ^0.4.24</strong> 是版本声明，声明使用的是solidity语言的0.4.24版本；</li>
+<li><strong>contract</strong> 是关键字，指示当前代码是一份合约。</li>
+<li><strong>string</strong>、<strong>unit</strong> 是字段的类型</li>
+<li><strong>msg.sender</strong> 是solidity全局变量，指当前合约调用者。</li>
+<li><strong>constant</strong> 代表当前方法只读，只读方法不需要消耗gas。</li>
+<li><strong>selfdestruct</strong> 析构函数，作用是销毁当前合约。</li>
+</ul>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

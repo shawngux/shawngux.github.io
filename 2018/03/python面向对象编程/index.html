@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python面向对象编程</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python面向对象编程</div>
+        <div class="post-date">Wednesday, Mar 21, 2018</div>
+    </div>
+    <article>
+
+<p>Python本身是一种面向对象编程语言，面向对象编程（Object Oriented Programming），简称OOP，是一种编程思想，OOP将对象作为编程的基本单元，一个对象包含了数据以及对数据操作的函数。面向对象编程都有下面几个特点：</p>
+
+<ol>
+<li>封装</li>
+<li>继承</li>
+<li>多态</li>
+</ol>
+
+<p>在说面向对象编程特点前，先说说类（class）和对象（object）的概念。</p>
+
+<h1 id="类和对象">类和对象</h1>
+
+<p><strong>类（class）</strong>：一种抽象的模板，它定义了一组对象的共有特点。例如人类。</p>
+
+<p><strong>对象（object）</strong>：是类的实例（instance）。例如男人、女人等。</p>
+
+<h2 id="类的定义">类的定义</h2>
+
+<p>类通过关键字<strong><font color="red">class</font></strong>来定义，后面紧跟着类名，如：</p>
+
+<pre><code class="language-python"> class Person:
+     pass
+</code></pre>
+
+<p>如果需要继承某个类，需要在类名后加<strong><font color="red">（class_name）</font></strong>，如：</p>
+
+<pre><code class="language-python"> class Person(object): # 表示Person类继承object类
+     pass
+</code></pre>
+
+<h2 id="创建对象">创建对象</h2>
+
+<p>类定义好后，便可以创建一个实例，也叫创建对象，创建对象很简单，如：</p>
+
+<pre><code class="language-python"> man = Person()
+ print(man) # 返回&lt;__main__.Person object at 0x1083ed390&gt;，0x1083ed390表示对象在内存中的地址
+</code></pre>
+
+<p>对象创建好后，可以动态的给对象绑定属性：</p>
+
+<pre><code class="language-python"> man.name = 'shawn.gu'
+ print(man.name) # 返回 shawn.gu
+</code></pre>
+
+<p>另外我们可以在类定义的时候初始化一些属性，这样在创建对象后，这些属性就会自动绑定到对象上。</p>
+
+<pre><code class="language-python"> # 通过__init__ （两边都是两个下划线）函数
+ class Person(object):
+     
+     def __init__(self, name, age):
+         self.name = name
+         self.age = age
+</code></pre>
+
+<p>这样在实例化时可以传入参数进行绑定具体值：</p>
+
+<pre><code class="language-python"> man = Person('shawn.gu', 25)
+ print(man.name) # 返回shawn.gu
+</code></pre>
+
+<p>说明：在<strong>init</strong>函数中，<font color="red">self.name</font>和<font color="red">self.age</font>表示类自己定义的属性，后面的<font color="red">name</font>和<font color="red">age</font>则表示传入的参数。</p>
+
+<h1 id="封装">封装</h1>
+
+<p>即向程序的其他部分隐藏对象的具体实现细节，比如将对象的属性操作封装到一个函数中，而外部通过该函数去访问对象的属性。如：</p>
+
+<pre><code class="language-python"> class Person(object):
+     
+     def __init__(self, name, age):
+         self.name = name
+         self.age = age
+         
+     def get_name(self):
+         print('name: %s' % self.name) 
+         
+     def get_age(self):
+         print('age: %d' % self.age)
+</code></pre>
+
+<p>通过函数来访问属性：</p>
+
+<pre><code class="language-python"> man = Person('tom', 33)
+ man.get_name # 返回 name: tom
+ man.get_age # 返回 age: 33
+</code></pre>
+
+<p>说明：类中定义一个方法，第一个参数一定是<font color="red">self</font>，而调用传参时，<font color="red">self</font>对应的参数不用传，其他的和普通函数一样。</p>
+
+<h2 id="访问限制">访问限制</h2>
+
+<p>当我们想让属性变得私有时，即不允许外部直接访问或修改属性，这个时候可以将属性前面加上<strong><font color="red">两个下划线__，(注意，是两个下划线)</font></strong>，这个时候属性就变得私有。只能在类的内部访问了。如：</p>
+
+<pre><code class="language-python"> class Person(object):
+     
+     def __init__(self, name, age):
+         self.__name = name
+         self.__age = age
+         
+     def get_name(self):
+         print('name: %s' % self.__name) 
+         
+     def get_age(self):
+         print('age: %d' % self.__age)
+</code></pre>
+
+<p>创建实例：</p>
+
+<pre><code class="language-python"> man = Person('jack', 40)
+ man.get_name # 返回 name: jack
+</code></pre>
+
+<p>方法也是一样，在前面加上<strong>双下划线__</strong>，可以让方法私有化。</p>
+
+<h1 id="继承">继承</h1>
+
+<p>当我们定义类的时候，类中的方法和另一个功能相似或相同，这个时候我们可以让这个类直接继承另一个类，这就避免了重复定义造成代码冗余的问题。其中新定义的类称为<strong><font color="red">子类（subclass）</font></strong>，而被继承的类称为<strong><font color="red">父类</font></strong>，也叫<strong><font color="red">超类（super class）</font></strong>或<strong><font color="red">基类（base class）</font></strong>。如：</p>
+
+<pre><code class="language-python"> # 父类
+ class Animal:
+     def eat(self):
+         print('animal is eating!!!')
+
+ # Bird类什么事都没做，就拥有了父类的eat方法
+ class Bird(Animal):
+     pass
+     
+ # 创建子类对象
+ bird = Bird()
+ bird.eat() # 返回 animal is eating!!!
+</code></pre>
+
+<p>另外子类可以扩展自己的方法，如：</p>
+
+<pre><code class="language-python"> class Bird(Animal):
+     def fly(self):
+         print('bird can fly!!!')
+         
+ # 实例化
+ bird = Bird()
+ bird.eat() # 返回 animal is eating!!!
+ bird.fly() # 返回 bird can fly!!!   
+</code></pre>
+
+<p>另外，Python中子类可以继承多个超类，这种行为叫做<strong><font color="red">多重继承</font></strong>，这样子类就拥有了多个超类的方法。如：</p>
+
+<pre><code class="language-python"> class Action:
+     def run(self):
+         print('run...')
+        
+        
+ # 子类继承多个超类
+ class Dog(Animal, Action):
+     pass
+     
+ # 实例化
+ dog = Dog()
+ dog.eat() # 从Animal中继承的方法
+ dog.run() # 从Action中继承的方法
+</code></pre>
+
+<p><strong>注</strong>：当继承的多个超类中有相同方法名的时候，要主要继承的超类的顺序，<font color="red">先继承的会写后继承的方法</font>。</p>
+
+<h1 id="多态">多态</h1>
+
+<p>多态，即多种状态。多态意味着即使不知道变量所引用的对象类型是什么，仍然可以对它进行操作，而它也会根据对象类型的不同而表现出不同的行为。多态在Java中具体表现为：父类的引用可以指向子类的对象。而在Python中，也可以通过这个来展示。</p>
+
+<p>当子类覆盖父类的方法时，总是会调用子类的方法。如：</p>
+
+<pre><code class="language-python"> class Base:
+     def run(self):
+         print('base run ...')
+         
+ # 定义子类
+ class Cat(Base):
+     # 覆盖父类的run方法
+     def run(self):
+         print('cat run...')
+         
+         
+ class Dog(Base):
+     # 覆盖父类的run方法
+     def run(self):
+         print('dog run...')
+ 
+ # 测试多态，传入的base看作是Base类型的
+ def test(base):
+     base.run()
+    
+ # 展示多种行为状态
+ test(Base()) # base run ...
+ test(Cat()) # cat run ...
+ test(Dog()) # dog run ...
+</code></pre>
+
+<h2 id="isinstance">isinstance</h2>
+
+<p>isinstance函数可以用来判断一个变量是否属于某个类型，见名知意又叫一个变量是否是某个对象的实例。如：</p>
+
+<pre><code class="language-python"> print(isinstance(instance, Base)) # 返回True
+ 
+ a = tuple()
+ print(isinstance(a, tuple)) # 返回True
+</code></pre>
+
+<h1 id="类属性和实例属性">类属性和实例属性</h1>
+
+<p>在Python中，我们可以通过实例变量动态的给实例绑定属性，也可以在定义类模板是通过<strong><font color="red">self</font></strong>来绑定。如</p>
+
+<pre><code class="language-python"> class Person:
+     
+     # 通过self绑定
+     def __init__(self, name):
+         self.name = name
+         
+ # 创建实例
+ p = Person()
+ # 通过实例变量动态绑定
+ p.age = 25
+</code></pre>
+
+<p>这样绑定的属性属于每个对象独有的。</p>
+
+<p>而有的时候，我们想要一个属性，可以让类的所有实例都访问到，这个时候我们可以字节在类中定义，这个属性叫做<strong><font color="red">类属性</font></strong>，看代码：</p>
+
+<pre><code class="language-python"> class Person:
+     name = 'Tom'
+     age = 25
+     
+ # 实例
+ p1 = Person()
+ print('name: ', p1.name, ',age: ', p1.age) # 返回 name:  Tom ,age:  25
+ 
+ p2 = Person()
+ print('name: ', p2.name, ',age: ', p2.age) # 返回 name:  Tom ,age:  25
+</code></pre>
+
+<p>这样一来每个实例都访问到同一个类属性。</p>
+
+<p>注：在编写代码的时候，类属性名和实例属性名不要使用同一名字，否则实例属性会覆盖掉类属性。</p>
+
+<h1 id="总结">总结</h1>
+
+<p>Python是一种面向对象的语言，但又比其他的一些面向对象的语言（如：Java）多了一份灵活。多理解面向对象编程的几大特点，多实操。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

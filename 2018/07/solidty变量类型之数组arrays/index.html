@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidty变量类型之数组（Arrays）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidty变量类型之数组（Arrays）</div>
+        <div class="post-date">Saturday, Jul 21, 2018</div>
+    </div>
+    <article>
+
+<p>solidity中，数组分为固定长度数组，和可变长度数组。数组直接通过类型加[]来定义。</p>
+
+<p><a href="https://solidity.readthedocs.io/en/latest/types.html#arrays">https://solidity.readthedocs.io/en/latest/types.html#arrays</a></p>
+
+<p>例如：uint[3] arr = [1, 2, 3] 或者 uint[] arr = [1, 2, 3]</p>
+
+<h1 id="固定长度数组">固定长度数组</h1>
+
+<p>固定长度数组是指在定义时就指定好长度的数组，指定长度后，长度不可再改变，索引下的值可以修改。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    uint[5] arr = [1, 2, 3, 4, 5];
+    
+    // output: 5
+    function len() constant returns (uint) {
+        return arr.length;
+    }
+    
+    function setValue() {
+        arr[0] = 10;
+    }
+}
+</code></pre>
+
+<h1 id="可变长度数组">可变长度数组</h1>
+
+<p>可变长度数组即在声明的时候并没有指定长度大小，可以动态的改变。数组内的值可修改，亦可通过push来追加元素。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    string[] names = ['shawn'];
+        
+    function pushValue() {
+        names.push('tom');
+    }
+    
+    function len() constant returns (uint) {
+        return names.length;
+    }
+}
+</code></pre>
+
+<h1 id="二维数组">二维数组</h1>
+
+<pre><code class="language-javascript">uint[2][3] arr = [[1, 2], [1, 3], [1, 4]]
+</code></pre>
+
+<p>注：前一个数可看成是列，后一个数可看成是行。要访问第2个数组元素中的第1个元素，可以通过：</p>
+
+<pre><code class="language-javascript">arr[0][1]
+</code></pre>
+
+<p>这和其他语言相比刚好相反。</p>
+
+<h1 id="创建内存数组">创建内存数组</h1>
+
+<p>可以通过new关键字在内存在创建可变长数组。当内存数组创建后，其长度不可以通过<strong>.length</strong>来修改。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    function f(uint len) public pure {
+        uint[] memory arr = new uint[](7);
+        bytes memory arr2 = new bytes(len);
+        // 这里我们有 arr.length == 7 以及 arr2.length == len
+        arr[6] = 8;
+    }
+}
+</code></pre>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

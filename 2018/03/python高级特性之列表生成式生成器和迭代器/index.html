@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python高级特性之列表生成式、生成器和迭代器</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python高级特性之列表生成式、生成器和迭代器</div>
+        <div class="post-date">Saturday, Mar 24, 2018</div>
+    </div>
+    <article>
+
+<h1 id="列表生成式">列表生成式</h1>
+
+<p>Python中提供了一种非常简洁的方式来生成列表list。</p>
+
+<p>例如：要生成[1x1, 2x2, 3x3, 4x4, 5x5, 6x6, 7x7, 8x8, 9x9]这样的一个列表。</p>
+
+<p>一种方式是使用循环，如：</p>
+
+<pre><code class="language-python"> squares = []
+ for x in range(10):
+     squares.append(x * x)
+    
+ print(squares) # 返回[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+</code></pre>
+
+<p>另一种方式是使用一个map和匿名函数lambda，如：</p>
+
+<pre><code class="language-python"> squares = list(map(lambda x: x*x, range(10)))
+ print(squares) # 返回[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+</code></pre>
+
+<p>而最简洁的方式则肯定是使用列表生成式了，看代码：</p>
+
+<pre><code class="language-python"> squares = [x * x for x in range(10)]
+</code></pre>
+
+<p>说明：在一个列表中，使用for循环生成需要的值，for前面即是最终存放在列表中的具体值。在列表生成式中，甚至可以嵌套for循环，并且可以加判断，看代码：</p>
+
+<pre><code class="language-python">number_tuples = [(a, b) for a in [1, 2, 3, 4] for b in ['a', 'b']]
+print(number_tuples) # 返回[(1, 'a'), (1, 'b'), (2, 'a'), (2, 'b'), (3, 'a'), (3, 'b'), (4, 'a'), (4, 'b')]
+
+# 加判断
+number_tuples = [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
+print(number_tuples) # 返回[(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+
+# 筛选出1到10中的偶数
+even_numbers = [x for x in range(1, 11) if x % 2 == 0]
+print(even_numbers) # 返回[2, 4, 6, 8, 10]
+</code></pre>
+
+<p>使用列表生成式，输出当前目录中的所有目录和文件名，看代码：</p>
+
+<pre><code class="language-python">import os
+all_files = [d for d in os.listdir('.')]
+</code></pre>
+
+<p>遍历二维list，输出其中所有元素，代码：</p>
+
+<pre><code class="language-python">vecs = [[1,2,3], [4,5,6], [7,8,9]]
+numbers = [n for elem in vecs for n in elem]
+print(numbers) # 返回[1, 2, 3, 4, 5, 6, 7, 8, 9]
+</code></pre>
+
+<p>在列表生成式中，还可以遍历元组，输出元组的键和值，看代码：</p>
+
+<pre><code class="language-python">stu = {'name': 'Tom', 'age': 25, 'sex': 'male'}
+info_list = [k + '=' + str(v) for k, v in stu.items()]
+print(info_list) # 返回['name=Tom', 'age=25', 'sex=male']
+</code></pre>
+
+<p>以上可以看出列表生成式是多么的简洁和方便。</p>
+
+<h1 id="生成器">生成器</h1>
+
+<p>通过列表，我们一次性可以输出一堆的元素，但是这种方式在元素个数相当多的时候是需要占据很大的空间的。而往往有时我们又用不到所有的元素，仅仅是使用其中的几个，那么这个时候，未用到的元素所占的空间就白白浪费了，不划算。这个时候我们可以使用<strong><font color="red">生成器</font></strong>来“按需取值”，即通过一个生成器对象需要一个元素的时候就生成一个，不需要不生成。</p>
+
+<p>创建一个生成器的方式有多个，第一种方式是通过一个小括号()，这种形式和列表生成器很相似，如：</p>
+
+<pre><code class="language-python">g = (n for n in range(10))
+print(g) # 返回&lt;generator object &lt;genexpr&gt; at 0x10bc01fc0&gt;
+</code></pre>
+
+<p>这样返回的是一个生成器对象，当我们需要其中的元素时，可以通过<strong><font color="red">next</font></strong>函数依次取得，当取得最后一个元素后，再次调用就会返回一个<strong><font color="red">StopIteration</font></strong>。</p>
+
+<pre><code class="language-python">g = (n for n in range(3))
+print(next(g)) # 0
+print(next(g)) # 1
+print(next(g)) # 2
+print(next(g)) '''返回Traceback (most recent call last):
+  File &quot;/test.py&quot;, line 5, in &lt;module&gt;
+    print(next(g))
+StopIteration'''
+</code></pre>
+
+<p>这种方式肯定没法满足我们的需要，因此，一般是通过<strong><font color="red">for</font></strong>来迭代取得其中元素。代码：</p>
+
+<pre><code class="language-python">g = (n for n in range(3))
+for n in g:
+    print(n)
+</code></pre>
+
+<h2 id="yield">yield</h2>
+
+<p>当我们需要每次取得元素的算法比较复杂时，这个时候就需要函数了。任何包含<strong><font color="red">yield</font></strong>语句的函数都称为<strong>生成器</strong>。这里和普通函数有很大的区别，普通函数遇到return或者最后一句程序时会返回，而这里是：每次遇到<strong><font color="red">yield</font></strong>产生一个值，然后函数就会被冻结（即函数停在那点等待被重新唤醒，函数重新被唤醒后就从停止的那点接着开始执行）。举个栗子：</p>
+
+<pre><code class="language-python">def step():
+    print('step1...')
+    yield 1
+    print('step2...')
+    yield 2
+    print('step3...')
+    yield 3
+    
+# 调用
+s = step()
+next(s) # 打印 step1...，遇到第一个yield 停止返回
+
+next(s) # 再次唤起，打印 step2...，遇到第二个yield 再次停止返回
+
+next(s) # 第三次唤起，打印 step3...，遇到第三个yield 停止返回
+
+next(s) # 没有元素了，报出StopIteration异常
+</code></pre>
+
+<p>同样在使用yield函数时，我们也使用for迭代生成的元素。如生成斐波那契数列：</p>
+
+<pre><code class="language-python">def fib(max):
+    n, a, b = 0, 0, 1
+    while n &lt; max:
+        yield b
+        a, b = b, a + b
+        n = n + 1
+
+# 调用
+for n in fib(5):
+    print(n)
+</code></pre>
+
+<h1 id="迭代器">迭代器</h1>
+
+<p>具有<strong><font color="red">next</font></strong>方法的对象称为迭代器。在调用next方法时，迭代器会返回它的下一个值。如果next方法被调用，但是迭代器没有值可以返回，这个时候旧货抛出<font color="red">StopIteration</font>异常。</p>
+
+<p>可以通过<strong><font color="red">iter()</font></strong>函数从一个可迭代的对象中获取一个迭代器。如：</p>
+
+<pre><code class="language-python">it = iter([1, 2, 3])
+# 循环输出
+while True:
+    try:
+        n = next(it)
+        print(n)
+    except StopIteration:
+        print('Stop')
+        break
+</code></pre>
+
+<p>说明：</p>
+
+<ul>
+<li>凡是可用for进行迭代的对象都是Iterable（可迭代）类型</li>
+<li>凡是可用next函数的对象都是Iterator（迭代器）类型，迭代器是一个惰性计算的序列，即“按需取值”</li>
+<li>可迭代对象如list、dict、str等可以通过<strong>iter</strong>函数获取对应的迭代器</li>
+</ul>
+
+<h1 id="总结">总结</h1>
+
+<p>熟练使用Python提供的这些高级特性，事半功倍。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

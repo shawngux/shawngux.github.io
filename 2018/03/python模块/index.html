@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python模块</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python模块</div>
+        <div class="post-date">Sunday, Mar 25, 2018</div>
+    </div>
+    <article>
+
+<h1 id="自定义模块">自定义模块</h1>
+
+<p>一般的，当我们想让代码重用的时候，就可以将代码放到一个模块中，这样一来，就可以再多个程序中使用这些代码了。其中一个<strong>xxx.py</strong>文件就是一个模块</p>
+
+<p>例如，我们编写一个简单的模块保存到<font color="red">hello.py</font>文件中：</p>
+
+<pre><code class="language-python">def hello():
+    print('hello world')
+       
+if __name__ == '__main__':
+    hello()
+</code></pre>
+
+<p>这样，当我们在命令行通过python hello.py时，就会输出&rsquo;hello world&rsquo;。</p>
+
+<p>解释：</p>
+
+<p><strong><font color="red"><strong>name</strong></font></strong>变量用来“告知”模块本身是作为程序运行还是导入到其他程序。当我们在“主程序”（包括命令行）执行这个模块时，Python解释器就会将<strong><font color="red"><strong>name</strong></font></strong>的值设置为<strong><font color="red"><strong>main</strong></font></strong>，而在导入的模块中，这个值就被设定为模块的名字。所以，为了让模块更加好用，一般将其放置在if语句中。</p>
+
+<h1 id="内置模块">内置模块</h1>
+
+<p>Python自身内置了很多的模块，可以直接拿来用，要使用模块，通过<strong><font color="red">import</font></strong>语句导入就可以使用了。如使用内置的<font color="red">sys</font>和<font color="red">pprint</font>模块：</p>
+
+<pre><code class="language-python">import sys
+import pprint
+
+# 打印系统模块列表
+pprint.pprint(sys.path)
+</code></pre>
+
+<p>注：当要打印的数据结构过大，不能在一行打印完，就可以使用pprint模块中的pprint函数替代普通的print语句。pprint函数能够提供很假只能的打印输出。</p>
+
+<h1 id="探究模块">探究模块</h1>
+
+<p>想要合理有效的使用模块，就必须对模块有所熟悉，知道模块里到底有什么，以及一些其他的细节。所谓“知己知彼”，才能运用自如。</p>
+
+<p>想要知道模块细节，最直接的方式就是在Python解释器中研究它们。研究的第一步是知道模块的名字，然后导入它，如sys：</p>
+
+<pre><code class="language-python">import sys
+</code></pre>
+
+<h2 id="使用dir">使用dir</h2>
+
+<p>查看模块中包含的内容可以使用dir函数，它会将模块的的所有函数、类和变量等列出。</p>
+
+<pre><code class="language-python">dir(sys)
+</code></pre>
+
+<h2 id="使用help获取帮助">使用help获取帮助</h2>
+
+<p>help函数可以帮助我们模块的一些更加详细的说明，如：</p>
+
+<pre><code class="language-python">help(sys)
+
+# 展示信息
+'''
+Help on built-in module sys:
+
+NAME
+    sys
+
+MODULE REFERENCE
+    https://docs.python.org/3.6/library/sys
+
+    The following documentation is automatically generated from the Python
+    source files.  It may be incomplete, incorrect or include features that
+    are considered implementation detail and may vary between Python
+Help on built-in module sys:
+
+    。。。。。。
+    
+'''
+</code></pre>
+
+<h2 id="使用文档">使用文档</h2>
+
+<p>当我们想要查看模块的一些描述时，可以使用<strong><font color="red"><strong>doc</strong></font></strong>查看，如：</p>
+
+<pre><code class="language-python">print(sys.__doc__)
+
+# 返回信息
+'''
+This module provides access to some objects used or maintained by the
+interpreter and to functions that interact strongly with the interpreter.
+
+Dynamic objects:
+
+  。。。。。。
+'''
+</code></pre>
+
+<h2 id="查看源代码">查看源代码</h2>
+
+<p>研究Python最好的方式莫过于查看源代码了，如何查看模块源码的文件？这个时候可以通过模块的<strong><font color="red">__file</font></strong>属性，如查看copy模块的源码位置：</p>
+
+<pre><code class="language-python">import copy
+
+print(copy.__file__) # 返回/usr/local/anaconda3/lib/python3.6/copy.py
+</code></pre>
+
+<p>注：有些模块不包含可以阅读的源代码，原因是他们可能已经融入到解释器内了，比如sys模块就不支持阅读源代码。</p>
+
+<p>查看Python内置模块：<a href="https://docs.python.org/3.7/py-modindex.html">https://docs.python.org/3.7/py-modindex.html</a></p>
+
+<h2 id="安装第三方模块">安装第三方模块</h2>
+
+<p>有的时候，内置模块不一定完全满足我们的需求，这个时候我们可以安装使用第三方的模块。而安装第三方模块，就必须知道第三方模块的名字，然后通过pip（或pip3)命令，如安装requests模块：</p>
+
+<pre><code class="language-python">pip install requests
+</code></pre>
+
+<p>注：查询模块名：<a href="https://pypi.org/">https://pypi.org/</a></p>
+
+<h1 id="包">包</h1>
+
+<p>为了组织好模块，我们可以将模块进行分组，每一组一个<strong><font color="red">包</font></strong>，包就是存储模块文件的目录，只是要让Python将其作为包对待，就必须包含一个名为<strong><font color="red"><strong>init</strong>.py</font></strong>的文件。使用包的好处避免模块名字重复带来的问题，不同的包中，模块的名字可以一样。一个包的结构：</p>
+
+<pre><code class="language-python">project
+  package-name1
+    __init__.py
+    a.py
+    b.py
+  package-name2
+    __init__.py
+    a.py
+    c.py
+
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>在Python中，一个xxx.py文件就是一个模块，使用模块可以提到代码的重用性和可维护性。使用包可以更好的组织不同的模块。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

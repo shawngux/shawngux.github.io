@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python通用的序列（字符串、列表、索引等）操作</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python通用的序列（字符串、列表、索引等）操作</div>
+        <div class="post-date">Friday, Mar 9, 2018</div>
+    </div>
+    <article>
+
+<p>Python内建了多种序列类型，有字符串、列表、元组等等。其他可参考 <a href="https://docs.python.org/3/library/index.html">https://docs.python.org/3/library/index.html</a></p>
+
+<p>而序列类型有一些通用的操作，下面概述介绍一下</p>
+
+<h1 id="索引">索引</h1>
+
+<p>序列中的所有元素都是有编号的，编号从0开始递增，而元素可以通过编号访问，这个编号就是索引。索引通过<strong><font color="red">[n]</font></strong>来表示，n为编号。</p>
+
+<ul>
+<li>正数索引: 即从左向右正向索引。</li>
+</ul>
+
+<pre><code class="language-python">name = 'shawn.gu'
+name[1] # 返回 'h'
+</code></pre>
+
+<ul>
+<li>负数索引: 即从右向左反向索引。</li>
+</ul>
+
+<pre><code class="language-python">name = 'shawn.gu'
+name[-1] # 返回 'u'
+</code></pre>
+
+<h1 id="分片">分片</h1>
+
+<p>分片是一个非常有用的高级特性，合理利用，可以极大的提高程序编写和执行效率。分片通过冒号隔开索引来实现。完整的分片如:</p>
+
+<p><strong>[1:5:2]</strong></p>
+
+<p><strong>第一数字1代表索引开始的编号，<font color="red">包含在索引结果内</font>；第二个数字5代表索引结束的编号，<font color="red">不包含在索引结果内</font>；第三个数字2代表的是步长，即每2个索引一个元素。</strong></p>
+
+<p>1、直接上代码：</p>
+
+<pre><code class="language-python"> url = 'https://docs.python.org/'
+ url[0:5] # 返回 'https'
+ url[0:10:2] # 返回 'hts/d'
+</code></pre>
+
+<p>2、索引数字还可以是负数，表示从后向前索引。</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ numbers[-5:-1] # 返回[5, 6, 7, 8]
+</code></pre>
+
+<p>注：分片中最左边的索引元素不能比它右边的索引元素晚出现在序列中，否则结果为空序列。什么意思呢？看代码</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ numbers[-1:-3] # 返回 []
+ numbers[-2:-5] # 返回 []
+ numbers[-3:3] # 返回 []
+</code></pre>
+
+<p>3、当我们想从序列某个元素索引到最后一个元素时，可以省略右边索引编号。也同样适用于左边索引编号。</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ numbers[-5:] # 返回[5, 6, 7, 8, 9]
+ numbers[:5] # 返回[1, 2, 3, 4, 5]
+</code></pre>
+
+<p>4、想要索引整个序列时，那左边的索引编号和右边的索引编号都省略即可。这种方式用来复制一个序列相当简单高效。</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ numbers[:] # 返回[1, 2, 3, 4, 5, 6, 7, 8, 9]
+ copy_numbers = numbers[:]
+ copy_numbers # 返回[1, 2, 3, 4, 5, 6, 7, 8, 9]
+</code></pre>
+
+<p>5、同样，步长既可以是正数，也可以是负数，但是步长不能为0。</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ numbers[0:9:2] # 返回[1, 3, 5, 7, 9]
+ numbers[::2] # 左右索引都省略，结果和上面一样返回[1, 3, 5, 7, 9]
+ numbers[8:1:-2] # 步长为负数时，左边的索引编号要大于右边的，表示从右向左索引，返回[9, 7, 5, 3]
+ numbers[::-4] # 同上，返回[9, 5, 1]
+</code></pre>
+
+<h1 id="序列相加">序列相加</h1>
+
+<p>必须是同类型的序列才可以通过相加进行连接操作。这个地方相加操作是指连接运算，和整数加减乘除运算不是一个意思。上代码：</p>
+
+<pre><code class="language-python"> seq1 = [1, 2, 3, 4]
+ seq2 = [5, 6, 7, 8]
+ seq1 + seq2 # 返回[1, 2, 3, 4, 5, 6, 7, 8]
+
+ str1 = 'hello,'
+ str2 = 'world'
+ str1 + str2 # 返回'hello,world'
+</code></pre>
+
+<h1 id="乘法">乘法</h1>
+
+<p>用一个数字n乘一个序列会得到一个新的序列，新序列元素相当于原序列元素重复n次。看代码：</p>
+
+<pre><code class="language-python"> str = 'shawn'
+ str * 5 # 返回'shawnshawnshawnshawnshawn'
+
+ seq = [10]
+ seq * 5 # 返回[10, 10, 10, 10, 10]
+
+ seq2 = [1, 2, 3]
+ seq2 * 5 # 返回[1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]
+ 
+ seq3 = [None] * 5 # 初始化一个长度为5的空列表，返回[None, None, None, None, None]
+</code></pre>
+
+<p><strong><font color="red">None</font></strong>是Python的一个内建值，表示“什么也没有”。</p>
+
+<h1 id="成员资格">成员资格</h1>
+
+<p>即检验元素是否在序列中</p>
+
+<pre><code class="language-python">str = 'hello, world'
+'he' in str # 返回True
+
+seq = ['tom', 'kate', 'shawn']
+'jack' in seq # 返回False
+</code></pre>
+
+<h1 id="序列长度-最小值和最大值">序列长度、最小值和最大值</h1>
+
+<p>序列长度、最小值和最大值分别通过Python内建函数len、min、max来计算。len返回序列中元素个数，min返回最小值，max返回元素最大值。直接看代码：</p>
+
+<pre><code class="language-python">nums = [5, 19, 2018, 1993]
+len(nums) # 4
+min(nums) # 5
+max(nums) # 2018
+
+str = 'hello,world'
+len(str) # 11
+min(str) # ','
+max(str) # 'w'
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>上面介绍了Python序列类型的通用操作，用好这些操作可以极大提高效率，体验编程的乐趣。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

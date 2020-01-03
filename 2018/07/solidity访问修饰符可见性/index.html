@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidity访问修饰符（可见性）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidity访问修饰符（可见性）</div>
+        <div class="post-date">Friday, Jul 13, 2018</div>
+    </div>
+    <article>
+
+<h1 id="编辑器">编辑器</h1>
+
+<p>例子中涉及到的代码，都是选用<a href="https://remix.ethereum.org/">Remix</a>这个编辑器来编译执行，并且都是执行通过的。以下简单介绍一下Remix编辑器的布局。</p>
+
+<p><img src="/post_images/solidity/remix-ide-simpleuse.jpg" alt="Remix Use" /></p>
+
+<h1 id="状态变量可见性">状态变量可见性</h1>
+
+<p>在solidity中，状态变量的访问修饰符有3种，分别是public、internal和private。默认是<font color="red">internal</font>。</p>
+
+<p>1、<strong>public</strong>：当访问修饰符为public时，该状态变量可以在合约内部、子合约和合约外部被调用。同时会自动生成一个同名的getter函数。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    string public name;
+    
+    function Test() public {
+        name = 'shawn';
+    }
+}
+</code></pre>
+
+<p>Output: fn &ndash;&gt; name</p>
+
+<p>2、<strong>internal</strong>：当访问修饰符为internal时，该状态变量只能在内部访问，即可从当前合约内部或者有它派生的子合约中访问。与Java等其他语言的protected类似但不完全一样。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Parent {
+
+    string internal name;
+}
+
+contract Child is Parent {
+
+    function Child() public {
+        name = 'shawn';
+    }
+    
+    // output =&gt; &quot;shawn&quot;
+    function getName() returns (string) {
+        return name;
+    }
+}
+</code></pre>
+
+<p>3、<strong>private</strong>: 当访问修饰符为private时，该状态变量只能在当前定义它的合约中使用，也不可以被继承。</p>
+
+<pre><code class="language-javascript">
+pragma solidity ^0.4.24;
+
+contract Test {
+    string private name;
+    
+    function Test() public {
+        name = 'shawn';
+    }
+    
+    function getName() returns (string) {
+        return name;
+    }
+}
+</code></pre>
+
+<h1 id="函数可见性">函数可见性</h1>
+
+<p>solidity中，函数的访问修饰符有4种，分别是external、public、internal和private。默认为<font color="red">public</font>。</p>
+
+<p>1、<strong>external</strong>：当函数修饰符为external时，那么该函数只能被外部合约调用。外部函数在接收大量数据的时候，调用外部函数效率有时会更高。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    
+    // 本合约中不可调用，只能通过外部其他合约来调用。
+    function show() external returns (uint) {
+        return 1 + 2;
+    }
+}
+</code></pre>
+
+<p>2、<strong>public</strong>：public修饰的函数可以在合约内部和外部访问。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    
+    // 可以在本合约内部直接调用，也可以在外部调用
+    function getName() public returns (string) {
+        return 'shawn.gu';
+    }
+}
+</code></pre>
+
+<p>3、<strong>internal</strong>：当函数被internal修饰时，可以在本合约及派生的合约中调用。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Parent {
+    
+    function getNum() internal returns (uint) {
+        return 1 * 2;
+    }
+}
+
+contract Child is Parent {
+    
+    function callGetNum() returns (uint) {
+        return getNum();
+    }
+}
+</code></pre>
+
+<p>4、<strong>private</strong>：函数被private修饰时，只能在本本合约中调用。这和状态变量被修饰一样。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    
+    // 只能在被合约内部调用。
+    function getName() private returns (string) {
+        return 'shawn.gu';
+    }
+}
+</code></pre>
+
+<h1 id="小结">小结</h1>
+
+<p>在以上状态变量和函数修饰符中，只有external和public修饰的可以通过this来调用，其他访问修饰符修饰的变量和函数不可以通过this来调用。另外只有public类型的状态变量可以自动生成一个getter函数。合约中的所有内容对外部观察者都是可见的。设置一些 private 类型只能阻止其他合约访问和修改这些信息， 但是对于区块链外的整个世界它仍然是可见的。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

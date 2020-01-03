@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mongodb数据库和集合（表）的相关操作</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Mongodb数据库和集合（表）的相关操作</div>
+        <div class="post-date">Tuesday, May 16, 2017</div>
+    </div>
+    <article>
+
+<p>MongoDB是一个基于分布式文件存储的开源数据库系统，也是一款流行的NoSQL数据库。是一个介于关系数据库和非关系数据库之间的产品，旨在为web应用提供可扩展的高性能数据存储解决方案。</p>
+
+<p>MongoDB将数据存储为一个文档，数据结构有键值对（k-v）组成。类似于JSON对象。字段值可以包含其他文档，数组及文档数组。</p>
+
+<h1 id="数据库的操作">数据库的操作</h1>
+
+<p>MongoDB中默认的数据库为admin、local、config，如果没有创建新的数据库，集合会存放在local或者admin库中。</p>
+
+<h2 id="创建数据库">创建数据库</h2>
+
+<p>创建数据库使用<strong>use</strong>命令，表示如果没有给定库就创建，有则使用</p>
+
+<pre><code class="language-bash">&gt; use test;
+switched to db test
+</code></pre>
+
+<h2 id="查看数据库">查看数据库</h2>
+
+<p>1、查看所有数据库</p>
+
+<pre><code class="language-bash">&gt; show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+</code></pre>
+
+<p>注：新创建的test数据库因为没有内容，所以不会显示。</p>
+
+<p>2、查看当前数据库状态</p>
+
+<pre><code class="language-bash">&gt; use test;
+&gt; db.stats();
+{
+	&quot;db&quot; : &quot;test&quot;,
+	&quot;collections&quot; : 0,
+	&quot;views&quot; : 0,
+	&quot;objects&quot; : 0,
+	&quot;avgObjSize&quot; : 0,
+	&quot;dataSize&quot; : 0,
+	&quot;storageSize&quot; : 0,
+	&quot;numExtents&quot; : 0,
+	&quot;indexes&quot; : 0,
+	&quot;indexSize&quot; : 0,
+	&quot;fileSize&quot; : 0,
+	&quot;fsUsedSize&quot; : 0,
+	&quot;fsTotalSize&quot; : 0,
+	&quot;ok&quot; : 1
+}
+</code></pre>
+
+<h2 id="删除数据库">删除数据库</h2>
+
+<p>删除数据库要先切换到要删除的库，然后使用<strong>db.dropDatabase()</strong>命令删除。</p>
+
+<pre><code class="language-bash">&gt; use test
+&gt; db.dropDatabase()
+{ &quot;ok&quot; : 1 }
+</code></pre>
+
+<h1 id="表-集合-的操作">表（集合）的操作</h1>
+
+<p>MongoDB中表称作为集合。集合的操作包括添加、删除、修改、查询，即crud。</p>
+
+<h2 id="创建集合-表">创建集合（表）</h2>
+
+<p><strong>db.createCollection(name, options)</strong></p>
+
+<ul>
+<li><strong>name</strong>：要创建的集合名</li>
+<li><strong>option</strong>：可选参数，可指定有关内存大小及索引相关选项</li>
+</ul>
+
+<pre><code class="language-bash">&gt; use test
+&gt; db.createCollection('users')
+{ &quot;ok&quot; : 1 }
+
+# 查看当前库有哪些表使用命令show collections(tables)
+&gt; show collections
+users
+</code></pre>
+
+<h2 id="修改集合-表">修改集合（表）</h2>
+
+<p>常用的操作有修改表名</p>
+
+<pre><code class="language-bash">&gt; db.users.renameCollection('more_users')
+{ &quot;ok&quot; : 1 }
+
+&gt; show collections
+more_users
+</code></pre>
+
+<h2 id="删除集合-表">删除集合（表）</h2>
+
+<pre><code class="language-bash">&gt; db.more_users.drop()
+true
+</code></pre>
+
+<h2 id="文档的操作">文档的操作</h2>
+
+<p>文档即为集合中的数据，以<strong>BSON</strong>格式存储，这种格式类似于<strong>JSON</strong>，当其存储的是二进制。</p>
+
+<p><strong>BJON</strong>：binary json。</p>
+
+<h2 id="插入文档-数据">插入文档（数据）</h2>
+
+<p>使用<strong>inset()</strong>或<strong>save()</strong>方法向集合中插入文档。</p>
+
+<p>1、使用insert（）</p>
+
+<p>格式：db.col_name.insert(document)</p>
+
+<pre><code class="language-bash"># 默认插入一条，还可以使用insertOne()
+&gt; db.users.insert({name: 'tom', age: 24, address: 'US'})
+WriteResult({ &quot;nInserted&quot; : 1 })
+
+&gt; db.users.insertOne({name: 'lily', age: 27, address: 'shanghai'})
+{
+        &quot;acknowledged&quot; : true,
+        &quot;insertedId&quot; : ObjectId(&quot;5bc556b1402861fa0c45e4e9&quot;)
+}
+
+# 插入多条，[{}, {}]
+&gt; db.users.insertMany([{name: 'shawn', age: 24, address: 'beijing'}, {name: 'rose', age: 26, address: 'UK'}])
+{
+        &quot;acknowledged&quot; : true,
+        &quot;insertedIds&quot; : [
+                ObjectId(&quot;5bc5566b402861fa0c45e4e7&quot;),
+                ObjectId(&quot;5bc5566b402861fa0c45e4e8&quot;)
+        ]
+}
+</code></pre>
+
+<p>2、使用save（）</p>
+
+<p>使用save()时，如果不指定_id，作用和insert()一样，如果指定_id，则会更新该_id的数据</p>
+
+<pre><code class="language-bash">&gt; db.users.save({name: 'jack', age: 25, address: 'beijing'})
+WriteResult({ &quot;nInserted&quot; : 1 })
+</code></pre>
+
+<h2 id="查询文档">查询文档</h2>
+
+<p>格式：db.collection.find(query, projection)，其中，query和projection都是可选的。query为指定的查询条件，projection为指定的返回键。</p>
+
+<p>1、查询所有</p>
+
+<pre><code class="language-bash"># 查询所有
+&gt; db.users.find()
+{ &quot;_id&quot; : ObjectId(&quot;5bc554e8402861fa0c45e4e5&quot;), &quot;name&quot; : &quot;tom&quot;, &quot;age&quot; : 24, &quot;address&quot; : &quot;US&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5bc555ad402861fa0c45e4e6&quot;), &quot;name&quot; : &quot;jack&quot;, &quot;age&quot; : 25, &quot;address&quot; : &quot;beijing&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5bc5566b402861fa0c45e4e7&quot;), &quot;name&quot; : &quot;shawn&quot;, &quot;age&quot; : 24, &quot;address&quot; : &quot;beijing&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5bc5566b402861fa0c45e4e8&quot;), &quot;name&quot; : &quot;rose&quot;, &quot;age&quot; : 26, &quot;address&quot; : &quot;UK&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5bc556b1402861fa0c45e4e9&quot;), &quot;name&quot; : &quot;lily&quot;, &quot;age&quot; : 27, &quot;address&quot; : &quot;shanghai&quot; }
+
+# 使用pretty()让查询的文档以易读的方式显示
+&gt; db.users.find().pretty()
+{
+        &quot;_id&quot; : ObjectId(&quot;5bc554e8402861fa0c45e4e5&quot;),
+        &quot;name&quot; : &quot;tom&quot;,
+        &quot;age&quot; : 24,
+        &quot;address&quot; : &quot;US&quot;
+}
+{
+        &quot;_id&quot; : ObjectId(&quot;5bc555ad402861fa0c45e4e6&quot;),
+        &quot;name&quot; : &quot;jack&quot;,
+        &quot;age&quot; : 25,
+        &quot;address&quot; : &quot;beijing&quot;
+}
+{
+        &quot;_id&quot; : ObjectId(&quot;5bc5566b402861fa0c45e4e7&quot;),
+        &quot;name&quot; : &quot;shawn&quot;,
+        &quot;age&quot; : 24,
+        &quot;address&quot; : &quot;beijing&quot;
+}
+{
+        &quot;_id&quot; : ObjectId(&quot;5bc5566b402861fa0c45e4e8&quot;),
+        &quot;name&quot; : &quot;rose&quot;,
+        &quot;age&quot; : 26,
+        &quot;address&quot; : &quot;UK&quot;
+}
+{
+        &quot;_id&quot; : ObjectId(&quot;5bc556b1402861fa0c45e4e9&quot;),
+        &quot;name&quot; : &quot;lily&quot;,
+        &quot;age&quot; : 27,
+        &quot;address&quot; : &quot;shanghai&quot;
+}
+</code></pre>
+
+<p>2、查询一条文档并隐藏主键id</p>
+
+<pre><code class="language-bash">&gt; db.users.find({name: 'shawn'}, {_id: false}).pretty()
+{ &quot;name&quot; : &quot;shawn&quot;, &quot;age&quot; : 24, &quot;address&quot; : &quot;beijing&quot; }
+</code></pre>
+
+<p>3、使用findOne查询一条文档</p>
+
+<pre><code class="language-bash">&gt; db.users.findOne();
+{
+        &quot;_id&quot; : ObjectId(&quot;5bc554e8402861fa0c45e4e5&quot;),
+        &quot;name&quot; : &quot;tom&quot;,
+        &quot;age&quot; : 24,
+        &quot;address&quot; : &quot;US&quot;
+}
+</code></pre>
+
+<p>MongoDB中可用的查询条件：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">操作</th>
+<th align="center">格式</th>
+<th align="center">范例</th>
+<th align="center">rdbms中类似语句</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">等于</td>
+<td align="center">{key: val}</td>
+<td align="center">db.collection.find({name: &lsquo;xxx&rsquo;})</td>
+<td align="center">where name = &lsquo;xxx&rsquo;</td>
+</tr>
+
+<tr>
+<td align="center">小于</td>
+<td align="center">{key: {$lt: val}}</td>
+<td align="center">db.collection.find({&lsquo;age&rsquo;: {$lt: 30}})</td>
+<td align="center">where age &lt; 30</td>
+</tr>
+
+<tr>
+<td align="center">小于或等于</td>
+<td align="center">{key: {$lte: val}}</td>
+<td align="center">db.collection.find({&lsquo;age&rsquo;: {$lte: 30}})</td>
+<td align="center">where age &lt;= 30</td>
+</tr>
+
+<tr>
+<td align="center">大于</td>
+<td align="center">{key: {$gt: val}}</td>
+<td align="center">db.collection.find({&lsquo;age&rsquo;: {$gt: 25}})</td>
+<td align="center">where age &gt; 25</td>
+</tr>
+
+<tr>
+<td align="center">大于或等于</td>
+<td align="center">{key: {$gte: val}}</td>
+<td align="center">db.collection.find({&lsquo;age&rsquo;: {$gte: 25}})</td>
+<td align="center">where age &gt;= 25</td>
+</tr>
+
+<tr>
+<td align="center">不等于</td>
+<td align="center">{key: {$ne: val}}</td>
+<td align="center">db.collection.find({&lsquo;age&rsquo;: {$ne: 20}})</td>
+<td align="center">where age != 20</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="修改文档">修改文档</h2>
+
+<p>格式：db.collection.update(query, update, {upsert: [boolean], multi:[boolean], writeConcern: [document]})</p>
+
+<p>其中：query是查询条件、update为更新的文档数据，第三个参数为可选参数，upsert表示不存在时是否插入该文档，multi表示是否更新所有匹配的记录，writeConcern为跑出异常的级别。</p>
+
+<p>1、简单修改</p>
+
+<pre><code class="language-bash">&gt; db.users.update({name: 'shawn'}, {$set: {age: 22}})
+WriteResult({ &quot;nMatched&quot; : 1, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 1 })
+
+&gt; db.users.find({name: 'shawn'})
+{ &quot;_id&quot; : ObjectId(&quot;5bc5566b402861fa0c45e4e7&quot;), &quot;name&quot; : &quot;shawn&quot;, &quot;age&quot; : 22, &quot;address&quot; : &quot;beijing&quot; }
+</code></pre>
+
+<p>2、不存在该记录则新增</p>
+
+<pre><code class="language-bash">&gt; db.users.update({name: 'john'}, {$set: {age: 33}}, {upsert: true})
+WriteResult({
+        &quot;nMatched&quot; : 0,
+        &quot;nUpserted&quot; : 1,
+        &quot;nModified&quot; : 0,
+        &quot;_id&quot; : ObjectId(&quot;5bc5619825383fb8676b9c81&quot;)
+})
+
+&gt; db.users.find({name: 'john'})
+{ &quot;_id&quot; : ObjectId(&quot;5bc5619825383fb8676b9c81&quot;), &quot;name&quot; : &quot;john&quot;, &quot;age&quot; : 33 }
+</code></pre>
+
+<p>3、修改匹配条件的所有记录</p>
+
+<pre><code class="language-bash">&gt; db.users.update({name: 'jack'}, {$set: {name: 'jackson', age: 18}}, {multi: true})
+WriteResult({ &quot;nMatched&quot; : 1, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 1 })
+</code></pre>
+
+<p>新版本中，提供了<strong>updateOne</strong>、<strong>updateMany</strong>、<strong>replaceOne</strong>方法分别用来修改单个文档、修改多个文档、替换新的文档。</p>
+
+<h2 id="删除文档">删除文档</h2>
+
+<p>删除文档通过remove()方法来操作。</p>
+
+<p>格式：db.collection.remove(query, {justOne: [boolean], writeConcern: [document]})</p>
+
+<p>其中：query为删除的条件；justOne为删除文档数，为true时表示只删除1个文档；writeConcern为抛出异常的级别，可选。</p>
+
+<p>1、只删除匹配的一条</p>
+
+<pre><code class="language-bash">&gt; db.users.remove({name: 'shawn'}, {justOne: true})
+WriteResult({ &quot;nRemoved&quot; : 1 })
+</code></pre>
+
+<p>2、删除所有匹配的记录</p>
+
+<pre><code class="language-bash">&gt; db.users.remove({name: 'jack'})
+</code></pre>
+
+<p>使用<strong>deleteOne</strong>和<strong>deleteMany</strong>删除，官方文档推荐。</p>
+
+<p>1、删除所有记录</p>
+
+<pre><code class="language-bash">&gt; db.users.deleteMany({})
+</code></pre>
+
+<p>2、删除所有满足条件的记录</p>
+
+<pre><code class="language-bash">&gt; db.users.deleteMany({age: 20})
+</code></pre>
+
+<p>3、删除满足条件的一条记录</p>
+
+<pre><code class="language-bash">&gt; db.users.deleteOne({address: 'beijing'})
+{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 1 }
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>上面概述的MongoDB常用操作指令。MongoDB是一款高扩展性、高性能分布式架构的NoSQL产品，也是目前主流的web项目数据存储方案。需知晓更多详细描述和细节说明，可参考官方文档：<a href="https://docs.mongodb.com/">https://docs.mongodb.com/</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

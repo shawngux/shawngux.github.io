@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>区块链基础</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">区块链基础</div>
+        <div class="post-date">Friday, Jul 6, 2018</div>
+    </div>
+    <article>
+
+<h1 id="一-区块链诞生的背景">一、区块链诞生的背景</h1>
+
+<p>在社会发展进程中，金融科技是保障社会文明的重要支柱，而记账这一行为或称为记账科技则是金融科技最核心的支柱基石。</p>
+
+<p>以往，无论是传统的交易，还是互联网上的经济金融贸易，几乎都需要借助可被广泛大众认可和信赖的第三方信用结构（银行、支付宝等）中的账本来记录，这样的话交易信息掌握在个体手中，同时涉及到多个交易方的情况下，需要分别维护各自的账本，可能出现不一致抑或对账困难的情况，而且，一旦出现数据遗失，则有可能无法找回。</p>
+
+<p>随着交易信息受限于“基于信用”这一模式的一系列可能出现的问题，去中心化，分布式账本这一概念出现。于是，区块链技术随之而来。</p>
+
+<h1 id="二-区块链的发展历程">二、区块链的发展历程</h1>
+
+<p>区块链发展至今，经历了三次浪潮：</p>
+
+<ul>
+<li>第一个浪潮出现在2013左右，此前，一个名为中本聪的在一封加密邮件中发布比特币白皮书<a href="https://bitcoin.org/bitcoin.pdf">《比特币：一种点对点的电子现金系统》</a>，并在09年公开最初的实现代码，由此比特币项目上线，但在很长一段时间内并未引起太多的关注，直到比特币的价值暴涨，各种加密货币在此时期纷纷出现，因此，隐藏在其背后的区块链技术才首次引起大家的关注。这一时期，我们称之为区块链1.0时代。</li>
+<li>第二个浪潮出现在2016年前后，这一时期，区块链技术也有了自身的突破，首个大规模的公有智能合约引擎&ndash;以太坊（Ethereum）项目正式上线（我们称之为区块链2.0）。于此时期内，首个面向企业应用的联盟式分布式账本&ndash;超级账本（HyperLedger Fabric）,在一些企业巨头支持下成立（我们称之为区块链2.5）。</li>
+<li>第三个浪潮，从2017年开始至今，众多互联网领域的资本开始关注区块链，人才缺口也相应的持续加大，区块链成为继人工智能后的又一个资本追逐以及技术的热点。由此及未来的一段时间，我们称之为区块链3.0时代。</li>
+</ul>
+
+<h1 id="三-区块链中一些概念">三、区块链中一些概念</h1>
+
+<ol>
+<li>定义
+
+<ul>
+<li>狭义上：区块链就是一种以区块为基本单位的<strong>链式存储结构</strong>。</li>
+<li>广义上：区块链是指基于区块链存储结构实现的<strong>分布式账本</strong>。</li>
+</ul></li>
+</ol>
+
+<p><img src="/post_images/blockchain/blockchain.jpg" alt="区块链" /></p>
+
+<ol>
+<li>基本原理
+
+<ul>
+<li><strong>矿工</strong>：即参与维护区块链网络的每一个节点</li>
+<li><strong>挖矿</strong>：矿工通过不断计算得出一个满足给定难度的随机数从而生成符合记录交易数据的区块并获得奖励的过程，即矿工争夺记账权的过程。</li>
+<li><strong>交易</strong>：一次对账本的操作，如添加一条转账记录。</li>
+<li><strong>hash</strong>：一种摘要算法，将给定的输入经过hash运算，得到一个固定长度的无规律字符串，给定的输入即使有非常细微的不同，hash过后的字符串也会有非常大的差别。</li>
+<li><strong>nonce</strong>：随机串，即节点通过将上一个区块打包的内容加上不断计算得出的这个nonce进行hash，从而可以得出一个满足指定难度的一个hash值。</li>
+<li><strong>PoW(Proof of Work)</strong>：即工作量证明，在区块链网络中指的是节点贡献的算力，也就是共识（此种共识存在一定的不足，因此PoW和PoS之争的话题常有）。</li>
+</ul></li>
+</ol>
+
+<p>以比特币为例阐述基本原理：</p>
+
+<p>首先，比特币客户端（比特币钱包等）发起一个转账交易，这笔交易广播到比特币网络中等待确认，网络中的节点接收到广播，便将待确认的交易记录打包在一起，组成一个候选区块，然后通过不断的暴力计算，试图找到一个随机串nonce，放到这个候选区块里，从而让这个候选区块的hash值满足一定的条件（例如小于某个特定的值）。一旦某个节点找到了这个nonce值，这个区块就可被认为是合法的，节点就会尝试将这个区块广播到区块链网络中。其他节点接收到这个区块后，进行验证，验证通过，则会将这个区块添加到自己维护的区块链上。当大部分节点都将这个区块添加到自己维护的区块链上后，这个区块则被全网接受，区块中的交易得到确认。而生成该区块的节点（即矿工）会接收到比特币奖励，但比特币不是立刻到达矿工的钱包，而是会在该区块之后的5个新区块被确认后，即第6个区块确认时收到。</p>
+
+<h1 id="四-比特币-btc-的一些特点">四、比特币(BTC)的一些特点</h1>
+
+<p>比特币本质上就是一种加密货币，基于区块链技术的一种数字货币实现，也是历史上首个经过大规模长时间检验的数字货币系统。</p>
+
+<ul>
+<li><strong>去中心化</strong>：没有第三方的机构或者中介可以对网络中的交易进行破坏，任何交易都是基于共识来进行。</li>
+<li><strong>隐私匿名性</strong>：网络中交易的地址是匿名的，通过一个34位的地址来进行交易，避免了直接关联到具体的个体。</li>
+<li><strong>安全性</strong>：网络中交易存储是分布式的，每一个节点都维护一个完整的区块链，即使其中有个别节点异常也不会影响网络的运转。除非掌握全网51%及其以上算力，即可控制整个区块链。</li>
+<li><strong>总量一定</strong>：比特币总量固定，只有2100万枚。</li>
+<li>每产生210000个区块后，比特币产量减半。</li>
+<li>系统给矿工的奖励每4年减半，最开始是50个。</li>
+<li>比特币区块的大小不超过1M，最多不超过4000笔交易，每个交易250字节。</li>
+<li><strong>共识机制</strong>：工作量证明（PoW)、只在最长链上添加，即只认可最长链。</li>
+<li>比特币网络不是图灵完备的。</li>
+</ul>
+
+<p>交易输入和输出</p>
+
+<p>比特币交易中有一个重要的概念叫UTXO(Unspent Transaction Outputs)，即未被引用的交易输出，也可以将其看作是比特币交易中的单位，通俗点将类似人民币中的10、20、100这样的面额。</p>
+
+<ul>
+<li><strong>交易输出</strong>：不同面额的UTXO由交易输出提供。一个交易输出中包含两个部分，一是定量的比特币，单位为“聪”，二是包含一个锁定脚本。</li>
+<li><strong>交易输入</strong>：前一个有效的交易输出可以被新的交易引用作为其输入，这也就称之为交易输入。</li>
+<li>比特币中最小单位即为“聪”，1“聪”等于10^-8比特币，即一亿分之一比特币。</li>
+</ul>
+
+<p>交易脚本</p>
+
+<p>为了保障交易的完成，比特币交易中引入交易脚本（Script），交易脚本主要用来检验交易的合法性。每个交易一般会包含两个脚本，负责输入的解锁脚本（scriptSig）和负责输出的锁定脚本（scriptPubKey）。</p>
+
+<ul>
+<li><strong>解锁脚本</strong>：也可称之为输入脚本，是接收方用来证明自己是发送方发送的对象，即自己满足解锁认领对方输出的比特币。</li>
+<li><strong>锁定脚本</strong>：也可称为输出脚本，是由付款方对当前发送的交易进行锁定，规定谁能动这笔交易的输出，例如限定了只有拥有某个公钥的另一方才有对这笔交易的花费权。</li>
+</ul>
+
+<h1 id="五-以太坊-ethereum-的一些特点">五、以太坊（Ethereum）的一些特点</h1>
+
+<p>随着区块链技术的进一步发展，以太坊项目对以比特币为主的数字货币交易系统的功能进一步扩展，支持智能合约这一特性，从而让基于区块链的数字货币系统有了更灵活的应用场景。</p>
+
+<ul>
+<li>支持图灵完备的智能合约，可以运行更复杂的自定义合约规则。</li>
+<li>平台独立设计了solidity语言，并运行于EVM（Ethereum Virtual Machine），即以太坊虚拟机。</li>
+<li>支持PoW共识算法，同时支持效率更高的PoS共识算法</li>
+<li>抛弃UTXO,采用账户系统和世界状态。</li>
+<li>叔块（Uncle Block）激励机制，降低集中式矿池的优势。所谓叔块激励，是指一个矿工生成了满足条件的区块后，另一个矿工随后或同时也生成了满足条件的另一个区块，这两个区块属于不同分支的同辈，对于一个分支上的下一个区块而言，另一个分支上的区块则是称为它的叔块，生成叔块的节点同样会获得奖励。</li>
+<li>采用gas来限制执行合约数，避免循环执行攻击。即每执行一次合约，都会消耗一定的gas，gas可与以太币进行兑换。</li>
+</ul>
+
+<p>核心概念</p>
+
+<ul>
+<li><strong>智能合约（Contract）</strong>：即执行特定功能的代码，严格一点叫做程序执行指令。是以太坊中最重要的一个概念。这些指令执行结果一旦确认则不可伪造和篡改。智能合约运行在以太坊虚拟机（EVM）中。</li>
+<li><strong>账户（Account）</strong>：在比特币系统中没有账户这样的一个概念，而是采用UTXO模型来记录整个系统的状态。每个人都可以通过搜寻交易历史来推算出用户的余额信息。以太坊则采用了与比特币完全不同的方式，即直接采用账户来记录系统的交易状态。每个账户存储用户余额，智能合约和一些其他数据等。账号分为两种，一种是合约账号，用来存储智能合约代码，只能供外部账号调用；另一种是外部账号，即以太币拥有者账号，由每一个人来控制，里面存储着balance等信息。</li>
+<li><strong>交易（Transaction）</strong>：从一个账户到另一个账户的消息传递。在交易包含以下几个字段：<br/>
+
+<ol>
+<li><em>to</em>: 目标账户地址，类型为address。<br/></li>
+<li><em>value</em>: 给对方账户转账时，指定转移的以太坊数量。<br/></li>
+<li><em>nonce</em>: 交易相关的随机数，目的主要是用来防止交易被重放。<br/></li>
+<li><em>gasPrice</em>: 执行智能合约中的交易要消耗的gas。<br/></li>
+<li><em>startgas</em>: 交易消耗的最大gas。<br/></li>
+<li><em>signature</em>: 交易中的签名信息。<br/></li>
+</ol></li>
+<li><strong>以太币（Ether）</strong>：以太坊网络中用来交易的货币。最小单位为wei，一个以太币等于10^18个wei。在以太坊网络中，矿工挖矿生成区块会获得5个以太坊奖励。</li>
+<li><strong>燃料（gas）</strong>：用来提供执行智能合约的费用，gas可以和以太币进行相互兑换。</li>
+</ul>
+
+<h1 id="六-merkle树">六、Merkle树</h1>
+
+<p>在区块链中，每个区块中的交易都是以默克尔树的方式来存储的。</p>
+
+<p>1、什么是默克尔树（Merkle）?</p>
+
+<blockquote>
+<p>默克尔树又叫哈希树，是一种典型的二叉树结构，因此也叫做哈希二叉树，它由一个根节点，一组中间节点和一组叶子节点组成。可以用来快速定位某笔交易和用来比较大量数据（即快速校验大规模数据合法性）。</p>
+</blockquote>
+
+<p>2、区块链中交易如何使用默克尔树（Merkle）进行存储？</p>
+
+<blockquote>
+<p>在区块链中，每个区块中的交易可能存在几百上千个，这时最近的交易会从生成新的默克尔树叶子节点，在默克尔树中，叶子节点存储着当前交易的数据及其hash值，而非叶子节点存储着两个孩子的内容的hash值，这样，实际上到了根节点则存储了整棵树中的交易内容的hash值。因此，底层数据的任何变动，都会传递到父节点，一层一层的最终传递到跟节点。</p>
+</blockquote>
+
+<h1 id="总结">总结</h1>
+
+<p>以上内容参考了网上的一些相关文章，同时也作为这段时间基本学习的一些总结。区块链相关概念的大火，同时也引起了人们尤其是技术人员对区块链技术的相关关注，随着区块链技术的发展，以及区块链相关应用的落地，相信我们的一些社会行为会发生天翻地覆的变化。
+不由的想起某个大牛曾经说过的一句话：人工智能一定会改变世界，区块链或许会改变世界。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

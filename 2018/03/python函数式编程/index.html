@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python函数式编程</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python函数式编程</div>
+        <div class="post-date">Tuesday, Mar 20, 2018</div>
+    </div>
+    <article>
+
+<p>函数式编程又叫面向过程编程，Python对函数式编程提供部分支持，但是Python并不是一个完全的函数式编程。</p>
+
+<h1 id="高阶函数">高阶函数</h1>
+
+<p>简单的说就是一个函数将另一个函数作为参数传入函数中，这样的函数就是高阶函数。如：</p>
+
+<pre><code class="language-python"> def f(a):
+     return a**2;
+     
+ def oper(x, f): # f函数作为参数传入
+     return f(x)
+</code></pre>
+
+<p>一些内建高阶函数：</p>
+
+<h2 id="map">map</h2>
+
+<p><strong><font color="red">map()</font></strong>函数接收两个参数，第一个参数是一个函数，第二个参数为可迭代的对象Iterable,例如序列。map将函数作用于可迭代的对象的每一个元素，并返回一个Iterator。看代码：</p>
+
+<pre><code class="language-python"> def f(x):
+     return x**2
+     
+ numbers = [1, 2, 3, 4, 5]
+ res = map(f, numbers)
+ print(list(res)) # 返回[1, 4, 9, 16, 25]
+</code></pre>
+
+<h2 id="reduce">reduce</h2>
+
+<p><strong><font color="red">reduce</font></strong>是functools模块中的一个函数，它把一个函数作用在给定的序列上，而这个参数函数必须接收两个参数，每次执行都会把结果继续和序列的下一个元素做累积计算，直接看代码：</p>
+
+<pre><code class="language-python"> from functools import reduce
+ def fn(a, b):
+    return a * 10 + b
+
+ numbers = [1, 2, 3, 4, 5]
+ res = reduce(fn, numbers) # 将给定的序列转成12345
+ print(res) # 返回12345
+</code></pre>
+
+<h2 id="filter">filter</h2>
+
+<p><strong><font color="red">filter</font></strong>函数用来过滤一个序列，filter接收两个参数，第一个参数是一个函数，第二个参数是一个序列，它将函数作用于序列的每一个元素，然后根据结果为True还是False决定是否过滤舍弃掉这个元素。结果返回一个可迭代对象。看代码：</p>
+
+<pre><code class="language-python"> # 一个序列中只保留偶数，过滤掉奇数
+ def is_even(n):
+     return n % 2 == 0
+     
+ numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+ res = filter(is_even, numbers)
+ print(list(res)) # 返回[2, 4, 6, 8]
+</code></pre>
+
+<h1 id="匿名函数">匿名函数</h1>
+
+<p>Python中匿名函数使用关键字<strong><font color="red">lambda</font></strong>来表示，如 lambda x: x ** 2。冒号前面的为参数，后面的为表达式，也是返回值。</p>
+
+<pre><code class="language-python"> fn = lambda x: x ** 2
+ # 调用
+ fn(5) # 返回25
+ 
+ # 用在高阶函数里
+ res = map(lambda x: x * 10, [1, 2, 3, 4, 5])
+ print(list(res)) # 返回[10, 20, 30, 40, 50]
+</code></pre>
+
+<p>冒号前的参数可省略，表示无参数。</p>
+
+<pre><code class="language-python"> fn = lambda: 1+2
+ fn() # 返回3
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>Python对函数式编程提供了一定的支持，其中一些函数在使用时要方便需要，按需有效使用，可提高效率。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

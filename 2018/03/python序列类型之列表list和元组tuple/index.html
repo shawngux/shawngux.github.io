@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python序列类型之列表(list)和元组(tuple)</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python序列类型之列表(list)和元组(tuple)</div>
+        <div class="post-date">Saturday, Mar 10, 2018</div>
+    </div>
+    <article>
+
+<h1 id="列表-list">列表（List）</h1>
+
+<p>列表是一种可变序列类型，所以通用的序列操作，如索引、分片、连接、乘等都适用于列表。除此之外，还有其他的一些改变列表的方法，如列表元素赋值、元素删除等等，下面概述一些常用操作。</p>
+
+<p>字符串不能像列表一样被修改，有时候根据字符串创建列表会相当有用。如：</p>
+
+<pre><code class="language-python"> list('hello') # 返回['h', 'e', 'l', 'l', 'o']
+</code></pre>
+
+<h2 id="元素赋值">元素赋值</h2>
+
+<p>即可以通过索引来单个元素赋值，也可以通过分片来批量赋值。具体看代码：</p>
+
+<pre><code class="language-python"> # 索引赋值修改元素
+ nums = [1, 2, 3]
+ nums[1] = 5
+ print(nums) # 返回[1, 5, 3]
+ 
+ names = ['Tom', 'Lucy', 'Viky']
+ names[0] = 'shawn'
+ print(names) # 返回['shawn', 'Lucy', 'Viky']
+ 
+ # 分片赋值修改元素
+ strs = list('shawn.gu') # 返回['s', 'h', 'a', 'w', 'n', '.', 'g', 'u']
+ strs[-3:] = list('lalala') # strs返回['s', 'h', 'a', 'w', 'n', 'l', 'a', 'l', 'a', 'l', 'a'] -- 插入了新元素
+ numbers = [1, 2]
+ numbers[1:] = [4, 5, 6, 7, 8]
+ print(numbers) # 返回[1, 4, 5, 6, 7, 8] -- 替换并且插入新元素
+</code></pre>
+
+<h2 id="删除元素">删除元素</h2>
+
+<p>可以通过del语句来删除列表元素，也可以使用分片实现删除效果，具体看代码：</p>
+
+<pre><code class="language-python"> # 通过del删除元素
+ names = ['Tom', 'Kate', 'Shawn', 'Viky', 'Jack']
+ del names[2]
+ print(names) # 返回['Tom', 'Kate', 'Viky', 'Jack']
+ 
+ # 通过分片删除元素 -- 给一个空列表即可
+ names[0:2] = []
+ print(names) # 返回['Viky', 'Jack']
+</code></pre>
+
+<p>注：<strong><font color="red">del</font></strong> 语句除了可以删除列表元素外，还可以用于删除字典元素，甚至还可以删除变量。</p>
+
+<p><strong>下面是列表对象的方法使用：</strong></p>
+
+<h2 id="append">append</h2>
+
+<p>append方法用来在列表末尾追加新的元素：</p>
+
+<pre><code class="language-python"> names = ['Tom', 'Kate']
+ names.append('Jack')
+ print(names) # 返回['Tom', 'Kate', 'Jack']
+</code></pre>
+
+<h2 id="count">count</h2>
+
+<p>count用来统计某个元素在列表中出现的次数：</p>
+
+<pre><code class="language-python"> nums = [1, 2, 1, 4, 5, 6, 2, 5]
+ print(nums.count(1)) # 返回2
+ 
+ lists = [[1, 2], ['shawn', 'jack'], [1, 2]]
+ print(lists.count(['shawn', 'jack'])) # 返回1
+</code></pre>
+
+<h2 id="extend">extend</h2>
+
+<p>extend用来在列表末尾一次性追加另一个列表的多个值。即可以用新的列表来扩展原来的列表：</p>
+
+<pre><code class="language-python"> nums = [1, 3, 1, 4]
+ exts = [5, 2, 0]
+ nums.extend(exts)
+ print(nums) # 返回[1, 3, 1, 4, 5, 2, 0]
+</code></pre>
+
+<p>注：extend方法和+号连接列表不同，+号连接会返回一个新的列表，而extend直接在原列表后追加，修改的是原列表。</p>
+
+<h2 id="index">index</h2>
+
+<p>index用来在列表中找出某个匹配值的索引位置：</p>
+
+<pre><code class="language-python"> names = ['Tom', 'Kate', 'Shawn', 'Viky', 'Jack']
+ names.index('Viky') # 返回3
+ 
+ names.index('Lily') # 报错，因为没有这个元素
+</code></pre>
+
+<h2 id="insert">insert</h2>
+
+<p>insert方法可用来将给定元素插入到列表指定位置，第一个参数是列表索引位置，第二个参数为给定元素：</p>
+
+<pre><code class="language-python"> ages = [10, 13, 15, 21, 25, 28, 33]
+ ages.insert(2, 30)
+ print(ages) # 返回[10, 13, 30, 15, 21, 25, 28, 33]
+</code></pre>
+
+<h2 id="pop">pop</h2>
+
+<p>pop可用来移除列表中指定索引的元素，不给索引默认移除最后一个元素，<strong>并返回移除的元素</strong>：</p>
+
+<pre><code class="language-python"> n = [1, 3, 5, 7, 9]
+ n.pop() # 移除并返回9
+ n.pop(1) # 移除并返回3
+</code></pre>
+
+<h2 id="remove">remove</h2>
+
+<p>remove方法用来移除列表中匹配的值：</p>
+
+<pre><code class="language-python"> names = ['Tom', 'Kate', 'Shawn', 'Viky', 'Jack']
+ names.remove('Jack')
+ print(names) # 返回['Tom', 'Kate', 'Shawn', 'Viky']
+</code></pre>
+
+<p>注：remove只有一个参数，给定的参数为元素的值，这和pop不同，pop给定的是元素的索引。另外remove方法没有返回值。</p>
+
+<h2 id="reverse">reverse</h2>
+
+<p>reverse方法用来将列表中的元素倒置，即反向存放：</p>
+
+<pre><code class="language-python"> nums = [2, 4, 6]
+ nums.reverse()
+ print(nums) # 返回[6, 4, 2]
+</code></pre>
+
+<h2 id="sort">sort</h2>
+
+<p>sort用来对列表元素进行排序。是指在原列表内部进行排序，而不是返回排序的列表副本：</p>
+
+<pre><code class="language-python"> nums = [3, 2, 8, 5, 11, 0, 9, 6]
+ nums.sort()
+ print(nums) # 返回[0, 2, 3, 5, 6, 8, 9, 11]
+</code></pre>
+
+<p>sort方法返回值是None，所以通过sort方法排序后的结果进行排序是<strong>不正确的</strong>，即x=y.sort()这样是得不到正确结果的。如果得到x排序后的副本，而x本身不变得话，可以通过下面方式实现：</p>
+
+<pre><code class="language-python"> # 方法一
+ x = [4, 1, 3, 8, 5]
+ y = x[:]
+ y.sort()
+ print(y) # 返回[1, 3, 4, 5, 8]
+ 
+ # 方法二
+ y = sorted(x)
+ print(y) # 返回[1, 3, 4, 5, 8]
+</code></pre>
+
+<p>注：不能直接使用x赋值y，即y=x,这样的话x和y指向同一个列表了。</p>
+
+<h1 id="元组-tuple">元组（Tuple）</h1>
+
+<p>元组也是一种序列类型，但是元组一定定义不能修改。元组通过逗号（或加上小括号）来创建，看代码：</p>
+
+<pre><code class="language-python"> t = 1, 2, 3
+ print(t) # 返回(1, 2, 3)，自动加上小括号()
+ 
+ t2 = ('shawn', 'lily', 'jack')
+ print(t2) # 返回('shawn', 'lily', 'jack')
+ 
+ # 当元组中只有一个元素时，后面的逗号,一定不能省略，否则会自动转换成整数、字符串或其他类型
+ t3 = (5,)
+ t4 = 'shawn',
+</code></pre>
+
+<p>元组可以通过tuple()方法加一个序列作为参数，转成元组，这个和list一样：</p>
+
+<pre><code class="language-python"> t = tuple([1, 3, 5])
+ print(t) # 返回(1, 3, 5)
+ 
+ t2 = tuple('shawn')
+ print(t2) # 返回('s', 'h', 'a', 'w', 'n')
+ 
+ t3 = tuple(('tom', 'lily', 'jack'))
+ print(t3) # 返回('tom', 'lily', 'jack')
+</code></pre>
+
+<p>元组的应用场景有：</p>
+
+<ul>
+<li>可以作为映射和集合中当做键来使用</li>
+<li>作为函数的返回值存在。</li>
+</ul>
+
+<h1 id="总结">总结</h1>
+
+<p>列表list和元组，尤其列表是Python经常使用到的序列类型，列表是可变的序列，可以进行赋值、删除等操作；而元组是不可变的序列，不可变的含义是指向不可变。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

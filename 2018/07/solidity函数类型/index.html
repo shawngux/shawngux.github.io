@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidity函数类型</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidity函数类型</div>
+        <div class="post-date">Thursday, Jul 26, 2018</div>
+    </div>
+    <article>
+
+<p>Solidity中，函数可以使用不同的关键字进行修饰，代表不同的类型函数，函数类型关键字常用的有view、constant、pure、payable。</p>
+
+<h1 id="view类型函数">View类型函数</h1>
+
+<p>将函数声明为view类型，代表该函数不会修改区块链中的状态。可看成只读类型的函数。调用只读状态类型的函数不会消耗gas。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    
+    function func() public view returns (uint) {
+        return 2 * 4 + now;
+    }
+}
+</code></pre>
+
+<p><strong><font color="red">constant</font></strong>修饰函数时是view的别名，作用和view一样，代表只读状态。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    
+    // constant &lt;==&gt; view
+    function func() public constant returns (uint) {
+        return 4 * 8 + now;
+    }
+}
+</code></pre>
+
+<p>不修改状态相对的则是修改状态，以下情况被认为是修改状态。</p>
+
+<ul>
+<li>修改定义的状态变量</li>
+<li>产生事件</li>
+<li>创建其他合约</li>
+<li>使用selfdestruct自毁函数</li>
+<li>通过调用发送以太币</li>
+<li>调用任何没有被标记为view或pure的函数</li>
+<li>使用低级调用</li>
+<li>包含特定操作码的内联汇编</li>
+</ul>
+
+<p>注：在solidity中，编译器没有强制view函数一定不能修改状态，只是尽可以保证不修改以让其只读。</p>
+
+<h1 id="pure函数">Pure函数</h1>
+
+<p>将函数声明为pure类型，这种情况下看成承诺不读取或修改状态。这个地方可理解为局部变量值返回。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+
+    // 不会去读取和修改区块链中的状态。
+    function func() public pure returns (string) {
+        return 'shawn.gu';
+    }
+}
+</code></pre>
+
+<p>相对于不读取，以下情况被认为是读取区块链状态。</p>
+
+<ul>
+<li>读取定义的状态变量</li>
+<li>访问this.balance 或 <address>.balance</li>
+<li>访问block、tx、msg中的任意成员（除了msg.sig和msg.data）</li>
+<li>调用任何为标记为pure的函数</li>
+<li>使用包含某些操作码的内联汇编</li>
+</ul>
+
+<p>注：同样，solidity编译器没有强制pure函数一定不能读取状态。</p>
+
+<h1 id="fallback函数-payable">Fallback函数（payable）</h1>
+
+<p>solidity智能合约中，可以有一个未命名的函数，这个函数不能有参数和返回值。如果在调用合约时，没有其他函数与给定的函数标识符匹配（或没有提供调用数据），即没找到要调用的函数，那么这函数就会被执行。</p>
+
+<p>另外，当合约接收到以太币（没有任何其他数据），这个函数也会执行。此外，为了接收以太币，fallback函数必须被<strong><font color="red">payable</font></strong>修饰。如果不存在这样的函数，合约则不同正常接收以太币交易。</p>
+
+<p>在这种情况下，通常只有很少的gas用来调用这个函数（2300gas），所以尽可能让fallback函数的调用便宜。</p>
+
+<p>以下使用fallback来执行的操作会被常规的花费要多。</p>
+
+<ul>
+<li>写入存储</li>
+<li>创建合约</li>
+<li>调用消耗大量gas的外部函数</li>
+<li>发送以太币</li>
+</ul>
+
+<p>所以在部署合约前要彻底测试fallback函数，确保执行成本低于2300gas。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    uint x;
+    
+    // 给这个合约发送以太币时会导致异常，因为没有使用payable来修饰，发送其他消息都会调用这个函数
+    function() public {
+        x = 1;
+    }
+}
+
+contract Sink {
+
+    // 这个合约会保留所有发送给它的以太币，没有办法返回
+    function() public payable {}
+}
+
+contract Caller {
+    address test;
+
+    function Caller() {
+        test = new Test();
+    }
+    
+    
+    function callTest() public {
+        // 这会导致test.x = 1
+        test.call(0x0763ae);
+        
+        // 拒绝接收
+        test.transfer(5 ether);
+    }
+}
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>在声明函数时，根据不同的功能使用不同的关键字来修改不同类型的函数。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

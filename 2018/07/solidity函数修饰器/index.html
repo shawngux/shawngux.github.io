@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidity函数修饰器</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidity函数修饰器</div>
+        <div class="post-date">Wednesday, Jul 25, 2018</div>
+    </div>
+    <article>
+
+<h1 id="函数修饰器">函数修饰器</h1>
+
+<p>在solidity中，当我们想要在执行某个函数之前处理一些行为，例如检查某个条件，这个时候函数修饰器可以轻松实现这样的要求。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    address owner;
+
+    function Test() {
+        owner = msg.sender;
+    }
+
+    // 定义修饰器，用于在执行函数前判断当前调用者是为合约拥有者
+    // _; 修饰器修饰的函数体会被插入到这个符号的位置。
+    modifier onlyOwner {
+        require(msg.sender == owner);
+        _;
+    }
+
+    // 使用修饰器修饰
+    function add() public constant onlyOwner returns (uint) {
+        return 1 + 2;
+    }
+}
+</code></pre>
+
+<p>修饰器也可以被继承，一个函数也可以被多个修饰器修饰，被多个修饰器修饰时，使用空格隔开。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Parent {
+    address public owner;
+    uint public value;
+
+    modifier onlyOwner {
+        require(msg.sender == owner);
+        _;
+    }
+
+    modifier check {
+        require(value &gt; 10);
+        _;
+    }
+}
+
+contract Child is Parent{
+
+    function Child() {
+        owner = msg.sender;
+        value = 15;
+    }
+
+    function test() public constant onlyOwner check returns (string){
+        return &quot;All Pass!&quot;;
+    }
+}
+</code></pre>
+
+<p>修饰器中，也可以传递参数。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    uint public value;
+    uint public given;
+
+    function Test() {
+        value = 10;
+        given = 15;
+    }
+
+    // 修饰器中传递参数
+    modifier check(uint val) {
+        require(val &gt; value);
+        _;
+    }
+
+    function show() public constant check(given) returns(string) {
+        return &quot;Checked!&quot;;
+    }
+}
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>修饰器中或函数体中显式的return语句仅仅跳出当前的修饰器和函数体。返回变量会被赋值，整个执行逻辑会从前一个修饰器中定义的&rdquo;_&ldquo;之后继续执行。另外，修饰器的参数可以是任意表达式。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

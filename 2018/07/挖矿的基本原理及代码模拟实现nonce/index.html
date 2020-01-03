@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>挖矿的基本原理及代码模拟实现nonce</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">挖矿的基本原理及代码模拟实现nonce</div>
+        <div class="post-date">Sunday, Jul 8, 2018</div>
+    </div>
+    <article>
+
+<h1 id="基本原理">基本原理</h1>
+
+<p>区块链网络中存储交易信息的区块源源不断的生成本质上是通过节点的挖矿来实现的，节点即所谓的矿工，而挖矿通俗点来说是指矿工抢夺记录交易信息（记账）权的过程。而隐藏在挖矿背后的是PoW共识（比特币）。</p>
+
+<p>PoW(Proof of Work)，即工作量证明，所谓工作量证明，是指根据矿工贡献的算力多少来获得奖励，简单点说就是多劳多得。</p>
+
+<h1 id="挖矿的过程">挖矿的过程</h1>
+
+<p>节点根据上一个节点的hash值、当前时间戳、打包的交易信息去寻找一个nonce，从而让这几个数据整合生成的hash满足一定的难度，这个难度一般是指hash值前面0的个数。而nonce寻找过程是由1开始，依次累加，直到找到满足条件的hash为止，即生成了满足难度的区块。然后矿工将这个区块广播到区块链网络中，得其他节点检验，其他节点检验通过，便会将这个区块加到自己维护的链上。而生成区块的这个节点矿工便会在此后5个区块后，即第6个区块被确认后，获得奖励。</p>
+
+<h1 id="模拟生成nonce伪代码">模拟生成nonce伪代码</h1>
+
+<pre><code class="language-javascript">/**
+ * 检验hash值难度
+ * @param targetHash: 给定的hash值
+ * @param difficulty: 给定的难度
+ */
+function isValidDifficulty(targetHash, difficulty) {
+    var i;
+    for (i = 0; len = targetHash.length, i &lt; len; ++i) {
+        if ('0' !== targetHash[i]) {
+            break;
+        }
+    }
+    
+    return i &gt;= difficulty;
+}
+
+/**
+ * 生成nonce和目标hash值
+ */
+function generate() {
+    var nonce = 0; // 从0开始累加
+    var targetHash; // 目标hash
+    var input; // hash运算的数据
+    var difficulty = 4; // 初始难度为4
+    while(isValidDifficulty(targetHash, difficulty)) {
+        nonce = nonce + 1;
+        input = index + prevHash + timestamp + data + nonce;
+        targetHash = CryptoJS.SHA256(input);
+    }
+    
+    return [nonce, targetHash];
+}
+</code></pre>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

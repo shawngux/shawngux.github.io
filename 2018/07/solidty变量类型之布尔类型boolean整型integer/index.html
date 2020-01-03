@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solidty变量类型之布尔类型（Boolean）、整型（Integer）</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Solidty变量类型之布尔类型（Boolean）、整型（Integer）</div>
+        <div class="post-date">Tuesday, Jul 17, 2018</div>
+    </div>
+    <article>
+
+<h1 id="布尔类型-booleans">布尔类型（Booleans）</h1>
+
+<p><a href="https://solidity.readthedocs.io/en/latest/types.html#booleans">https://solidity.readthedocs.io/en/latest/types.html#booleans</a></p>
+
+<p><strong><font color="red">bool</font></strong>：可能的取值为true和false。</p>
+
+<p>支持的运算符有：</p>
+
+<ul>
+<li><strong><font color="red">!</font></strong>（逻辑非）</li>
+<li><strong><font color="red">&amp;&amp;</font></strong>（逻辑与，&rdquo;and&rdquo;）</li>
+<li><strong><font color="red">||</font></strong>（逻辑或）</li>
+<li><strong><font color="red">==</font></strong>（等于）</li>
+<li><strong><font color="red">!=</font></strong>（不等于）</li>
+</ul>
+
+<p>注：运算符<strong><font color="red">||</font></strong>和<strong><font color="red">&amp;&amp;</font></strong>遵循短路规则。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    uint a;
+    uint b;
+    bool c;
+    bool d;
+    
+    function Test() {
+        a = 1;
+        b = 2;
+        c = true;
+        d = false;
+    }
+    
+    // output: false
+    function fnA() constant returns (bool) {
+        return !c;
+    }
+    
+    // output: false
+    function fnB() constant returns (bool) {
+        return c &amp;&amp; d;
+    }
+    
+    // output: true
+    function fnC() constant returns (bool) {
+        return c || d;
+    }
+    
+    // output: false
+    function fnD() constant returns (bool) {
+        return a == b;
+    }
+    
+    // output: true
+    function fnE() constant returns (bool) {
+        return a != b;
+    }
+    
+    // 短路效果，output: 1
+    function fnF() constant returns (uint) {
+        if (c || d) {
+            return 1;
+        }
+        return 0;
+    }
+}
+</code></pre>
+
+<h1 id="整型-integers">整型（Integers）</h1>
+
+<p><a href="https://solidity.readthedocs.io/en/latest/types.html#integers">https://solidity.readthedocs.io/en/latest/types.html#integers</a></p>
+
+<p>整型分为有符号<strong><font color="red">int</font></strong>和无符号<strong><font color="red">uint</font></strong>两种。</p>
+
+<p><strong><font color="red">uint</font></strong>：支持 uint8 ~ uint256。</p>
+
+<p><strong><font color="red">int</font></strong>：支持 int8 ~ int256。</p>
+
+<p>默认为 <strong>uint256</strong> 和 <strong>int256</strong>。</p>
+
+<p>有符号整型可以表示负数，同时能表示的正数的范围相对于无符号的要缩小。因为其一般的数值要用来表示负数。例如： uint8的范围为：0 ~ 255，int8的范围为：-127 ~ 127。</p>
+
+<p>支持的运算符有：</p>
+
+<ul>
+<li>比较运算符：<strong><font color="red">&gt;</font></strong>、<strong><font color="red">&gt;=</font></strong>、<strong><font color="red">&lt;</font></strong>、<strong><font color="red">&lt;=</font></strong>、<strong><font color="red">==</font></strong>、<strong><font color="red">!=</font></strong>，结果返回布尔值（bool）。</li>
+<li>位运算符：<strong><font color="red">&amp;</font></strong>、<strong><font color="red">|</font></strong>、<strong><font color="red">^（异或）</font></strong>、<strong><font color="red">~（取反）</font></strong>。</li>
+<li>算术运算符：<strong><font color="red">+</font></strong>、<strong><font color="red">-</font></strong>、<strong><font color="red">x（乘）</font></strong>、<strong><font color="red">/</font></strong>、<strong><font color="red">%（取余）</font></strong>、<strong><font color="red">幂运算</font></strong>、<strong><font color="red">&lt;&lt;（左位移）</font></strong>、<strong><font color="red">&gt;&gt;（右位移）</font></strong>。</li>
+</ul>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+contract Test {
+    uint8 a = 2;
+    uint16 b = 4;
+    int c = 8;
+    int d = 16;
+    
+    // 比较运算
+    function fnA() constant returns (bool) {
+        return a &gt;= c;
+    }
+    
+    // 同类型相加才能得到正确的值
+    function fnB() constant returns (uint) {
+        return c + b;
+    }
+    
+    // 幂运算
+    function fnC() constant returns (uint) {
+        return a ** a;
+    }
+    
+    // 位运算
+    function fnD() contant returns (int) {
+        return d &lt;&lt; 2;
+    }
+    
+    // ......
+}
+</code></pre>
+
+<p>注意：在 Solidity 中，右移和除是等价的，因此对一个负数进行右移操作会导致向 0 的取整（截断）。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

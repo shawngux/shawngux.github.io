@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python字符串常用的方法</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python字符串常用的方法</div>
+        <div class="post-date">Thursday, Mar 8, 2018</div>
+    </div>
+    <article>
+
+<p>Python为字符串的操作提供了相当丰富的方法，这里介绍一些常用的。</p>
+
+<p>介绍字符方法前，简单介绍一个下字符串常量。</p>
+
+<h1 id="string-constants">String constants</h1>
+
+<p>Python字符串模块中，定义了一些字符串常量，可直接拿来用，很方便。</p>
+
+<ul>
+<li><strong><font color="orange">string.ascii_letters</font></strong>：包含所有大写和小写字母的字符串。</li>
+</ul>
+
+<pre><code class="language-python">import string
+print(string.ascii_letters) # abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.ascii_lowercase</font></strong>：包含所有小写字母的字符串。</li>
+</ul>
+
+<pre><code class="language-python">print(string.ascii_lowercase) # abcdefghijklmnopqrstuvwxyz
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.ascii_uppercase</font></strong>：包含所有大写字母的字符串。</li>
+</ul>
+
+<pre><code class="language-python">print(string.ascii_uppercase) # ABCDEFGHIJKLMNOPQRSTUVWXYZ
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.digits</font></strong>：包含0~9数字的字符串。</li>
+</ul>
+
+<pre><code class="language-python">print(string.digits) # 0123456789
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.hexdigits</font></strong>：包含十六进制中所有字符的字符串。</li>
+</ul>
+
+<pre><code class="language-python">print(string.hexdigits) # 0123456789abcdefABCDEF
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.octdigits </font></strong>：包含八进制中所有数字的字符串。</li>
+</ul>
+
+<pre><code class="language-python">print(string.octdigits) # 01234567
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.punctuation</font></strong>：包含所有的标点符号。</li>
+</ul>
+
+<pre><code class="language-python">print(string.punctuation) # !&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">string.printable</font></strong>：包含可打印字符的字符串。</li>
+</ul>
+
+<pre><code class="language-python">print(string.printable) # 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~
+</code></pre>
+
+<h1 id="字符串方法">字符串方法</h1>
+
+<h2 id="find">find</h2>
+
+<p>find方法可以在一个较长的字符串中寻找子串。如果存在，返回子串所在位置的最左端索引，如果不存在该子串，则返回-1。另外可指定搜索索引范围。</p>
+
+<pre><code class="language-python">str = 'this is a test string for find method'
+print(str.find('test')) # 返回10
+
+print(str.find('test', 4)) # 指定从索引4开始搜索，返回10
+
+print(str.find('test', 4, 20)) # 指定从索引4开始到索引20结束，在这个范围内搜索，返回10
+
+print(str.find('hello')) # 不存在这个子串，返回-1
+</code></pre>
+
+<p>注：判断一个字符串是否在另一个字符中，可用 <strong><font color="red">in</font></strong>。</p>
+
+<pre><code class="language-python">print('el' in 'hello,world') # True
+</code></pre>
+
+<h2 id="join">join</h2>
+
+<p>join方法用来将一个序列中的元素用指定的字符连接，生成一个新的字符串。</p>
+
+<pre><code class="language-python">sep = '-' # 连接符
+target_seq = ['1', '2', '3']
+print(sep.join(target_seq)) # 1-2-3
+
+target_seq = ('a', 'b', 'c')
+print(sep.join(target_seq)) # a-b-c
+</code></pre>
+
+<h2 id="split">split</h2>
+
+<p>split通过自定字符对字符串进行分割，返回字符串列表。</p>
+
+<pre><code class="language-python">str = 'tom,lily,jack'
+print(str.split(',')) # ['tom', 'lily', 'jack']
+
+str = 'chinese \nmath \nenglish'
+print(str.split()) # 默认空格 ['chinese', 'math', 'english']
+
+print(str.split(' ', 1)) # ['chinese', '\nmath \nenglish'] 只分割一个
+</code></pre>
+
+<h2 id="lower">lower</h2>
+
+<p>lower将字符串大写字符转成小写。</p>
+
+<pre><code class="language-python">str = 'ABDdeH'
+print(str.lower()) # abddeh
+</code></pre>
+
+<h2 id="upper">upper</h2>
+
+<p>upper将字符串中的小写字符转成大写。</p>
+
+<pre><code class="language-python">str = 'Welcome to China'
+print(str.upper()) # WELCOME TO CHINA
+</code></pre>
+
+<h2 id="title">title</h2>
+
+<p>返回标题化的字符串，意思就是将所有单词首字母转成大写</p>
+
+<pre><code class="language-python">str = 'this is a title'
+print(str.title()) # This Is A Title
+</code></pre>
+
+<h2 id="capitalize">capitalize</h2>
+
+<p>将字符串的第一字符转成大写。</p>
+
+<pre><code class="language-python">str = 'this is a example'
+print(str.capitalize()) # This is a example
+</code></pre>
+
+<h2 id="replace">replace</h2>
+
+<p>将某个字符串中的指定子串使用另外指定的字符串替换。</p>
+
+<pre><code class="language-python">str = 'good boy, welcome to study python'
+print(str.replace('boy', 'girl')) # good girl, welcome to study python
+
+str = 'good good good day'
+print(str.replace('good', 'nice', 2)) # 可以指定替换的次数 nice nice good day
+</code></pre>
+
+<h2 id="strip">strip</h2>
+
+<p>去除字符串两侧的空格，也可以指定去除的字符。</p>
+
+<pre><code class="language-python">str = ' hello, study python happily '
+print(str.strip()) # hello, study python happily
+
+print(str.strip(' hy')) # ello, study python happil
+</code></pre>
+
+<h2 id="translate">translate</h2>
+
+<p>translate功能和replace类似，可以替换掉字符串某个部分。translate是通过转换表的方式来实现转换。转换表中定义的是待替换的字符和指定替换的字符的对应关系。使用string模块中的maketrans来实现。</p>
+
+<pre><code class="language-python">table = str.maketrans('abcde', '12345') # 前面是待替换的字符，后面是指定替换的字符
+
+target = 'hello, today is a nice day'
+print(target.translate(table)) # h5llo, to41y is 1 ni35 41y
+</code></pre>
+
+<h2 id="小结">小结</h2>
+
+<p>以上是一些非常常用的字符方法，另外可根据需要了解更多，参考官方文档：</p>
+
+<p><a href="https://docs.python.org/3/library/stdtypes.html#str">https://docs.python.org/3/library/stdtypes.html#str</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

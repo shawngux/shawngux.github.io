@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL用户管理</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL用户管理</div>
+        <div class="post-date">Friday, May 5, 2017</div>
+    </div>
+    <article>
+
+<p>在MySQL数据库系统中，用户存储在mysql库的user表中，即mysql.user。</p>
+
+<pre><code class="language-sql">SHOW CREATE TABLE mysql.user \G
+
+-- 结构
+/*
+Create Table: CREATE TABLE `user` (
+  `Host` char(60) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `User` char(16) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `Password` char(41) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `Select_priv` enum('N','Y') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+  。。。
+  PRIMARY KEY (`Host`,`User`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Users and global privileges';
+*/
+</code></pre>
+
+<p>其中：</p>
+
+<ul>
+<li><strong>Host</strong>：表示用户登录的ip</li>
+<li><strong>User</strong>：用户名</li>
+<li><strong>Password</strong>：用密码，通过password加密</li>
+<li><strong>xxx_priv</strong>：权限，值为Y代表用户有这个权限，N代表没有这个权限</li>
+</ul>
+
+<h1 id="创建用户">创建用户</h1>
+
+<p>格式：
+&gt; <strong><font color='red'>CREATE USER</font></strong> &lsquo;username&rsquo;@&lsquo;ip&rsquo; <strong><font color='red'>IDENTIFIED BY</font></strong> &lsquo;password&rsquo;</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">CREATE USER 'tom'@'127.0.0.1' IDENTIFIED BY '123abc';
+
+SELECT `Host`, `User`, `Password` FROM mysql.user;
+/*
++-----------+------+-------------------------------------------+
+| Host      | User | Password                                  |
++-----------+------+-------------------------------------------+
+| localhost | root | *81F5E21E35407D884A6CD4A731AEBFB6AF209E1B |
+| 127.0.0.1 | root | *81F5E21E35407D884A6CD4A731AEBFB6AF209E1B |
+| ::1       | root | *81F5E21E35407D884A6CD4A731AEBFB6AF209E1B |
+| 127.0.0.1 | tom  | *3620754A963ECB3D7296097F9DA00C1FA5476B03 |
++-----------+------+-------------------------------------------+
+*/
+</code></pre>
+
+<h1 id="删除用户">删除用户</h1>
+
+<p>格式：
+&gt; <strong><font color='red'>DROP USER</font></strong> &lsquo;username&rsquo;@&lsquo;ip&rsquo;;</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">DROP USER 'tom'@'127.0.0.1';
+</code></pre>
+
+<p>注：只有超级用户可做删除用户操作</p>
+
+<h1 id="修改用户密码">修改用户密码</h1>
+
+<p>1、修改自己的密码</p>
+
+<pre><code class="language-sql">SET PASSWORD=PASSWORD('abc');
+</code></pre>
+
+<p>2、给他人修改密码（一般是超级用户）</p>
+
+<p>SET PASSWORD FOR &lsquo;username&rsquo;@&lsquo;ip&rsquo; = PASSWORD(new_pwd)</p>
+
+<pre><code class="language-sql">SET PASSWORD FOR 'tom'@'127.0.0.1' = PASSWORD('abc')
+</code></pre>
+
+<h1 id="给用户赋权">给用户赋权</h1>
+
+<p>可选的权限有：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">privileges</th>
+<th align="center">column</th>
+<th align="center">content</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">CREATE</td>
+<td align="center">Create_priv</td>
+<td align="center">建库、表、索引权限</td>
+</tr>
+
+<tr>
+<td align="center">DROP</td>
+<td align="center">Drop_priv</td>
+<td align="center">删库、表</td>
+</tr>
+
+<tr>
+<td align="center">GRANT OPTION</td>
+<td align="center">Grant_priv</td>
+<td align="center">库、表或保存的程序</td>
+</tr>
+
+<tr>
+<td align="center">REFERENCES</td>
+<td align="center">References_priv</td>
+<td align="center">库、表</td>
+</tr>
+
+<tr>
+<td align="center">ALTER</td>
+<td align="center">Alter_priv</td>
+<td align="center">表</td>
+</tr>
+
+<tr>
+<td align="center">DELETE</td>
+<td align="center">Delete_priv</td>
+<td align="center">表</td>
+</tr>
+
+<tr>
+<td align="center">INDEX</td>
+<td align="center">Index_priv</td>
+<td align="center">表</td>
+</tr>
+
+<tr>
+<td align="center">INSERT</td>
+<td align="center">Insert_priv</td>
+<td align="center">表</td>
+</tr>
+
+<tr>
+<td align="center">SELECT</td>
+<td align="center">Select_priv</td>
+<td align="center">表</td>
+</tr>
+
+<tr>
+<td align="center">UPDATE</td>
+<td align="center">Update_priv</td>
+<td align="center">表</td>
+</tr>
+</tbody>
+</table>
+
+<p>格式：
+&gt; <strong><font color='red'>GRANT</font></strong> priv_lists <strong><font color='red'>ON</font></strong> db.table_name <strong><font color='red'>TO</font></strong> username@ip [IDENTIFIED BY password]</p>
+
+<p>其中：</p>
+
+<ul>
+<li>priv_lists可指定具体权限，也可以使用all，代表所有权限</li>
+<li>[]表示给用户修改密码，当用户不存在时，就创建赋权；存在时修改密码、赋权</li>
+</ul>
+
+<pre><code class="language-sql">-- 给用户赋予在test库user表上指定的权限
+GRANT SELECT, UPDATE, DELETE ON test.users TO 'tom'@'127.0.0.1';
+
+-- 创建新用户并赋所有权限
+GRANT ALL ON test.users TO 'jack'@'127.0.0.1' IDENTIFIED BY '123';
+</code></pre>
+
+<h1 id="回收权限">回收权限</h1>
+
+<p>回收权限前，我们通过<strong>show grants for username@ip</strong>来查看用户被赋予的权限指令</p>
+
+<pre><code class="language-sql">SHOW GRANTS FOR 'tom'@'127.0.0.1';
+/*
++------------------------------------------------------------------------------------------------------------+
+| Grants for tom@127.0.0.1                                                                                   |
++------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'tom'@'127.0.0.1' IDENTIFIED BY PASSWORD '*0D3CED9BEC10A777AEC23CCC353A8C08A633045E' |
+| GRANT DELETE ON `test`.`users` TO 'tom'@'127.0.0.1'                                                        |
++------------------------------------------------------------------------------------------------------------+
+*/
+</code></pre>
+
+<p>格式：
+&gt; <strong><font color='red'>REVOKE</font></strong> priv_lists <strong><font color='red'>ON</font></strong> db.table_name <strong><font color='red'>FROM</font></strong> username@ip</p>
+
+<p>如：</p>
+
+<pre><code class="language-sql">-- 回收指定的权限
+REVOKE SELECT, UPDATE ON test.users FROM 'tom'@'127.0.0.1';
+
+-- 回收所有权限
+REVOKE ALL ON test.users FROM 'tom'@'127.0.0.1';
+</code></pre>
+
+<p>一些细节说明：</p>
+
+<ul>
+<li>创建用户时，若不指定host，则默认为<strong>%</strong>，表示所有IP都可以连接</li>
+<li>IP中也可以使用%，如CREATE TABLE &lsquo;rose&rsquo;@&lsquo;192.168.0.%&lsquo;，表示rose用户可以从192.168.0.*的IP登录数据库</li>
+</ul>
+
+<p>更详细的权限描述可参考：<a href="https://dev.mysql.com/doc/refman/5.7/en/grant.html">https://dev.mysql.com/doc/refman/5.7/en/grant.html</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

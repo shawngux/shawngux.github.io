@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python流程控制之条件判断、循环</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python流程控制之条件判断、循环</div>
+        <div class="post-date">Tuesday, Mar 13, 2018</div>
+    </div>
+    <article>
+
+<h1 id="条件判断">条件判断</h1>
+
+<p>计算机能执行一些复杂的、自动化的任务，关键在于自己能够根据条件作出判断。</p>
+
+<p>条件判断语句为：if&hellip;elif&hellip;else。</p>
+
+<p>完整形式为：</p>
+
+<pre><code class="language-python">if &lt;condition1&gt;:
+    &lt;operation1&gt;
+elif &lt;condition2&gt;:
+    &lt;operation2&gt;
+else:
+    &lt;operation3&gt; 
+</code></pre>
+
+<p>其中elif可有多个。当if后面的条件为真（True）时，就会执行if后的操作，而elif和else就会被忽略掉。如果if后面条件为假（False），就会向下去执行elif，如果所有elif的条件也都为假，最后会执行else的操作。</p>
+
+<p>看代码：</p>
+
+<pre><code class="language-python"> # if...else
+ name = 'jack'
+ if name == 'shawn':
+     print('找到shawn了')
+ else:
+     print('不是shawn'） # 执行该语句，返回'不是shawn'
+     
+ # if...elif...else
+ age = 18
+ if age &lt;= 13:
+     print('少年你好')
+ elif age &lt;= 20:
+     print('哟，青年才俊嘛') # 执行该语句
+ else:
+     print('再过几年就是油腻的大叔啦')          
+</code></pre>
+
+<p>一些常用的条件：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">表达式</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">x == y</td>
+<td align="center">x 等于 y</td>
+</tr>
+
+<tr>
+<td align="center">x &lt; y</td>
+<td align="center">x 小于 y</td>
+</tr>
+
+<tr>
+<td align="center">x &lt;= y</td>
+<td align="center">x 小于等于 y</td>
+</tr>
+
+<tr>
+<td align="center">x &gt; y</td>
+<td align="center">x 大于 y</td>
+</tr>
+
+<tr>
+<td align="center">x &gt;= y</td>
+<td align="center">x 大于等于 y</td>
+</tr>
+
+<tr>
+<td align="center">x != y</td>
+<td align="center">x 不等于 y</td>
+</tr>
+
+<tr>
+<td align="center">x is y</td>
+<td align="center">x 和 y 是同一个对象</td>
+</tr>
+
+<tr>
+<td align="center">x is not y</td>
+<td align="center">x 和 y 不是同一个对象</td>
+</tr>
+
+<tr>
+<td align="center">x in y</td>
+<td align="center">x 和 y 容器的成员，y一般为序列等</td>
+</tr>
+
+<tr>
+<td align="center">x not in y</td>
+<td align="center">x 不是 y 容器的成员，y一般为序列等</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-python"> # is
+ x = y = [1, 2, 3] # x和y执行同一个列表对象
+ if x is y:
+     print('x和y是同一个对象') # 执行该语句，因为x和y是同一个对象
+ else:
+     print('x和y不是同一个对象')
+     
+ # in
+ a = 5
+ if a in x:
+     print('a是x的成员')
+ else:
+     print('a不是x的成员') # 执行该语句，因为5不在列表里             
+</code></pre>
+
+<h1 id="循环">循环</h1>
+
+<p>循环有两种，for&hellip;in循环和while循环</p>
+
+<h2 id="for-in循环">for&hellip;in循环</h2>
+
+<p>使用for&hellip;in循环，可以很方便的对可序列对象或可迭代对象进行操作，例如，list、tuple等</p>
+
+<pre><code class="language-python"> # 循环输入每个元素
+ numbers = [1, 2, 3, 5]
+ for n in numbers:
+     print(n)
+     
+ names = ['tom', 'jack', 'shawn', 'lily', 'kate']
+ for name in names:
+     print(name)
+     
+ # 循环遍历字典，默认遍历出键
+ d = {'name': 'jack', 'age': 25, 'sex': 'male'}
+ for k in d: # 循环输出键（k）
+     print(k)
+     
+ # 遍历键和值    
+ for k, v in d.items():
+     print('key=' + k + ',val=',v)  
+     
+ # 指定遍历键      
+ for k in d.keys():
+     print('key=', k)
+     
+ # 指定遍历值
+ for v in d.values():
+     print('value=', v)    
+</code></pre>
+
+<p>注：字典遍历巧妙使用<strong><font color="red">d.items()</font></strong>，<strong><font color="red">d.keys()</font></strong>，<strong><font color="red">d.values()</font></strong>。其中<strong><font color="red">d.items()</font></strong>以<strong>k-v</strong>键值对元组返回。</p>
+
+<h2 id="while循环">while循环</h2>
+
+<p>当条件满足时，就一直循环执行。</p>
+
+<pre><code class="language-python"> x = 1
+ sum = 0
+ while x &lt; 100:
+     sum = sum + x
+     x = x + x
+</code></pre>
+
+<h1 id="跳出循环">跳出循环</h1>
+
+<p>在循环的过程中，当循环执行到某个情况时，我们需要跳出循环，这个时候可以使用break或者continue。</p>
+
+<h2 id="break">break</h2>
+
+<p>跳出整个循环。</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ for n in numbers:
+     if n == 5: # 当循环到5时，跳出整个循环
+         break
+     print(n)
+     
+ # 最终打印1、2、3、4
+</code></pre>
+
+<h2 id="continue">continue</h2>
+
+<p>continue表示的是跳过当前这一轮循环，直接跳到下一轮循环开始。</p>
+
+<pre><code class="language-python"> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ for n in numbers:
+     if n % 2 == 0:
+         continue
+     print(n)
+     
+ # 最后打印1、3、5、7、9
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>条件判断和循环是高级语言中必备的功能，更是具备图灵完备的计算机语言的基础。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

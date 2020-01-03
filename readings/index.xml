@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>读书 on Shawngu的网络日志</title>
+    <link>https://shawngu.com/readings/</link>
+    <description>Recent content in 读书 on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 15 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://shawngu.com/readings/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>见与不见</title>
+      <link>https://shawngu.com/readings/see-or-not/</link>
+      <pubDate>Sun, 20 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/readings/see-or-not/</guid>
+      <description>你见，或者不见我
+我就在那里
+不悲不喜
+你念，或者不念我
+情就在那里
+不来不去
+你爱，或者不爱我
+爱就在那里
+不增不减
+你跟，或者不跟我
+我的手就在你手里
+不舍不弃
+来我的怀里
+或者
+让我住进你的心里
+默认 相爱
+寂静 欢喜</description>
+    </item>
+    
+  </channel>
+</rss>

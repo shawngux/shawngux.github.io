@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL数据类型之字符串类型</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL数据类型之字符串类型</div>
+        <div class="post-date">Monday, Apr 24, 2017</div>
+    </div>
+    <article>
+
+<p>在MySQL中，字符串类型是常见的数据类型，而字符串中用的最多的要数：<font color="red">char(size)</font>、<font color="red">varchar(size)</font>、<font color="red">text</font>这三种。如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `user_info`
+(
+ id int unsigned not null default 0,
+ name varchar(32) not not null default '',
+ sex char(2) not null default '男',
+ profile text
+)
+</code></pre>
+
+<p>细节说明：</p>
+
+<p>1、char(size)和varchar(size)中size范围：</p>
+
+<ul>
+<li><strong>char(size)</strong>中，size的范围为 1~255</li>
+
+<li><p><strong>varchar(size)</strong>中，size范围是变化的，主要和表所选的编码有关：</p>
+
+<ol>
+<li>如表的字符编码为<strong>utf8</strong>时，size的最大值则为 <strong>(65535-3)/3 = 21844</strong>。解释：在varchar中，有<strong><font color="red">2</font></strong>个字节用于记录varchar保存的内容长度，<strong><font color="red">1</font></strong>个字节用来记录该varchar是否为null，而utf8编码采用三个字节保存一个字符，所以除以3。</li>
+<li>当表的字符编码为<strong>gbk</strong>时，size的最大值为 <strong>(65535-3)/3 = 32766</strong>。解释：gbk使用两个字节保存一个字符，所以除以2。</li>
+<li>而当表的字符编码为<strong>latin1</strong>时，size的最大值则为 <strong>(65535-3)/1 = 65532</strong>。解释：因为latin1使用一个字节保存一个字符，所以除以1。</li>
+</ol>
+
+<p>注：char(size)和varchar(size)中，<strong>size</strong>指的是存放的<strong><font color="red">字符数</font></strong>，而不是字节。</p></li>
+</ul>
+
+<p>2、char和varchar的不同之处：</p>
+
+<ul>
+<li><strong>char(size)</strong>表示的是定长的字符串，如char(4)，这个时候即使我们插入&rsquo;ab&rsquo;(不足4个)，它也占4个字符的长度。</li>
+<li><strong>varchar(size)</strong>表示的是变长的字符串，如varchar(1000)，当我们插入&rsquo;abcd&rsquo;时，实际占用的空间为四个字符的长度+1个字节（因为varchar除了保存值时，还要使用一个字节来记录长度），举个栗子：假设我们的表字符编码为utf8，存储了&rsquo;abcd&rsquo;，这个时候所占空间为 <strong>s = 4 * 3 + 1 = 13</strong> 个字节（utf8中一个字符使用3个字节表示）。</li>
+</ul>
+
+<p>3、char类型在存储内容时，如果内容的末尾是空格，则该空格就会丢失掉，而varchar会保留末尾的空格。如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `test`
+(
+ char_content char(4),
+ varchar_content varchar(256)
+)charset = utf8;
+INSERT INTO `test` VALUES ('ab ', 'ab ');
+SELECT length(char_content), length(varchar_content) from `test`;
+
+-- 显示
+/*
++----------------------+-------------------------+
+| length(char_content) | length(varchar_content) |
++----------------------+-------------------------+
+|                    2 |                       3 |
++----------------------+-------------------------+
+*/
+</code></pre>
+
+<p>4、当使用varchar时，一个表中的所有字段内容加起来不能超过<strong><font color="red">65535</font></strong>个字节。如：</p>
+
+<pre><code class="language-sql">CREATE TABLE `test2`
+(
+ id int not null default 0,
+ content varchar(21844) not null default ''
+)charset = utf8;
+
+-- 返回信息
+/*
+Row size too large. The maximum row size for the used table type, not counting BLOBs, is 65535. This includes storage overhead, check the manual. You have to change some columns to TEXT or BLOBs
+*/
+</code></pre>
+
+<p>5、<strong><font color="red">text</font></strong>等价于varchar，当时text类型存储的内容长度要比varchar大，一般存储大段文本时，如文章等，可选用text。另外text不受全部字段内容65535字节的限制。</p>
+
+<pre><code class="language-sql">CREATE TABLE `test3`
+(
+ id int not null default 0,
+ content text,
+ article text
+)charset = utf8;
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>字符串是MySQL中使用的比较多的类型，而不同类型的字符串又有各自更适合的应用场景。当我们存放的字段内容长度不确定事，应该选择varchar，如名字、一些标题等；当我们存储的内容长度固定时，尽可能选择char，因为效率比较高，如存储身份证、固定长度密码、邮编等；当我们需要存储大段内容时，这时可以选择text，这样就避免出现全表字段内容超过65535个字节的限制。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

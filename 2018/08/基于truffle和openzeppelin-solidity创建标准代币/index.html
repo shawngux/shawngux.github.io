@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基于Truffle和Openzeppelin-solidity创建标准代币</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">基于Truffle和Openzeppelin-solidity创建标准代币</div>
+        <div class="post-date">Thursday, Aug 2, 2018</div>
+    </div>
+    <article>
+
+<p>在以太坊中创建代币需要符合ERC20协议标准，<strong>Openzeppelin</strong>是一个用来编写安全的以太坊智能合约的库，实现了RRC20协议，因此基于<strong>Openzeppelin</strong>和<strong>Truffle</strong>，我们可以很方便的创建我们自己的标准代币。</p>
+
+<p>1、首先我们需要确保已经安装了npm 和 truffle</p>
+
+<p>node-npm: <a href="https://nodejs.org/en/download/">https://nodejs.org/en/download/</a></p>
+
+<pre><code class="language-javascript">$ npm install -g truffle
+</code></pre>
+
+<p>2、我们通过truffle unbox命令下载truffle官方给的tutorialtoken项目骨架，在此基础上开发自己的代币</p>
+
+<p>首先我们新建一个目录，作为我们的项目目录</p>
+
+<pre><code class="language-shell">$ mkdir encrypted-token
+$ cd encrypted-token
+</code></pre>
+
+<p>然后下载tutorialtoken骨架</p>
+
+<pre><code class="language-javascript">$ truffle unbox tutorialtoken
+Downloading...
+Unpacking...
+Setting up...
+Unbox successful. Sweet!
+
+Commands:
+
+  Compile:        truffle compile
+  Migrate:        truffle migrate
+  Test contracts: truffle test
+  Run dev server: npm run dev
+</code></pre>
+
+<p>4、然后安装openzeppelin-solidity库</p>
+
+<pre><code class="language-shell">$ npm install openzeppelin-solidity
+
++ openzeppelin-solidity@1.12.0
+added 1 package in 13.191s
+</code></pre>
+
+<p>至此，项目结构搭建完成</p>
+
+<pre><code>encrypted-token
+    contracts
+        Migrations.sol
+    migrations
+        1_initial_migraions.js
+    node_modules
+    src
+        css
+        fonts
+        js
+        index.html
+    test
+    box-img-lg.png
+    box-img-sm.png
+    bs-config.json
+    package-lock.json
+    package.josn
+    truffle.js
+</code></pre>
+
+<p>5、在contracts目录中，创建我们自己的代币智能合约EncryptedToken.sol并继承StandardToken.sol，定义我们自己代币的信息。</p>
+
+<pre><code class="language-javascript">pragma solidity ^0.4.24;
+
+import &quot;openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol&quot;;
+
+contract EncryptedToken is StandardToken {
+    string public name = &quot;EncryptedToken&quot;;
+    string public symbol = &quot;ET&quot;;
+    uint8 public decimals = 4;
+    uint public INITIAL_SUPPLY = 100000;
+
+    constructor() public {
+        totalSupply_ = INITIAL_SUPPLY;
+        balances[msg.sender] = INITIAL_SUPPLY;
+    }
+}
+</code></pre>
+
+<ul>
+<li>name和symbol代表我们自己token的唯一标识符</li>
+<li>decimals代表代币单位，也叫合约进制，指定为4是指一个代币储存时是10000个最小单位的值。</li>
+<li>INITIAL_SUPPLY是代币总供应量。</li>
+</ul>
+
+<p><strong>totalSupply_</strong>变量在openzeppelin-solidity/contracts/token/ERC20/BasicToken.sol中定义，我们需要将自己的发行总量赋给它。</p>
+
+<p>6、然后在migrations目录中创建本合约的部署文件2_initial_migration.js</p>
+
+<pre><code class="language-javascript">var EncryptedToken = artifacts.require(&quot;./EncryptedToken.sol&quot;);
+
+module.exports = function(deployer) {
+  deployer.deploy(EncryptedToken);
+};
+</code></pre>
+
+<p>7、进入truffle开发控制台，进行编译、部署和测试</p>
+
+<pre><code class="language-shell">$ truffle develop
+Truffle Develop started at http://127.0.0.1:9545/
+
+Accounts:
+(0) 0x627306090abab3a6e1400e9345bc60c78a8bef57
+(1) 0xf17f52151ebef6c7334fad080c5704d77216b732
+(2) 0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef
+(3) 0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+(4) 0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+(5) 0x2932b7a2355d6fecc4b5c0b6bd44cc31df247a2e
+(6) 0x2191ef87e392377ec08e7c08eb105ef5448eced5
+(7) 0x0f4f2ac550a1b4e2280d04c21cea7ebd822934b5
+(8) 0x6330a553fc93768f612722bb8c2ec78ac90b3bbc
+(9) 0x5aeda56215b167893e80b4fe645ba6d5bab767de
+
+Private Keys:
+(0) c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3
+(1) ae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f
+(2) 0dbbe8e4ae425a6d2687f1a7e3ba17bc98c673636790f1b8ad91193c05875ef1
+(3) c88b703fb08cbea894b6aeff5a544fb92e78a18e19814cd85da83b71f772aa6c
+(4) 388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418
+(5) 659cbb0e2411a44db63778987b1e22153c086a95eb6b18bdf89de078917abc63
+(6) 82d052c865f5763aad42add438569276c00d3d88a2d062d36b2bae914d58b8c8
+(7) aa3680d5d48a8283413f7a108367c7299ca73f553735860a87b08f39395618b7
+(8) 0f62d96d6675f32685bbdb8ac13cda7c23436f63efbb9d07700d8669ff12b7c4
+(9) 8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5
+
+Mnemonic: candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+
+⚠️  Important ⚠️  : This mnemonic was created for you by Truffle. It is not secure.
+Ensure you do not use it on production blockchains, or else you risk losing funds.
+</code></pre>
+
+<p>truffle给我们提供了10个测试账户地址，方便用来测试</p>
+
+<p>然后通过compile命令编译合约</p>
+
+<pre><code class="language-shell">truffle(develop)&gt; compile
+Compiling .\contracts\EncryptedToken.sol...
+Compiling .\contracts\Migrations.sol...
+Compiling openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol...
+Compiling openzeppelin-solidity\contracts\math\SafeMath.sol...
+Compiling openzeppelin-solidity\contracts\token\ERC20\BasicToken.sol...
+Compiling openzeppelin-solidity\contracts\token\ERC20\ERC20.sol...
+Compiling openzeppelin-solidity\contracts\token\ERC20\ERC20Basic.sol...
+Writing artifacts to .\build\contracts
+</code></pre>
+
+<p>再通过migrate部署合约</p>
+
+<pre><code class="language-shell">truffle(develop)&gt; migrate
+Using network 'develop'.
+
+Running migration: 2_initial_migration.js
+  Deploying EncryptedToken...
+  ... 0xa554e1b752701a4dfcac5e1d12b4be546039f007a71f70038d53e8cf8f62807e
+  EncryptedToken: 0x345ca3e014aaf5dca488057592ee47305d9b3e10
+Saving successful migration to network...
+  ... 0xf36163615f41ef7ed8f4a8f192149a0bf633fe1a2398ce001bf44c43dc7bdda0
+Saving artifacts...
+</code></pre>
+
+<p>8、修改src目录下index.html和src/js目录下app.js的相关信息</p>
+
+<ul>
+<li>将index.html中标题修改成EncryptedToken，并把jquery换成可访问到的jQuery库</li>
+</ul>
+
+<pre><code class="language-javascript">&lt;script src=&quot;https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<ul>
+<li>将app.js文件中$.getJSON(&lsquo;xxx.json&rsquo;, function(data) {});改成获取我们自己的代币合约json文件$.getJSON(&lsquo;EncryptedToken.json&rsquo;, function(data) {//&hellip;});</li>
+</ul>
+
+<pre><code class="language-javascript">$.getJSON('EncryptedToken.json', function(data) {...}
+</code></pre>
+
+<p>至此，基于openzeppelin的标准代币创建完成</p>
+
+<p>9、web端页面</p>
+
+<pre><code class="language-shell">$ npm run dev
+</code></pre>
+
+<p>浏览器中输入<a href="http://127.0.0.1:3000/，可以看到：">http://127.0.0.1:3000/，可以看到：</a></p>
+
+<p><img src="/post_images/blockchain/web-token-wallet.png" alt="web轻钱包" /></p>
+
+<p>通过这个web钱包，我们可以实现转账的功能。</p>
+
+<p>以上是一个完整的简单标准代币创建过程。</p>
+
+<h1 id="总结">总结</h1>
+
+<p>基于truffle和openzeppelin我们可以方便的创建自己的代币，并可以根据自己特定的需求开发复杂功能。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

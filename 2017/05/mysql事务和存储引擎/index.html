@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL事务和存储引擎</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">MySQL事务和存储引擎</div>
+        <div class="post-date">Wednesday, May 3, 2017</div>
+    </div>
+    <article>
+
+<h1 id="事务">事务</h1>
+
+<p>事务是用来保证数据的一致性的，它由一组相关的DML语句组成，这组DML语句要么全部执行成功，要么全部失败。如：银行转账业务，即为典型的事务应用场景。</p>
+
+<p>事务的几个重要操作：</p>
+
+<ul>
+<li><strong>start transaction</strong>: 开始一个事务</li>
+<li><strong>savepoint</strong>：设置一个保存点</li>
+<li><strong>rollback to</strong>：回退掉某个保存点</li>
+<li><strong>commit</strong>：事务提交，执行指令</li>
+</ul>
+
+<p>注：如果没有设置保存点，事务开始时会自动创建一个匿名保存点；当有多个保存点时，事务回退需要依次回退，回退到前面的保存点，后面的即被销毁。要使用事务，存储引擎必须支持事务，MySQL中一般选择<strong>INNODB</strong>。</p>
+
+<p>创建一张测试表</p>
+
+<pre><code class="language-sql">CREATE TABLE `users`
+(
+    id int unsigned primary key auto_increment comment '自增编号',
+    name varchar(32) not null default '' comment '姓名',
+    age smallint unsigned not null default 0 comment '年龄'
+)CHARSET=utf8 COLLATE=utf8_general_ci;
+</code></pre>
+
+<p>事务操作，测试回退</p>
+
+<pre><code class="language-sql">-- 开始事务
+START TRANSACTION;
+-- 设置不自动提交
+SET AUTOCOMMIT = false;
+-- 设置保存点
+SAVEPOINT st;
+
+-- 一组dml语句
+INSERT INTO `users` (name, age) VALUES ('tom', 25), ('jack', 24), ('rose', 21), ('lucy', 26);
+DELETE FROM `users` WHERE id = 2;
+
+这个时候指令还没有真正执行，我们可以回退到保存点
+ROLLBACK TO st;
+
+SELECT * FROM `users`;
+/*
+Empty set (0.00 sec)
+*/
+</code></pre>
+
+<p>如果需要指令真正执行，需要使用commit指令提交事务，一旦事务提交，不可再回退</p>
+
+<pre><code class="language-sql">-- 开始事务
+START TRANSACTION;
+-- 设置不自动提交
+SET AUTOCOMMIT = false;
+-- 设置保存点
+SAVEPOINT st;
+
+-- 一组dml语句
+INSERT INTO `users` (name, age) VALUES ('tom', 25), ('jack', 24), ('rose', 21), ('lucy', 26);
+DELETE FROM `users` WHERE id = 2;
+
+-- 提交事务
+COMMIT;
+
+SELECT * FROM `users`;
+/*
++----+------+-----+
+| id | name | age |
++----+------+-----+
+|  1 | tom  |  25 |
+|  3 | rose |  21 |
+|  4 | lucy |  26 |
++----+------+-----+
+3 rows in set (0.00 sec)
+*/
+</code></pre>
+
+<h2 id="事务的隔离级别">事务的隔离级别</h2>
+
+<p>当不同的客户端或一个线程去访问同一张表时，MySQL提供了一种机制来控制不同的客户端或线程对数据的访问权限。</p>
+
+<p>隔离级别定义了事务与事务之间的隔离程度，在不同的事务中，看到的数据时不一样的。</p>
+
+<p>类别：</p>
+
+<ul>
+<li>(1)、读未提交（read uncommitted）</li>
+<li>(2)、读已提交（read committed）</li>
+<li>(3)、可重复读（repeatable read）</li>
+<li>(4)、串行化（serializable）</li>
+</ul>
+
+<p>不同的隔离级别可能产生的问题有：</p>
+
+<ul>
+<li><strong>脏读</strong>：当一个事务读取另一个事务未提交的修改时，读取的数据属于脏读</li>
+<li><strong>不可重复读</strong>：同一查询操作在同一事务中多次进行，由于其他提交事务所做的<strong>修改</strong>或<strong>删除</strong>操作，造成当前事务中每次都返回不同的结果集，这叫做不可重复读</li>
+<li><strong>幻读</strong>：同一查询在同一事务中多次进行，由于其他提交事务所做的<strong>修改</strong>操作，造成当前事务每次返回的结果都不同，叫做幻读。</li>
+</ul>
+
+<p>MySQL默认的隔离级别为<strong>repeatable read</strong>，即可重复读。</p>
+
+<pre><code class="language-sql">-- 查看当前会话的隔离级别
+SELECT @@tx_isolation;
+/*
++-----------------+
+| @@tx_isolation  |
++-----------------+
+| REPEATABLE-READ |
++-----------------+
+*/
+
+-- 查看全局的隔离级别
+SELECT @@global.tx_isolation;
+/*
++-----------------------+
+| @@global.tx_isolation |
++-----------------------+
+| REPEATABLE-READ       |
++-----------------------+
+*/
+
+-- 设置当前会话隔离级别
+SET SESSION TRANSACTION ISOLATION LEVEL repeatable read;
+
+-- 设置全局的隔开级别
+SET GLOBAL SESSION TRANSACTION ISOLATION LEVEL repeatable read;
+</code></pre>
+
+<h2 id="事务的四大特性">事务的四大特性</h2>
+
+<p>事务的四大特性为：ACID，即：</p>
+
+<ul>
+<li><strong>原子性（Atomicity）</strong>：指事务是一个不可分割的工作单位，事务中的操作要么都发生，要么都不发生</li>
+<li><strong>一致性（Consistency）</strong>：指在事务开始前和结束后，数据库的完整性没有被破坏</li>
+<li><strong>隔离性（Isolation）</strong>：指多个客户端或多个线程访问数据库时，数据库为每个独立客户端或线程单开一个事务，每个事务之间的操作互不干扰</li>
+<li><strong>持久性（Durability）</strong>：指一个事务一旦提交，它所做的改变是永久的</li>
+</ul>
+
+<h4 id="存储引擎">存储引擎</h4>
+
+<p>不同的应用场景我们一般选择不同的存储引擎。不同的存储引擎间也有区别。</p>
+
+<p>不同存储引擎间的区别：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">特点</th>
+<th align="center">Myisam</th>
+<th align="center">InnoDB</th>
+<th align="center">BDB</th>
+<th align="center">Memory</th>
+<th align="center">Archive</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">批量插入速度</td>
+<td align="center">快</td>
+<td align="center">慢</td>
+<td align="center">快</td>
+<td align="center">快</td>
+<td align="center">非常快</td>
+</tr>
+
+<tr>
+<td align="center">事务安全</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">全文索引</td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">锁机制</td>
+<td align="center">表锁</td>
+<td align="center">行锁</td>
+<td align="center">页锁</td>
+<td align="center">表锁</td>
+<td align="center">行锁</td>
+</tr>
+
+<tr>
+<td align="center">存储限制</td>
+<td align="center">没有</td>
+<td align="center">64TB</td>
+<td align="center">没有</td>
+<td align="center">有</td>
+<td align="center">没有</td>
+</tr>
+
+<tr>
+<td align="center">B树索引</td>
+<td align="center">支持</td>
+<td align="center">支持</td>
+<td align="center">支持</td>
+<td align="center">支持</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">哈希索引</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">集群索引</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">数据缓存</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">索引缓存</td>
+<td align="center">支持</td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">数据可压缩</td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">支持</td>
+</tr>
+
+<tr>
+<td align="center">空间使用</td>
+<td align="center">低</td>
+<td align="center">高</td>
+<td align="center">低</td>
+<td align="center">N/A</td>
+<td align="center">非常低</td>
+</tr>
+
+<tr>
+<td align="center">内存使用</td>
+<td align="center">低</td>
+<td align="center">高</td>
+<td align="center">低</td>
+<td align="center">中等</td>
+<td align="center">低</td>
+</tr>
+
+<tr>
+<td align="center">支持外键</td>
+<td align="center"></td>
+<td align="center">支持</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<p>其中，常用的有Myisam、InnoDB、Memory</p>
+
+<h2 id="myisam">Myisam</h2>
+
+<p>特点：</p>
+
+<ul>
+<li>添加数据速度快</li>
+<li>不支持事务安全</li>
+<li>在运行中会生成碎片，可通过 <strong>optimize table</strong> table_name 进行优化</li>
+</ul>
+
+<p>当我们查询情况多且不需要事务时，Myisam引擎是很好的选择</p>
+
+<h6 id="innodb">InnoDB</h6>
+
+<p>特点：</p>
+
+<ul>
+<li>支持事务安全，且支持外键</li>
+<li>并发性好</li>
+</ul>
+
+<p>使用MySQL时，当涉及到事务安全且对并发性要求高时，InnoDB是首选；新版本中，InnoDB也支持外键，且查询速度也有了很大的提高，因此推荐选InnoDB。</p>
+
+<h2 id="memory">Memory</h2>
+
+<p>menory引擎是内存级的，即数据存储在内存中，所以速度极快，但是存放的数据量是非常小，且不支持事务安全和外键。当数据库一旦关闭，所有数据都被销毁。</p>
+
+<p>应用的场景有：用户在线状态存储等。</p>
+
+<h2 id="其他">其他</h2>
+
+<p>查看数据库中支持的存储引擎：</p>
+
+<pre><code class="language-sql">SHOW ENGINES;
+/*
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| FEDERATED          | NO      | Federated MySQL storage engine                                 | NULL         | NULL | NULL       |
+| MRG_MYISAM         | YES     | Collection of identical MyISAM tables                          | NO           | NO   | NO         |
+| MyISAM             | DEFAULT | MyISAM storage engine                                          | NO           | NO   | NO         |
+| BLACKHOLE          | YES     | /dev/null storage engine (anything you write to it disappears) | NO           | NO   | NO         |
+| CSV                | YES     | CSV storage engine                                             | NO           | NO   | NO         |
+| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables      | NO           | NO   | NO         |
+| ARCHIVE            | YES     | Archive storage engine                                         | NO           | NO   | NO         |
+| InnoDB             | YES     | Supports transactions, row-level locking, and foreign keys     | YES          | YES  | YES        |
+| PERFORMANCE_SCHEMA | YES     | Performance Schema                                             | NO           | NO   | NO         |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+*/
+</code></pre>
+
+<p>更详细的描述查看：<a href="https://dev.mysql.com/doc/refman/5.7/en/storage-engines.html">https://dev.mysql.com/doc/refman/5.7/en/storage-engines.html</a></p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

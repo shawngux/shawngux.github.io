@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python函数和参数</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">Python函数和参数</div>
+        <div class="post-date">Saturday, Mar 17, 2018</div>
+    </div>
+    <article>
+
+<p>当我们在多个地方要使用同一个功能时，如果处都编写一次一样的代码，那么这样下来，整个程序会变得冗余不堪。为了解决这个问题，我们需要将一样功能的代码进行抽象封装，然后在需要的时间调用就行了，函数便是抽象的一个具体方式。</p>
+
+<p>函数分为内建函数和自定义函数，内建函数直接拿过来调用就好了，如：</p>
+
+<pre><code class="language-python"> max(5, 15) # 求两数最大值
+</code></pre>
+
+<p>其他更多内建函数参考：<a href="https://docs.python.org/3/library/functions.html">https://docs.python.org/3/library/functions.html</a></p>
+
+<p>这里主要探讨自定义函数</p>
+
+<h1 id="创建函数">创建函数</h1>
+
+<p>在Python中，定义函数使用关键字<strong><font color="red">def</font></strong>，紧接着是函数名、()和冒号:。函数体要缩进（四个空格）。看代码：</p>
+
+<pre><code class="language-python"> # 无返回值
+ def my_func():
+     print('hello,world')
+     
+ # 有返回值
+ def my_func2():
+     a = 5
+     return a
+ 
+ # 返回多个值
+ def my_func3():
+     a, b = 1, 2
+     return a, b
+     
+ # 空函数，pass表示什么也不做，占个位而已。
+ def my_func4():
+     pass
+</code></pre>
+
+<p>注：通过return也可以返回None，直接<strong><font color="red">return None</font></strong>即可。另外当一个函数什么也不做时，要给一个<strong><font color="red">pass</font></strong>，否则程序会报错</p>
+
+<h1 id="函数调用">函数调用</h1>
+
+<p>函数调用直接通过函数名加参数（有参数的话）即可，如：</p>
+
+<pre><code class="language-python"> my_func()
+ abs(-10)
+</code></pre>
+
+<h1 id="函数的参数">函数的参数</h1>
+
+<p>Python中函数的参数分为多种：</p>
+
+<ul>
+<li><strong><font color="orange">位置参数</font></strong>：对于一般的函数，比如abs(x)、max(a, b, c)等，括号里x、a、b、c都是位置参数，调用函数时，按照位置顺序赋给参数指定的值。</li>
+</ul>
+
+<pre><code class="language-python"> # 定义函数
+ def compare(x, y):
+     if x &gt; y:
+         print('x大于y')
+     else:
+         print('x小于等于y')
+         
+ # 调用函数
+ a, b = 5, 20
+ compare(a, b) # 打印 x小于等于y
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">默认值参数</font></strong>：在定义参数的时候给定默认值，这样一来，在调用函数时，即使不再给定义的参数传值函数也能正确的调用。有了默认参数，函数的使用就更加方便了一些。</li>
+</ul>
+
+<pre><code class="language-python"> def student(name, age, sex='male'):
+     print('name=', ',age=', age, ',sex=', sex)
+     
+ # 调用函数，这里并没有传入第三个参数，但因为在定义时给了默认值，所以在函数内部可以正常使用，并且函数调用正常
+ student('tom', 25) # 打印 name= ,age= 25 ,sex= male
+</code></pre>
+
+<p>注：默认参数必须在位置参数（必选参数）后面。</p>
+
+<ul>
+<li><strong><font color="orange">可变参数</font></strong>：有时候需要传入很多个，而在函数定义时定义多个参数显得太麻烦了，这个时候可变参数就很有用了。可变参数在定义时很简单，在普通参数前加个 <font color="red">*</font> 即可。可以理解成是收集其余参数的意思。看代码：</li>
+</ul>
+
+<pre><code class="language-python"> def compute(*params):
+     print('params:', params)
+     sum = 0
+     for n in params:
+         sum = sum + n 
+     print(sum)
+     
+ # 调用
+ compute(1, 2, 3, 4, 5) # 打印 params: (1, 2, 3, 4, 5) 和 15
+</code></pre>
+
+<p>注：函数内部将传入的可变参数组装成一个<strong><font color="red">元组tuple</font></strong>，如果本身传入的参数就是一个元组tuple或者list时，怎么办？也好办，只要在传入的tuple或list变量时在前面加一个 <font color="red">*</font>即可，意思是将tuple或list转成可变参数传进去。这个过程可看作是收集参数的逆过程。这个看代码：</p>
+
+<pre><code class="language-python"> def compute(*params):
+     print('params:', params)
+     
+ # 调用
+ numbers = [1, 2, 3, 4, 5]
+ compute(*numbers) # 打印 params: (1, 2, 3, 4, 5)
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">关键字参数</font></strong>：关键字参数，也叫收集默认值参数，在函数内部将传入的默认值参数转成一个字典。看代码：</li>
+</ul>
+
+<pre><code class="language-python"> # 定义关键字参数通过在普通参数前加两颗*
+ def student(name, age, **keyparams):
+     print('name=', name)
+     print('age=', age)
+     print('keyparams=', keyparams)
+     
+ # 调用，后面传入的默认值参数就成了关键字参数，在函数内部会转成一个字典存储。
+ student('jack', 28, city='beijing', sex='male', hobby='football')
+ '''
+ name= jack
+ age= 28
+ keyparams= {'city': 'beijing', 'sex': 'male', 'hobby': 'football'} # 关键字参数被组装成一个字典dict
+ '''
+</code></pre>
+
+<p>如果本身传入的关键字参数就是一个字典呢，要达到预期的效果时可以在传入时前面加两颗星，可看作是收集默认值参数的逆过程。看代码：</p>
+
+<pre><code class="language-python"> kp = {'city': 'nanjing', 'sex': 'male'}
+ student('kate', 25, **kp) # 加两颗*
+</code></pre>
+
+<ul>
+<li><strong><font color="orange">命名关键字参数</font></strong>：在传入关键字参数时，我们可以限制关键字参数的名字，例如只接收city和work作为关键字参数，这个时候<strong>命名关键字</strong>就派上用场了。看代码：</li>
+</ul>
+
+<pre><code class="language-python"> # 定义是：分隔符 * 后面的参数就是命名关键字参数，传参时必须加上命名
+ def stu(name, age, *, city, work):
+     print('name=', name, ',age=', age)
+     print('city=', city, ',work=', work)
+     
+ # 调用，必须加上命名，否则报错
+ stu('kate', 18, city='shanghai', work='teach')
+</code></pre>
+
+<p>命名关键字参数在定义时也可以给定默认值，这样在传值时就可以省略这个参数。</p>
+
+<pre><code class="language-python"> # 定义，给定一个默认值
+ def stu(name, age, *, city='hangzhou', work):
+     print('name=', name, ',age=', age)
+     print('city=', city, ',work=', work)
+     
+ # 调用，省略传入city
+ stu('kate', 18, work='teach')
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>Python中函数的定义使用关键字 def 来实现，在函数内部定义的变量属于函数内部这个作用域，即只在函数内部起作用，不会影响到外部全局作用域，函数内部变量也叫局部变量。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

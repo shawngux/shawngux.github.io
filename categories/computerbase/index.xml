@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>computerbase on Shawngu的网络日志</title>
+    <link>https://shawngu.com/categories/computerbase/</link>
+    <description>Recent content in computerbase on Shawngu的网络日志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://shawngu.com/categories/computerbase/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>计算机中的按位运算、二进制和十进制相互转换、原码，反码和补码</title>
+      <link>https://shawngu.com/2017/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E7%9A%84%E6%8C%89%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%92%8C%E5%8D%81%E8%BF%9B%E5%88%B6%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/</link>
+      <pubDate>Fri, 19 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://shawngu.com/2017/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%AD%E7%9A%84%E6%8C%89%E4%BD%8D%E8%BF%90%E7%AE%97%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%92%8C%E5%8D%81%E8%BF%9B%E5%88%B6%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/</guid>
+      <description>在计算机底层中，所有的运算都是采用二进制进行。所谓二进制，就是指逢二进一。二进制数由0、 1组成。
+一个二进制数0或1在底层叫作1&amp;rdquo;位&amp;rdquo;。其中八个0或1组成的8位代表一个字节。
+我们平时看到的字母、数字、汉字等在都是由字节组成，到计算机最底层就是由&amp;rdquo;位&amp;rdquo;来表示。
+一般：
+ 一个整数占4个字节，一个字节由8组成，因此一个整数由32表示。 一个英文字母占1个字节，由8表示。 一个汉字占2个字节，由16位表示。  下面以整数为例：
+按位运算 按位运算简单来说就是对位进行操作。
+按位与（&amp;amp;） 按位与（&amp;amp;）运算：两个数相同位上的（二进制数）都为1，那么运算结果的相同位上的数也为1，其他都为0。
+x = 00000000 00000000 00000000 00001010
+y = 00000000 00000000 00000000 00110010
+x &amp;amp; y = 00000000 00000000 00000000 00000010
+按位或（|） 按位或(｜)运算：两个数相同位上的（二进制数）只要有一个是1，那么运算结果的相同位上的数就为1，否则为0。
+x = 00000000 00000000 00000000 00001010
+y = 00000000 00000000 00000000 00110010
+x ｜ y = 00000000 00000000 00000000 00111010
+按位异或（^） 按位异或（^）运算：两个数相同位的二进制数一个为1，一个为0，那么结果的相同位上的数为1，其他的都为0。
+x = 00000000 00000000 00000000 00001010
+y = 00000000 00000000 00000000 00110010</description>
+    </item>
+    
+  </channel>
+</rss>

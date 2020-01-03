@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>计算机中的按位运算、二进制和十进制相互转换、原码，反码和补码</title>
+    <link rel="stylesheet" href="https://shawngu.com/css/app.css">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/brown-paper.min.css">
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <ul class="header-navigation">
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/home.png"/></div><div class="nav-link"><a href="/">主页</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/reading.png"/></div><div class="nav-link"><a href="/readings">读书</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/note.png"/></div><div class="nav-link"><a href="/notes">随手记</a></div>
+        </li>
+    
+        <li class="clearfix">
+            <div class="nav-icon"><img src="/icons/about.png"/></div><div class="nav-link"><a href="/about">关于</a></div>
+        </li>
+    
+</ul>
+        </header>
+        <div class="main">
+            
+            <div class="main-middle clearfix">
+                <div class="post-content">
+                    <div class="content-details">
+    <div class="post-wrapper">
+        <div class="post-title">计算机中的按位运算、二进制和十进制相互转换、原码，反码和补码</div>
+        <div class="post-date">Friday, May 19, 2017</div>
+    </div>
+    <article>
+
+<p>在计算机底层中，所有的运算都是采用二进制进行。所谓二进制，就是指逢二进一。二进制数由0、 1组成。</p>
+
+<p>一个二进制数0或1在底层叫作1&rdquo;位&rdquo;。其中八个0或1组成的8位代表一个字节。</p>
+
+<p>我们平时看到的字母、数字、汉字等在都是由字节组成，到计算机最底层就是由&rdquo;位&rdquo;来表示。</p>
+
+<p>一般：</p>
+
+<ul>
+<li>一个<strong>整数</strong>占<font color="red">4</font>个字节，一个字节由<font color="red">8</font>组成，因此一个整数由<font color="red">32</font>表示。</li>
+<li>一个<strong>英文字母</strong>占<font color="red">1</font>个字节，由<font color="red">8</font>表示。</li>
+<li>一个<strong>汉字</strong>占<font color="red">2</font>个字节，由<font color="red">16</font>位表示。</li>
+</ul>
+
+<p>下面以整数为例：</p>
+
+<h1 id="按位运算">按位运算</h1>
+
+<p>按位运算简单来说就是对位进行操作。</p>
+
+<h2 id="按位与">按位与（&amp;）</h2>
+
+<p><strong>按位与（&amp;）</strong>运算：两个数相同位上的（二进制数）都为<font color="red">1</font>，那么运算结果的相同位上的数也为<font color="red">1</font>，其他都为<font color="red">0</font>。</p>
+
+<p>x = 00000000 00000000 00000000 0000<font color="red">1</font>0<font color="red">1</font>0</p>
+
+<p>y = 00000000 00000000 00000000 00<font color="red">11</font>00<font color="red">1</font>0</p>
+
+<p>x &amp; y = 00000000 00000000 00000000 000000<font color="red">1</font>0</p>
+
+<h2 id="按位或">按位或（|）</h2>
+
+<p><strong>按位或(｜)</strong>运算：两个数相同位上的（二进制数）只要有一个是<font color="red">1</font>，那么运算结果的相同位上的数就为<font color="red">1</font>，否则为<font color="red">0</font>。</p>
+
+<p>x = 00000000 00000000 00000000 0000<font color="red">1</font>0<font color="red">1</font>0</p>
+
+<p>y = 00000000 00000000 00000000 00<font color="red">11</font>00<font color="red">1</font>0</p>
+
+<p>x ｜ y = 00000000 00000000 00000000 00<font color="red">111</font>0<font color="red">1</font>0</p>
+
+<h2 id="按位异或">按位异或（^）</h2>
+
+<p><strong>按位异或（^）</strong>运算：两个数相同位的二进制数<strong>一个为<font color="red">1</font>，一个为<font color="red">0</font></strong>，那么结果的相同位上的数为<font color="red">1</font>，其他的都为0。</p>
+
+<p>x = 00000000 00000000 00000000 0000<font color="red">1</font>0<font color="red">1</font>0</p>
+
+<p>y = 00000000 00000000 00000000 00<font color="red">11</font>00<font color="red">1</font>0</p>
+
+<p>x ^ y = 00000000 00000000 00000000 00<font color="red">111</font>000</p>
+
+<h2 id="按位取反">按位取反（~）</h2>
+
+<p><strong>按位取反（~）</strong>运算：即把当前数中位上为1的设为0，为0的设为1。</p>
+
+<p>a = 00000000 00000000 00000000 00<font color="red">1</font>0<font color="red">1</font>0<font color="red">11</font></p>
+
+<p>~a = 11111111 11111111 11111111 11<font color="red">0</font>1<font color="red">0</font>1<font color="red">00</font></p>
+
+<h2 id="按位左移">按位左移（&lt;&lt;）</h2>
+
+<p><strong>按位左移（&lt;&lt;）</strong>运算：即把操作数的位数向左移动，每一次移动相当于操作数乘以2。</p>
+
+<p>a = 00000000 00000000 00000000 0000000<font color="red">1</font></p>
+
+<p>a &lt;&lt; 3 = 00000000 00000000 00000000 0000<font color="red">1</font>000</p>
+
+<h2 id="按位右移">按位右移（&gt;&gt;）</h2>
+
+<p><strong>按位左移（&lt;&lt;）</strong>运算：即把操作数的位数向右移动，每一次移动相当于操作数除以2。</p>
+
+<p>a = 00000000 00000000 00000000 0000<font color="red">1</font>000</p>
+
+<p>a &gt;&gt; 3 = 00000000 00000000 00000000 0000000<font color="red">1</font></p>
+
+<p>b = 00000000 00000000 00000000 0000000<font color="red">1</font></p>
+
+<p>b &gt;&gt; 3 = 00000000 00000000 00000000 00000000</p>
+
+<h1 id="进制转换">进制转换</h1>
+
+<p>在计算机底层采用的进制数为二进制，而我们平时看到的数字、字符等一般都是十进制，那么为了方便，一般需要进行进制转换。</p>
+
+<h2 id="十进制转二进制">十进制转二进制</h2>
+
+<p>对于整数部分，每次都除以2，余数就为该位的二进制数，这个过程一直进行下去，直到被除数为0为止。然后从左后一个余数读起，直到最前面的余数。如：</p>
+
+<p><img src="/post_images/computerbase/ten_hex2binary_hex.jpg" alt="/assets/post_images/others/ten_hex2binary_hex.jpg" /></p>
+
+<p>对于小数部分，采用乘2取整法，即小数部分乘以2，然后去整数部分，剩下的小数继续乘以2，然后再取整，一直取到小数部分为0为止。如：</p>
+
+<p>0.125转换成二进制</p>
+
+<p>第一步：0.125 * 2 = 0.25 取整数部分为 0，小数部分为 0.25</p>
+
+<p>第二步：0.25 * 2 = 0.5 取整数部分为 0，小数部分为0.5</p>
+
+<p>第三步：0.5 * 2 = 1.0 取整数部分为1，小数部分为0.0</p>
+
+<p>这个时候小数部分为0终止，从第一位开始读数，得：<strong>0.001</strong>。</p>
+
+<p>注：当小数永远不可能为0时，酌情保留需要位数。</p>
+
+<h2 id="二进制转十进制">二进制转十进制</h2>
+
+<p>二进制转十进制时，进制数的第0位权值是2的0次方，第1位的权值是2的1次方，第2位的权值是2的2次方，依次类推。然后结果相加即得十进制数。其中位数从右向左开始数。</p>
+
+<p>如：110101转十进制</p>
+
+<p>1 * 2^0 = 1</p>
+
+<p>0 * 2^1 = 0</p>
+
+<p>1 * 2^2 = 4</p>
+
+<p>0 * 2^3 = 0</p>
+
+<p>1 * 2^4 = 16</p>
+
+<p>1 * 2^5 = 32</p>
+
+<p>结果相加得：53</p>
+
+<h1 id="原码-补码和反码">原码、补码和反码</h1>
+
+<p>原码、补码和反码也是针对于二进制而言的。</p>
+
+<h2 id="原码">原码</h2>
+
+<p>即二进制数，其中最高位（从左向右数第一位）是符号位，”0“表示正，”1“表示负，其余位表示数值。</p>
+
+<p><strong><font color="red">0</font></strong>0000000 00000000 00000000 00000100 ：正数4</p>
+
+<p><strong><font color="red">1</font></strong>0000000 00000000 00000000 00000100 ：负数4</p>
+
+<h2 id="反码">反码</h2>
+
+<p>正数的反码仍然其本身，如：</p>
+
+<p><strong><font color="red">0</font></strong>0000000 00000000 00000000 00000100 ==&gt; <strong><font color="red">0</font></strong>0000000 00000000 00000000 00000100</p>
+
+<p>负数的反码是对其原码进行逐位取反，0设为1，1设为0，符号位除外。如：</p>
+
+<p>10000000 00000000 00000000 00000100 ==&gt; 11111111 11111111 11111111 11111011</p>
+
+<h2 id="补码">补码</h2>
+
+<p>正数的补码也是其本身，如：</p>
+
+<p><strong><font color="red">0</font></strong>0000000 00000000 00000000 00000100 ==&gt; <strong><font color="red">0</font></strong>0000000 00000000 00000000 00000100</p>
+
+<p>负数的补码是在其反码的末位加1，如：</p>
+
+<p>10000000 00000000 00000000 00000100</p>
+
+<p>=反码为=&gt; 11111111 11111111 11111111 11111011</p>
+
+<p>=补码为=&gt; 11111111 11111111 11111111 11111100</p>
+
+<p>小结：正数的原码、反码和补码一样。负数的原码、反码和补码不同，但是计算时之间都有关联性。</p>
+</article>
+</div>
+                </div>
+                
+                <div class="aside-navigation">
+                    
+                    <div class="category-wrapper">
+    <div class="common-title">分类</div>
+    <div class="category-list">
+        <ul class="category-items">
+            
+                <li class="category-item"><a href="/categories/algo">算法</a></li>
+            
+                <li class="category-item"><a href="/categories/blockchain">区块链</a></li>
+            
+                <li class="category-item"><a href="/categories/computerbase">计算机基础</a></li>
+            
+                <li class="category-item"><a href="/categories/database">数据库|存储</a></li>
+            
+                <li class="category-item"><a href="/categories/datastructure">数据结构</a></li>
+            
+                <li class="category-item"><a href="/categories/golang">GoLang编程</a></li>
+            
+                <li class="category-item"><a href="/categories/linux">Linux</a></li>
+            
+                <li class="category-item"><a href="/categories/php">PHP编程</a></li>
+            
+                <li class="category-item"><a href="/categories/python">Python编程</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+                    <div class="chapter-wrapper">
+    <div class="common-title">章节</div>
+    <div class="chapter-list">
+        
+            <div class="chapter-item"><a href="/categories/mysql_chapter">MySQL笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/python_chapter">Python笔记</a></div>
+        
+            <div class="chapter-item"><a href="/categories/solidity_chapter">Solidity笔记</a></div>
+        
+    </div>
+</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
